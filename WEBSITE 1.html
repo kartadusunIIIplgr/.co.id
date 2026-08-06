@@ -1,0 +1,2061 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Panitia HUT RI ke-81 — KARANG TARUNA DUSUN III PEMATANG LANGGAR</title>
+<meta name="description" content="Website resmi Panitia Peringatan HUT Kemerdekaan RI ke-81." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+  }
+</script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+  :root{
+    --merah:#FF1F3D; --merah-deep:#D60028; --merah-soft:#FFE5E9; --merah-bright:#FF3B5C;
+    --cream:#FFFFFF; --cream-2:#F9FAFB; 
+    --gold:#FFB300; --gold-deep:#B45309;
+    --ink:#0F172A; --ink-2:#475569; 
+    --line:rgba(15, 23, 42, 0.1);
+    --bg-soft:#FFFFFF;
+  }
+  .dark {
+    --merah:#FF3B5C; --merah-deep:#FF1F3D; --merah-soft:rgba(255, 59, 92, 0.15);
+    --merah-bright:#FF6B85;
+    --cream:#09090B; --cream-2:#18181B; 
+    --gold:#FFCA28; --gold-deep:#FBBF24;
+    --ink:#FAFAFA; --ink-2:#D4D4D8; 
+    --line:rgba(255,255,255,.15);
+    --bg-soft:#18181B;
+  }
+
+  *{ -webkit-font-smoothing:antialiased; }
+  html, body { background:var(--cream); color:var(--ink); font-family:'Plus Jakarta Sans', sans-serif; transition: background-color .3s ease, color .3s ease; overflow-x: hidden; }
+  .font-display{ font-family:'Anton', sans-serif; letter-spacing:.01em; }
+  
+  .text-merah{ color:var(--merah); } .bg-merah{ background:var(--merah); }
+  .bg-cream{ background:var(--cream); } .bg-cream-2{ background:var(--cream-2); }
+  .text-gold{ color:var(--gold-deep); } .bg-gold{ background:var(--gold); }
+  .border-line{ border-color:var(--line); }
+  .text-ink{ color:var(--ink); } .text-ink-2{ color:var(--ink-2); }
+  .bg-bg-soft{ background:var(--bg-soft); }
+  .bg-merah-soft{ background:var(--merah-soft); }
+
+  .batik-bg{
+    background-color:var(--cream);
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(255,31,61,.05) 0, transparent 40%),
+      radial-gradient(circle at 75% 75%, rgba(255,179,0,.05) 0, transparent 45%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23FF1F3D' stroke-opacity='0.05' stroke-width='1.2'%3E%3Cpath d='M40 5 L75 40 L40 75 L5 40 Z'/%3E%3Ccircle cx='40' cy='40' r='14'/%3E%3Cpath d='M40 26 L54 40 L40 54 L26 40 Z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-mesh{
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(255,31,61,.92) 0, transparent 55%),
+      radial-gradient(ellipse at 80% 30%, rgba(214,0,40,.88) 0, transparent 55%),
+      radial-gradient(ellipse at 50% 90%, rgba(255,179,0,.55) 0, transparent 60%),
+      linear-gradient(135deg, #D60028 0%, #1A0F0A 100%);
+  }
+  @keyframes fadeUp { from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:none;} }
+  @keyframes floatY { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-12px);} }
+  @keyframes pulseRing { 0%{ transform:scale(1); opacity:.7;} 100%{ transform:scale(1.8); opacity:0;} }
+  @keyframes marquee { from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+  @keyframes shine { to{ background-position: 200% center; } }
+  @keyframes confettiFall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+  @keyframes countdownPop { 0%{ transform: scale(0.5); opacity: 0; } 50%{ transform: scale(1.2); opacity: 1; } 100%{ transform: scale(2); opacity: 0; } }
+
+  .reveal{ opacity:0; } .reveal.in{ animation: fadeUp .9s cubic-bezier(.2,.7,.2,1) forwards; }
+  .float{ animation: floatY 6s ease-in-out infinite; }
+  .marquee-track{ animation: marquee 28s linear infinite; }
+  .shine-text{
+    background: linear-gradient(90deg, var(--gold) 0%, #FFF6E0 25%, var(--gold) 50%, #FFF6E0 75%, var(--gold) 100%);
+    background-size: 200% auto; -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation: shine 4s linear infinite;
+  }
+  .card{ background:var(--bg-soft); border:1px solid var(--line); border-radius:1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,.05), 0 8px 24px -16px rgba(255,31,61,.18); transition: background-color .3s ease, border-color .3s ease, color .3s ease; }
+  .card-hover{ transition: transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s, border-color .4s; }
+  .card-hover:hover{ transform: translateY(-6px); box-shadow: 0 20px 50px -24px rgba(255,31,61,.45); border-color: rgba(255,31,61,.35); }
+  .btn{ display:inline-flex; align-items:center; justify-content:center; gap:.5rem; padding:.7rem 1.2rem; border-radius:9999px; font-weight:700; font-size:.85rem; transition: all .25s ease; cursor:pointer; border:1px solid transparent; -webkit-tap-highlight-color: transparent; }
+  .btn-primary{ background:var(--merah); color:#fff; box-shadow: 0 8px 20px -8px rgba(255,31,61,.5); }
+  .btn-primary:hover{ background:var(--merah-deep); transform: translateY(-2px); box-shadow:0 14px 30px -10px rgba(255,31,61,.7); }
+  .btn-ghost{ background:rgba(255,255,255,.08); color:#fff; border-color:rgba(255,255,255,.25); backdrop-filter: blur(6px); }
+  .btn-ghost:hover{ background:rgba(255,255,255,.16); }
+  .btn-light{ background:var(--bg-soft); color:var(--ink); border-color: var(--line); }
+  .btn-light:hover{ background:var(--cream-2); }
+  .btn-gold{ background:var(--gold); color:#000; }
+  .btn-gold:hover{ background:var(--gold-deep); color:#fff; }
+  .btn:disabled{ opacity:.5; cursor:not-allowed; transform:none !important; }
+
+  .nav-link{ position:relative; padding:.5rem .85rem; font-weight:600; font-size:.9rem; color:var(--ink); transition:color .25s; }
+  .nav-link:hover{ color:var(--merah); }
+  .nav-link::after{ content:""; position:absolute; left:.85rem; right:.85rem; bottom:.2rem; height:2px; background:var(--merah); transform:scaleX(0); transform-origin:left; transition:transform .3s; }
+  .nav-link:hover::after{ transform:scaleX(1); }
+  .tl-line{ background: linear-gradient(180deg, var(--merah) 0%, var(--gold) 100%); }
+  .input{ width:100%; padding:.75rem 1rem; border:1px solid var(--line); border-radius:.75rem; background:var(--bg-soft); color: var(--ink); font-size:.9rem; transition:all .2s; outline:none; }
+  .input::placeholder { color: var(--ink-2); opacity: 0.7; }
+  .input:focus{ border-color:var(--merah); box-shadow:0 0 0 4px rgba(255,31,61,.15); }
+  .label{ display:block; font-size:.75rem; font-weight:700; color:var(--ink-2); margin-bottom:.4rem; text-transform:uppercase; letter-spacing:.05em; }
+  ::-webkit-scrollbar{ width:8px; height:8px; } ::-webkit-scrollbar-track{ background:var(--cream-2); }
+  ::-webkit-scrollbar-thumb{ background:var(--merah); border-radius:10px; border:2px solid var(--cream-2); }
+  .sidebar-item{ display:flex; align-items:center; gap:.75rem; padding:.75rem 1rem; border-radius:.75rem; font-weight:600; font-size:.85rem; color:var(--ink-2); cursor:pointer; transition: all .2s; -webkit-tap-highlight-color: transparent; }
+  .sidebar-item:hover{ background:var(--merah-soft); color:var(--merah); }
+  .sidebar-item.active{ background:var(--merah); color:#fff; box-shadow: 0 10px 24px -10px rgba(255,31,61,.65); }
+  .sidebar-item.active svg{ color:#fff; }
+  .modal-backdrop{ background: rgba(0,0,0,.65); backdrop-filter: blur(8px); }
+  .modal-enter{ animation: fadeUp .35s cubic-bezier(.2,.7,.2,1); }
+  @keyframes toastIn { from{ opacity:0; transform: translateY(20px) translateX(20px);} to{opacity:1; transform:none;} }
+  .toast{ animation: toastIn .35s ease; }
+  .counter-num{ font-variant-numeric: tabular-nums; }
+  .particle{ position:absolute; border-radius:50%; pointer-events:none; }
+  .aspect-landscape{ aspect-ratio: 4/3; }
+  .hidden-x{ display:none !important; }
+  .gallery-item{ position:relative; overflow:hidden; border-radius:1rem; }
+  .gallery-item img{ transition: transform .8s cubic-bezier(.2,.7,.2,1); width: 100%; height: 100%; object-fit: cover; }
+  .gallery-item:hover img{ transform: scale(1.08); }
+  .gallery-item::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 40%, rgba(0,0,0,.85) 100%); opacity:0; transition:opacity .4s; }
+  .gallery-item:hover::after{ opacity:1; }
+  .hero-logo-img{ filter: drop-shadow(0 20px 40px rgba(0,0,0,.4)); }
+  .live-dot{ width:8px; height:8px; border-radius:50%; background:#22c55e; position:relative; }
+  .live-dot::before{ content:""; position:absolute; inset:0; border-radius:50%; background:#22c55e; animation: pulseRing 1.6s ease-out infinite; }
+  .div-flag{ width:60px; height:4px; border-radius:2px; background: linear-gradient(90deg, var(--merah) 0 50%, #fff 50% 100% ); }
+  .row-hover:hover{ background: var(--merah-soft); }
+  
+  .raffle-wheel{ transition: transform 10s cubic-bezier(0.25, 1, 0.5, 1); transform-origin: 50% 50%; transform-box: fill-box; }
+  .confetti{ position:fixed; width:10px; height:10px; pointer-events:none; z-index:300; animation: confettiFall 3s linear forwards; }
+  .badge{ display:inline-flex; align-items:center; gap:.25rem; padding:.25rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; }
+
+  .wheel-pointer{ filter: drop-shadow(0 4px 6px rgba(0,0,0,.3)); }
+  @keyframes pointerWiggle { 0%,100%{ transform: translateX(-50%) rotate(0deg);} 25%{ transform: translateX(-50%) rotate(-8deg);} 75%{ transform: translateX(-50%) rotate(8deg);} }
+  .pointer-spinning{ animation: pointerWiggle .15s linear infinite; }
+  .wheel-glow{ box-shadow: 0 0 60px rgba(255,31,61,.4), 0 0 30px rgba(255,179,0,.3); }
+
+  .dark select.input { background-color: #18181B; color: #FAFAFA; }
+  .dark select.input option { background-color: #18181B; color: #FAFAFA; }
+  
+  .countdown-num {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: 'Anton', sans-serif; font-size: 8rem; color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 0 40px rgba(255, 31, 61, 0.8), 0 0 80px rgba(255, 179, 0, 0.6);
+    pointer-events: none; z-index: 40; animation: countdownPop 1s ease-out forwards;
+  }
+  @media (min-width: 768px) { .countdown-num { font-size: 15rem; } }
+
+  #screenSpinResult { transition: opacity 0.5s ease; }
+  #screenUndian { height: 100vh; height: 100dvh; overflow: hidden; }
+
+  .ticket-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 640px) { .ticket-grid { grid-template-columns: repeat(3, 1fr); } }
+  .print-ticket { padding: 10px; border: 2px dashed #FF1F3D; border-radius: 8px; text-align: center; background: #fff; color: #000; }
+  .print-ticket h2 { font-family: 'Anton', sans-serif; font-size: 24px; margin: 5px 0; color: #FF1F3D; }
+  .print-ticket p { font-size: 10px; margin: 0; color: #666; }
+  
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-wrap table { min-width: 600px; }
+
+  @media print {
+    body * { visibility: hidden; }
+    #printArea, #printArea * { visibility: visible; }
+    #printArea { position: absolute; left: 0; top: 0; width: 100%; text-align: center; }
+    .print-ticket { border: 1px dashed #ccc; page-break-inside: avoid; }
+    .ticket-grid { display: block; }
+  }
+</style>
+</head>
+<body class="batik-bg">
+
+<div id="printArea" class="hidden-x"></div>
+
+<!-- ============================ LANDING PAGE ============================ -->
+<div id="landing">
+  <div class="bg-ink text-cream py-2 overflow-hidden text-xs font-semibold tracking-wider">
+    <div class="flex marquee-track whitespace-nowrap">
+      <div class="flex items-center gap-12 px-6">
+        <span class="flex items-center gap-2"><i data-lucide="flag" class="w-3.5 h-3.5 text-merah"></i> HUT RI KE-81 — 17 AGUSTUS 2026</span>
+        <span class="flex items-center gap-2"><i data-lucide="award" class="w-3.5 h-3.5 text-gold"></i> TEMA: INDONESIA BERDAULAT, ADIL DAN MAKMUR</span>
+        <span class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-merah"></i> LAPANGAN MERDEKA &amp; GEDUNG SERBA GUNA</span>
+        <span class="flex items-center gap-2"><i data-lucide="users" class="w-3.5 h-3.5 text-gold"></i> PUBLIK &amp; UNDANGAN</span>
+      </div>
+      <div class="flex items-center gap-12 px-6">
+        <span class="flex items-center gap-2"><i data-lucide="flag" class="w-3.5 h-3.5 text-merah"></i> HUT RI KE-81 — 17 AGUSTUS 2026</span>
+        <span class="flex items-center gap-2"><i data-lucide="award" class="w-3.5 h-3.5 text-gold"></i> TEMA: INDONESIA BERDAULAT, ADIL DAN MAKMUR</span>
+        <span class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-merah"></i> LAPANGAN MERDEKA &amp; GEDUNG SERBA GUNA</span>
+        <span class="flex items-center gap-2"><i data-lucide="users" class="w-3.5 h-3.5 text-gold"></i> PUBLIK &amp; UNDANGAN</span>
+      </div>
+    </div>
+  </div>
+
+  <header class="sticky top-0 z-40 bg-cream/85 backdrop-blur-md border-b border-line">
+    <nav class="max-w-7xl mx-auto px-4 lg:px-8 h-16 lg:h-20 flex items-center justify-between">
+      <a href="#home" class="flex items-center gap-2 lg:gap-3">
+        <div class="flex items-center gap-2">
+          <img src="https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg?auth_key=1885944092-c396f8ed75cd4697ad48ac96f8348a79-0-3c96888fefa7d855bd675d15d5a327ff" alt="Logo HUT RI" class="h-10 lg:h-12 w-auto rounded-lg shadow-md object-cover">
+          <img src="https://z-cdn-media.chatglm.cn/files/a7a854ae-530c-41b9-af33-6662c102c857.png?auth_key=1885944092-2f48a8ba4e74465c9e986296955d04a9-0-c5640cf1b8c714e86111b24033d05b0e" alt="Logo Karang Taruna" class="h-10 lg:h-12 w-auto object-contain">
+        </div>
+        <div class="leading-tight ml-1 lg:ml-2 hidden sm:block">
+          <div class="font-display text-base lg:text-lg text-ink">PANITIA HUT RI 81</div>
+          <div class="text-[10px] uppercase tracking-[0.2em] text-ink-2">TAHUN 2026</div>
+        </div>
+      </a>
+      <div class="hidden lg:flex items-center gap-1">
+        <a href="#tentang" class="nav-link">Tentang</a>
+        <a href="#agenda" class="nav-link">Agenda</a>
+        <a href="#galeri" class="nav-link">Galeri</a>
+        <a href="#panitia" class="nav-link">Panitia</a>
+        <a href="#pengumuman" class="nav-link">Pengumuman</a>
+        <a href="#kontak" class="nav-link">Kontak</a>
+      </div>
+      <div class="flex items-center gap-1.5 lg:gap-2">
+        <button onclick="toggleTheme()" id="themeBtn" class="btn btn-light !p-2" title="Ganti tema">
+          <i data-lucide="sun" class="w-5 h-5"></i>
+        </button>
+        <button onclick="openAdminLogin()" class="btn btn-light hidden sm:inline-flex"><i data-lucide="shield-check" class="w-4 h-4"></i> Admin</button>
+        <a href="#agenda" class="btn btn-primary"><i data-lucide="calendar-heart" class="w-4 h-4"></i> <span class="hidden md:inline">Lihat Agenda</span><span class="md:hidden">Agenda</span></a>
+        <button id="mobileMenuBtn" class="lg:hidden btn btn-light !p-2"><i data-lucide="menu" class="w-5 h-5"></i></button>
+      </div>
+    </nav>
+    <div id="mobileMenu" class="lg:hidden hidden border-t border-line bg-cream">
+      <div class="px-5 py-4 flex flex-col gap-1">
+        <a href="#tentang" class="nav-link">Tentang</a>
+        <a href="#agenda" class="nav-link">Agenda</a>
+        <a href="#galeri" class="nav-link">Galeri</a>
+        <a href="#panitia" class="nav-link">Panitia</a>
+        <a href="#pengumuman" class="nav-link">Pengumuman</a>
+        <a href="#kontak" class="nav-link">Kontak</a>
+        <button onclick="openAdminLogin()" class="btn btn-light mt-2 justify-start"><i data-lucide="shield-check" class="w-4 h-4"></i> Admin Login</button>
+      </div>
+    </div>
+  </header>
+
+  <section id="home" class="relative hero-mesh text-white overflow-hidden">
+    <div id="heroParticles" class="absolute inset-0 pointer-events-none"></div>
+    <svg class="absolute -top-20 -right-20 w-[600px] h-[600px] opacity-[0.08]" viewBox="0 0 200 200" fill="none">
+      <g stroke="white" stroke-width=".5"><circle cx="100" cy="100" r="80"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="40"/><path d="M100 20 L100 180 M20 100 L180 100 M40 40 L160 160 M160 40 L40 160"/></g>
+    </svg>
+    <svg class="absolute bottom-0 left-0 w-full h-20 md:h-32 text-cream" preserveAspectRatio="none" viewBox="0 0 1440 120" fill="currentColor"><path d="M0,64 C240,120 480,0 720,32 C960,64 1200,128 1440,64 L1440,120 L0,120 Z"/></svg>
+    <div class="relative max-w-7xl mx-auto px-4 lg:px-8 pt-12 lg:pt-20 pb-24 lg:pb-32">
+      <div class="grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+        <div class="lg:col-span-7 reveal">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-[10px] md:text-xs font-semibold tracking-wider mb-4 md:mb-6">
+            <span class="live-dot"></span><span>PERINGATAN KEMERDEKAAN · 17 AGUSTUS 2026</span>
+          </div>
+          <h1 class="font-display text-4xl sm:text-5xl lg:text-7xl xl:text-8xl leading-[0.95] mb-4 md:mb-6">KARANG TARUNA<br><span class="shine-text">DUSUN III PEMATANG LANGGAR</span><br>DESA KURUNGAN NYAWA I </h1>
+          <p class="text-white/80 text-base md:text-lg max-w-xl mb-6 md:mb-8">Mengenang 81 tahun perjuangan, merajut masa depan yang berdaulat di atas tanah air, adil bagi seluruh anak bangsa, dan makmur secara merata dari Sabang sampai Merauke.</p>
+          <div class="flex flex-wrap items-center gap-2 md:gap-3">
+            <a href="#agenda" class="btn btn-primary"><i data-lucide="calendar-days" class="w-4 h-4"></i> Jadwal Kegiatan</a>
+            <button onclick="openDaftarLombaModal()" class="btn btn-gold"><i data-lucide="trophy" class="w-4 h-4"></i> Daftar Lomba</button>
+          </div>
+          <div class="mt-8 md:mt-12 grid grid-cols-4 gap-2 md:gap-3 max-w-xl">
+            <div class="bg-white/8 border border-white/15 rounded-xl md:rounded-2xl p-2 md:p-3 text-center backdrop-blur"><div id="cd-days" class="font-display text-xl md:text-3xl">00</div><div class="text-[9px] md:text-[10px] tracking-widest text-white/60 mt-1">HARI</div></div>
+            <div class="bg-white/8 border border-white/15 rounded-xl md:rounded-2xl p-2 md:p-3 text-center backdrop-blur"><div id="cd-hours" class="font-display text-xl md:text-3xl">00</div><div class="text-[9px] md:text-[10px] tracking-widest text-white/60 mt-1">JAM</div></div>
+            <div class="bg-white/8 border border-white/15 rounded-xl md:rounded-2xl p-2 md:p-3 text-center backdrop-blur"><div id="cd-mins" class="font-display text-xl md:text-3xl">00</div><div class="text-[9px] md:text-[10px] tracking-widest text-white/60 mt-1">MENIT</div></div>
+            <div class="bg-white/8 border border-white/15 rounded-xl md:rounded-2xl p-2 md:p-3 text-center backdrop-blur"><div id="cd-secs" class="font-display text-xl md:text-3xl">00</div><div class="text-[9px] md:text-[10px] tracking-widest text-white/60 mt-1">DETIK</div></div>
+          </div>
+        </div>
+        <div class="lg:col-span-5 relative reveal mt-8 lg:mt-0">
+          <div class="relative">
+            <div class="absolute inset-0 -m-8"><div class="w-full h-full rounded-full bg-gradient-to-tr from-merah/40 via-gold/20 to-transparent blur-3xl"></div></div>
+            <div class="relative float z-20 flex flex-col items-center gap-4 md:gap-6">
+              <img src="https://z-cdn-media.chatglm.cn/files/a7a854ae-530c-41b9-af33-6662c102c857.png?auth_key=1885944092-2f48a8ba4e74465c9e986296955d04a9-0-c5640cf1b8c714e86111b24033d05b0e" alt="Logo Karang Taruna" class="w-40 md:w-52 lg:w-72 drop-shadow-2xl" />
+              <img src="https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg?auth_key=1885944092-c396f8ed75cd4697ad48ac96f8348a79-0-3c96888fefa7d855bd675d15d5a327ff" alt="Logo HUT RI 81" class="hero-logo-img w-full max-w-[250px] md:max-w-sm mx-auto rounded-2xl shadow-2xl" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative -mt-12 lg:-mt-16 z-10 px-4 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="card p-4 md:p-6 lg:p-8 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="calendar-check-2" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="24">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Agenda Kegiatan</div></div></div>
+        <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="users" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="1248">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Peserta Terdaftar</div></div></div>
+        <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="image" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="326">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Dokumentasi</div></div></div>
+        <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="trophy" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="56">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Penghargaan</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tentang" class="py-16 md:py-24 px-4 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-12 gap-8 md:gap-12 items-center">
+        <div class="lg:col-span-5 reveal">
+          <div class="div-flag mb-4 md:mb-5"></div>
+          <div class="text-xs font-bold uppercase tracking-[0.25em] text-merah mb-3">Tentang Peringatan</div>
+          <h2 class="font-display text-3xl md:text-4xl lg:text-5xl leading-tight mb-4 md:mb-6">DELAPAN PULUH SATU TAHUN<br><span class="text-merah">INDONESIA MERDEKA</span></h2>
+          <p class="text-ink-2 leading-relaxed mb-3 md:mb-4 text-sm md:text-base">Setiap 17 Agustus, bangsa Indonesia berhimpun mengenang proklamasi kemerdekaan yang dibacakan oleh Soekarno–Hatta pada 1945. Tahun 2026, peringatan ke-81 mengusung tema <strong>"Indonesia Berdaulat, Adil, dan Makmur"</strong>.</p>
+          <p class="text-ink-2 leading-relaxed mb-5 md:mb-6 text-sm md:text-base">Panitia HUT RI ke-81 menyelenggarakan rangkaian acara dari upacara bendera, lomba rakyat, pameran budaya, hingga malam anugerah.</p>
+          <div class="flex flex-wrap gap-2 md:gap-3">
+            <div class="px-3 md:px-4 py-2 bg-merah-soft text-merah rounded-full text-xs md:text-sm font-bold">🇮🇩 Berdaulat</div>
+            <div class="px-3 md:px-4 py-2 bg-cream-2 text-gold-deep rounded-full text-xs md:text-sm font-bold">⚖️ Adil</div>
+            <div class="px-3 md:px-4 py-2 bg-merah-soft text-merah rounded-full text-xs md:text-sm font-bold">🌾 Makmur</div>
+          </div>
+        </div>
+        <div class="lg:col-span-7 reveal">
+          <div class="grid grid-cols-2 gap-3 md:gap-4">
+            <div class="card card-hover p-4 md:p-6"><i data-lucide="flag" class="w-8 h-8 md:w-10 md:h-10 text-merah mb-3 md:mb-4"></i><div class="font-display text-xl md:text-2xl mb-1">01</div><div class="font-bold text-sm md:text-base mb-2">Upacara Bendera</div><p class="text-xs md:text-sm text-ink-2">Apel pagi dan pengibaran Sang Saka Merah Putih.</p></div>
+            <div class="card card-hover p-4 md:p-6 mt-4 md:mt-8"><i data-lucide="gamepad-2" class="w-8 h-8 md:w-10 md:h-10 text-merah mb-3 md:mb-4"></i><div class="font-display text-xl md:text-2xl mb-1">02</div><div class="font-bold text-sm md:text-base mb-2">Lomba Rakyat</div><p class="text-xs md:text-sm text-ink-2">Balap karung, panjat pinang, makan kerupuk.</p></div>
+            <div class="card card-hover p-4 md:p-6"><i data-lucide="palette" class="w-8 h-8 md:w-10 md:h-10 text-merah mb-3 md:mb-4"></i><div class="font-display text-xl md:text-2xl mb-1">03</div><div class="font-bold text-sm md:text-base mb-2">Pameran Budaya</div><p class="text-xs md:text-sm text-ink-2">Pameran batik, kuliner nusantara.</p></div>
+            <div class="card card-hover p-4 md:p-6 mt-4 md:mt-8"><i data-lucide="award" class="w-8 h-8 md:w-10 md:h-10 text-merah mb-3 md:mb-4"></i><div class="font-display text-xl md:text-2xl mb-1">04</div><div class="font-bold text-sm md:text-base mb-2">Malam Anugerah</div><p class="text-xs md:text-sm text-ink-2">Penghargaan pemenang lomba.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-16 md:py-24 hero-mesh text-white overflow-hidden">
+    <svg class="absolute top-0 left-0 w-full h-20 md:h-32 text-cream" preserveAspectRatio="none" viewBox="0 0 1440 120" fill="currentColor"><path d="M0,64 C240,0 480,120 720,64 C960,8 1200,120 1440,64 L1440,0 L0,0 Z"/></svg>
+    <div class="relative max-w-5xl mx-auto px-4 lg:px-8 text-center reveal">
+      <i data-lucide="quote" class="w-10 h-10 md:w-12 md:h-12 mx-auto text-gold mb-4 md:mb-6"></i>
+      <p class="font-display text-2xl md:text-3xl lg:text-5xl leading-tight mb-4 md:mb-6">"KEMERDEKAAN ITU BUKAN HADIAH, TAPI PENGORBANAN. BUKAN TUJUAN AKHIR, TAPI AWAL DARI SEBUAH PERJUANGAN."</p>
+      <div class="flex items-center justify-center gap-3"><div class="w-12 h-px bg-gold"></div><div class="text-xs md:text-sm tracking-widest text-gold font-semibold">IR. SOEKARNO — PROKLAMATOR</div><div class="w-12 h-px bg-gold"></div></div>
+    </div>
+  </section>
+
+  <section id="agenda" class="py-16 md:py-24 px-4 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-wrap items-end justify-between gap-4 md:gap-6 mb-8 md:mb-12">
+        <div class="reveal"><div class="div-flag mb-4 md:mb-5"></div><div class="text-xs font-bold uppercase tracking-[0.25em] text-merah mb-3">Rangkaian Acara</div><h2 class="font-display text-3xl md:text-4xl lg:text-5xl leading-tight">AGENDA KEGIATAN</h2></div>
+        <div class="flex gap-1.5 md:gap-2 reveal flex-wrap" id="agendaFilter">
+          <button class="btn btn-primary !py-1.5 md:!py-2 text-xs" data-filter="all">Semua</button>
+          <button class="btn btn-light !py-1.5 md:!py-2 text-xs" data-filter="upacara">Upacara</button>
+          <button class="btn btn-light !py-1.5 md:!py-2 text-xs" data-filter="lomba">Lomba</button>
+          <button class="btn btn-light !py-1.5 md:!py-2 text-xs" data-filter="budaya">Budaya</button>
+          <button class="btn btn-light !py-1.5 md:!py-2 text-xs" data-filter="sosial">Sosial</button>
+        </div>
+      </div>
+      <div class="grid lg:grid-cols-12 gap-6 md:gap-8">
+        <div class="lg:col-span-4 reveal"><div class="relative pl-8"><div class="absolute left-2 top-2 bottom-2 w-0.5 tl-line"></div><div id="agendaTimeline" class="space-y-4 md:space-y-6"></div></div></div>
+        <div class="lg:col-span-8 reveal"><div id="agendaDetail" class="card overflow-hidden"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="galeri" class="py-16 md:py-24 bg-cream-2/40 px-4 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-wrap items-end justify-between gap-4 md:gap-6 mb-8 md:mb-12">
+        <div class="reveal"><div class="div-flag mb-4 md:mb-5"></div><div class="text-xs font-bold uppercase tracking-[0.25em] text-merah mb-3">Dokumentasi</div><h2 class="font-display text-3xl md:text-4xl lg:text-5xl leading-tight">GALERI KEGIATAN</h2></div>
+        <button onclick="toast('Galeri lengkap akan segera tersedia','info')" class="btn btn-light reveal"><i data-lucide="images" class="w-4 h-4"></i> Lihat Semua</button>
+      </div>
+      <div id="galleryGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"></div>
+    </div>
+  </section>
+
+  <section id="panitia" class="py-16 md:py-24 px-4 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-10 md:mb-14 reveal">
+        <div class="div-flag mx-auto mb-4 md:mb-5"></div>
+        <div class="text-xs font-bold uppercase tracking-[0.25em] text-merah mb-3">Struktur Organisasi</div>
+        <h2 class="font-display text-3xl md:text-4xl lg:text-5xl leading-tight">PANITIA PENYELENGGARA</h2>
+        <p class="text-ink-2 max-w-2xl mx-auto mt-3 md:mt-4 text-sm md:text-base">Tim yang berkomitmen menghadirkan peringatan HUT RI ke-81 yang khidmat, meriah, dan bermakna.</p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5" id="panitiaGrid"></div>
+    </div>
+  </section>
+
+  <section id="pengumuman" class="py-16 md:py-24 bg-ink text-cream relative overflow-hidden px-4 lg:px-8">
+    <div class="absolute inset-0 opacity-[0.06]" style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='%23ffffff' fill-rule='evenodd'%3E%3Cpath d='M0 0h20v20H0zM20 20h20v20H20z'/%3E%3C/g%3E%3C/svg%3E&quot;);"></div>
+    <div class="relative max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-12 gap-8 md:gap-12">
+        <div class="lg:col-span-4 reveal">
+          <div class="div-flag mb-4 md:mb-5"></div>
+          <div class="text-xs font-bold uppercase tracking-[0.25em] text-gold mb-3">Informasi Resmi</div>
+          <h2 class="font-display text-3xl md:text-4xl lg:text-5xl leading-tight mb-4 md:mb-6">PENGUMUMAN<br><span class="text-gold">PANITIA</span></h2>
+          <p class="text-cream/70 mb-6 md:mb-8 text-sm md:text-base">Pantau pengumuman resmi panitia terkait jadwal, perubahan acara, pendaftaran lomba, dan informasi penting.</p>
+          <div class="flex items-center gap-3 text-xs md:text-sm"><i data-lucide="bell" class="w-5 h-5 text-gold"></i><span class="text-cream/80">Diperbarui setiap hari · 06.00 &amp; 18.00 WIB</span></div>
+        </div>
+        <div class="lg:col-span-8 reveal"><div id="pengumumanList" class="space-y-3 md:space-y-4"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="kontak" class="py-16 md:py-24 px-4 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-8 md:gap-10">
+        <div class="reveal">
+          <div class="div-flag mb-4 md:mb-5"></div>
+          <div class="text-xs font-bold uppercase tracking-[0.25em] text-merah mb-3">Hubungi Kami</div>
+          <h2 class="font-display text-3xl md:text-4xl lg:text-5xl leading-tight mb-4 md:mb-6">TERLIBAT<br>DALAM PERINGATAN?</h2>
+          <p class="text-ink-2 mb-6 md:mb-8 text-sm md:text-base">Untuk pendaftaran lomba, kerja sama sponsor, atau pertanyaan seputar kegiatan, silakan hubungi panitia.</p>
+          <div class="space-y-3 md:space-y-4">
+            <div class="flex items-start gap-3 md:gap-4"><div class="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="map-pin" class="w-5 h-5 md:w-6 md:h-6"></i></div><div><div class="text-[10px] md:text-xs uppercase tracking-widest text-ink-2 mb-1">Sekretariat</div><div class="font-semibold text-sm md:text-base">Gedung Serbaguna, Jl. Merdeka No. 81, Jakarta Pusat</div></div></div>
+            <div class="flex items-start gap-3 md:gap-4"><div class="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="phone" class="w-5 h-5 md:w-6 md:h-6"></i></div><div><div class="text-[10px] md:text-xs uppercase tracking-widest text-ink-2 mb-1">Telepon / WA</div><div class="font-semibold text-sm md:text-base">+62 21 381 0000 · +62 812 8100 2026</div></div></div>
+            <div class="flex items-start gap-3 md:gap-4"><div class="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="mail" class="w-5 h-5 md:w-6 md:h-6"></i></div><div><div class="text-[10px] md:text-xs uppercase tracking-widest text-ink-2 mb-1">Email</div><div class="font-semibold text-sm md:text-base">panitia@hutri81.go.id</div></div></div>
+            <div class="flex gap-2 md:gap-3 pt-3 md:pt-4">
+              <button onclick="toast('Membuka Instagram Panitia HUT RI 81','info')" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition"><i data-lucide="instagram" class="w-5 h-5"></i></button>
+              <button onclick="toast('Membuka Facebook Panitia HUT RI 81','info')" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition"><i data-lucide="facebook" class="w-5 h-5"></i></button>
+              <button onclick="toast('Membuka Twitter/X Panitia HUT RI 81','info')" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition"><i data-lucide="twitter" class="w-5 h-5"></i></button>
+              <button onclick="toast('Membuka YouTube Panitia HUT RI 81','info')" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition"><i data-lucide="youtube" class="w-5 h-5"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="card p-4 md:p-6 lg:p-8 reveal">
+          <form id="contactForm" class="space-y-3 md:space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4"><div><label class="label">Nama Lengkap</label><input type="text" class="input" placeholder="Nama Anda" required></div><div><label class="label">No. Telepon</label><input type="tel" class="input" placeholder="08xxxxxxxx" required></div></div>
+            <div><label class="label">Email</label><input type="email" class="input" placeholder="email@domain.com" required></div>
+            <div><label class="label">Kategori</label><select class="input"><option>Pendaftaran Lomba</option><option>Kerja Sama / Sponsor</option><option>Donasi</option><option>Pertanyaan Umum</option></select></div>
+            <div><label class="label">Pesan</label><textarea class="input" rows="4" placeholder="Tuliskan pesan Anda..." required></textarea></div>
+            <button type="submit" class="btn btn-primary w-full justify-center"><i data-lucide="send" class="w-4 h-4"></i> Kirim Pesan</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-ink text-cream pt-12 md:pt-16 pb-8 px-4 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 mb-8 md:mb-10">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="flex items-center gap-2">
+              <img src="https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg?auth_key=1885944092-c396f8ed75cd4697ad48ac96f8348a79-0-3c96888fefa7d855bd675d15d5a327ff" alt="Logo HUT RI" class="h-12 w-auto rounded-lg shadow-md object-cover">
+              <img src="https://z-cdn-media.chatglm.cn/files/a7a854ae-530c-41b9-af33-6662c102c857.png?auth_key=1885944092-2f48a8ba4e74465c9e986296955d04a9-0-c5640cf1b8c714e86111b24033d05b0e" alt="Logo Karang Taruna" class="h-12 w-auto object-contain">
+            </div>
+            <div class="leading-tight ml-1"><div class="font-display text-lg">PANITIA HUT RI 81</div><div class="text-[10px] uppercase tracking-[0.2em] text-cream/60">TAHUN 2026</div></div>
+          </div>
+          <p class="text-sm text-cream/70">Indonesia Berdaulat, Adil dan Makmur. Peringatan 81 tahun kemerdekaan Republik Indonesia.</p>
+        </div>
+        <div><h4 class="font-bold mb-4 text-gold">Tautan</h4><ul class="space-y-2 text-sm text-cream/70"><li><a href="#tentang" class="hover:text-cream">Tentang</a></li><li><a href="#agenda" class="hover:text-cream">Agenda</a></li><li><a href="#galeri" class="hover:text-cream">Galeri</a></li><li><a href="#panitia" class="hover:text-cream">Panitia</a></li><li><a href="#pengumuman" class="hover:text-cream">Pengumuman</a></li></ul></div>
+        <div><h4 class="font-bold mb-4 text-gold">Kontak</h4><ul class="space-y-2 text-sm text-cream/70"><li>Gedung Serbaguna</li><li>Jl. Merdeka No. 81</li><li>Jakarta Pusat</li><li>+62 21 381 0000</li><li>panitia@hutri81.go.id</li></ul></div>
+        <div>
+          <h4 class="font-bold mb-4 text-gold">Newsletter</h4>
+          <p class="text-sm text-cream/70 mb-3">Dapatkan info terbaru seputar kegiatan HUT RI ke-81.</p>
+          <form id="newsletterForm" class="flex gap-2">
+            <input type="email" class="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/15 text-sm text-white placeholder-white/50 outline-none focus:border-gold" placeholder="Email Anda" required>
+            <button type="submit" class="px-4 py-2 bg-merah hover:bg-merah-deep rounded-lg text-sm font-bold transition">Daftar</button>
+          </form>
+        </div>
+      </div>
+      <div class="pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-cream/60">
+        <div>© 2026 Panitia HUT RI ke-81. Hak Cipta Dilindungi.</div>
+        <div class="flex items-center gap-2"><span>Dibuat dengan</span><i data-lucide="heart" class="w-3.5 h-3.5 text-merah"></i><span>untuk Nusantara</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <button onclick="openAdminLogin()" class="fixed bottom-4 right-4 lg:bottom-6 lg:right-6 z-40 w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-merah text-white flex items-center justify-center shadow-2xl shadow-merah/40 hover:scale-110 transition" title="Login Admin"><i data-lucide="shield-check" class="w-5 h-5 lg:w-6 lg:h-6"></i></button>
+</div>
+
+<!-- ============================ ADMIN LOGIN MODAL ============================ -->
+<div id="adminLoginModal" class="fixed inset-0 z-50 modal-backdrop hidden-x items-center justify-center p-4 flex">
+  <div class="card w-full max-w-md p-6 md:p-8 modal-enter relative">
+    <button onclick="closeAdminLogin()" class="absolute top-3 right-3 lg:top-4 lg:right-4 w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center text-ink-2"><i data-lucide="x" class="w-5 h-5"></i></button>
+    <div class="text-center mb-6">
+      <div class="flex items-center justify-center gap-3 mb-4">
+        <img src="https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg?auth_key=1885944092-c396f8ed75cd4697ad48ac96f8348a79-0-3c96888fefa7d855bd675d15d5a327ff" alt="Logo HUT RI" class="h-16 w-auto rounded-lg shadow-lg object-cover">
+        <img src="https://z-cdn-media.chatglm.cn/files/a7a854ae-530c-41b9-af33-6662c102c857.png?auth_key=1885944092-2f48a8ba4e74465c9e986296955d04a9-0-c5640cf1b8c714e86111b24033d05b0e" alt="Logo Karang Taruna" class="h-16 w-auto object-contain">
+      </div>
+      <h3 class="font-display text-2xl">LOGIN ADMIN</h3>
+      <p class="text-sm text-ink-2 mt-1">Masuk ke dashboard panitia HUT RI 81</p>
+    </div>
+    <form id="loginForm" class="space-y-4">
+      <div><label class="label">Username</label><div class="relative"><i data-lucide="user" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-2"></i><input type="text" id="loginUser" class="input pl-10" placeholder="admin" value="admin"></div></div>
+      <div><label class="label">Password</label><div class="relative"><i data-lucide="lock" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-2"></i><input type="password" id="loginPass" class="input pl-10" placeholder="••••••••" value="admin123"><button type="button" onclick="togglePass('loginPass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-ink-2"><i data-lucide="eye" class="w-4 h-4"></i></button></div></div>
+      <div class="flex items-center justify-between text-sm"><label class="flex items-center gap-2 text-ink-2"><input type="checkbox" class="rounded"> Ingat saya</label><button type="button" onclick="toast('Silakan hubungi sekretariat untuk reset password','info')" class="text-merah font-semibold">Lupa password?</button></div>
+      <button type="submit" class="btn btn-primary w-full justify-center"><i data-lucide="log-in" class="w-4 h-4"></i> Masuk ke Dashboard</button>
+      <div class="text-xs text-center text-ink-2 bg-cream-2 p-3 rounded-lg"><strong>Demo:</strong> username <code class="text-merah">admin</code> · password <code class="text-merah">admin123</code></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================ DASHBOARD ADMIN ============================ -->
+<div id="dashboard" class="hidden-x min-h-screen bg-cream-2/40">
+  <header class="sticky top-0 z-30 bg-cream border-b border-line">
+    <div class="flex items-center justify-between px-4 lg:px-8 h-14 lg:h-16">
+      <div class="flex items-center gap-3">
+        <button id="sidebarToggle" class="lg:hidden btn btn-light !p-2"><i data-lucide="menu" class="w-5 h-5"></i></button>
+        <div class="flex items-center gap-2">
+          <img src="https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg?auth_key=1885944092-c396f8ed75cd4697ad48ac96f8348a79-0-3c96888fefa7d855bd675d15d5a327ff" alt="Logo HUT RI" class="h-8 lg:h-10 w-auto rounded-md object-cover">
+          <img src="https://z-cdn-media.chatglm.cn/files/a7a854ae-530c-41b9-af33-6662c102c857.png?auth_key=1885944092-2f48a8ba4e74465c9e986296955d04a9-0-c5640cf1b8c714e86111b24033d05b0e" alt="Logo Karang Taruna" class="h-8 lg:h-10 w-auto object-contain">
+          <div class="leading-tight ml-1 hidden md:block"><div class="font-display text-sm lg:text-base">DASHBOARD PANITIA</div><div class="text-[10px] uppercase tracking-[0.2em] text-ink-2">HUT RI KE-81 · 2026</div></div>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 lg:gap-3">
+        <button onclick="toggleTheme()" id="themeBtnDash" class="btn btn-light !p-2" title="Ganti tema">
+          <i data-lucide="sun" class="w-5 h-5"></i>
+        </button>
+        <button onclick="openNotifPanel()" class="btn btn-light !p-2 relative"><i data-lucide="bell" class="w-5 h-5"></i><span class="absolute -top-1 -right-1 w-4 h-4 bg-merah text-white text-[10px] font-bold rounded-full flex items-center justify-center" id="notifCount">3</span></button>
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-bg-soft border border-line rounded-xl">
+          <div class="w-8 h-8 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-sm">AS</div>
+          <div class="hidden md:block"><div class="text-xs font-bold leading-tight text-ink">Admin Sekretariat</div><div class="text-[10px] text-ink-2">Super Admin</div></div>
+        </div>
+        <button onclick="logoutAdmin()" class="btn btn-light !p-2" title="Logout"><i data-lucide="log-out" class="w-5 h-5"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex">
+    <aside id="sidebar" class="fixed lg:sticky top-14 lg:top-14 left-0 z-20 w-64 h-[calc(100vh-3.5rem)] bg-cream border-r border-line overflow-y-auto -translate-x-full lg:translate-x-0 transition-transform">
+      <nav class="p-3 lg:p-4 space-y-1">
+        <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-ink-2 px-3 py-2">Menu Utama</div>
+        <div class="sidebar-item active" data-page="dashboard"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</div>
+        <div class="sidebar-item" data-page="agenda"><i data-lucide="calendar-days" class="w-5 h-5"></i> Agenda</div>
+        <div class="sidebar-item" data-page="panitia"><i data-lucide="users" class="w-5 h-5"></i> Panitia</div>
+        <div class="sidebar-item" data-page="galeri"><i data-lucide="images" class="w-5 h-5"></i> Galeri</div>
+        <div class="sidebar-item" data-page="pengumuman"><i data-lucide="megaphone" class="w-5 h-5"></i> Pengumuman</div>
+        <div class="sidebar-item" data-page="peserta"><i data-lucide="user-check" class="w-5 h-5"></i> Peserta</div>
+
+        <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-ink-2 px-3 py-2 mt-4">Lomba & Undian</div>
+        <div class="sidebar-item" data-page="lomba"><i data-lucide="trophy" class="w-5 h-5"></i> Peserta Lomba</div>
+        <div class="sidebar-item" data-page="kepanitiaan"><i data-lucide="clipboard-list" class="w-5 h-5"></i> Kepanitiaan Lomba</div>
+        <div class="sidebar-item" data-page="undian"><i data-lucide="gift" class="w-5 h-5"></i> Undian Penonton</div>
+
+        <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-ink-2 px-3 py-2 mt-4">Lainnya</div>
+        <div class="sidebar-item" data-page="laporan"><i data-lucide="bar-chart-3" class="w-5 h-5"></i> Laporan</div>
+        <div class="sidebar-item" data-page="pengaturan"><i data-lucide="settings" class="w-5 h-5"></i> Pengaturan</div>
+
+        <div class="mt-6 p-4 rounded-2xl bg-gradient-to-br from-merah to-merah-deep text-white">
+          <div class="flex items-center gap-2 mb-2"><i data-lucide="flag" class="w-5 h-5"></i><span class="font-bold text-sm">Menuju 17 Agustus</span></div>
+          <div class="font-display text-3xl" id="dashCountdown">--</div>
+          <div class="text-xs text-white/80 mt-1">hari menuju HUT RI 81</div>
+        </div>
+      </nav>
+    </aside>
+    <div id="sidebarOverlay" class="fixed inset-0 z-10 bg-black/40 lg:hidden hidden-x" onclick="closeSidebar()"></div>
+
+    <main class="flex-1 min-w-0 p-4 lg:p-8">
+
+      <section id="page-dashboard" class="dash-page">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div>
+            <h1 class="font-display text-2xl lg:text-4xl">SELAMAT DATANG, ADMIN 👋</h1>
+            <p class="text-ink-2 mt-1 text-sm">Ringkasan penyelenggaraan HUT RI ke-81 — diperbarui hari ini.</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="exportReport()" class="btn btn-light hidden md:inline-flex"><i data-lucide="download" class="w-4 h-4"></i> Ekspor Laporan</button>
+            <button onclick="goPage('agenda'); setTimeout(openAgendaModal, 100)" class="btn btn-primary"><i data-lucide="plus" class="w-4 h-4"></i> Tambah Agenda</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+          <div class="card p-4 md:p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="calendar-check-2" class="w-5 h-5"></i></div><span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+12%</span></div><div class="font-display text-xl md:text-3xl" id="statAgenda">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Total Agenda</div></div>
+          <div class="card p-4 md:p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="users" class="w-5 h-5"></i></div><span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+8%</span></div><div class="font-display text-xl md:text-3xl" id="statPanitia">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Anggota Panitia</div></div>
+          <div class="card p-4 md:p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="trophy" class="w-5 h-5"></i></div><span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+24%</span></div><div class="font-display text-xl md:text-3xl" id="statPesertaLomba">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Peserta Lomba</div></div>
+          <div class="card p-4 md:p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="gift" class="w-5 h-5"></i></div><span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+15%</span></div><div class="font-display text-xl md:text-3xl" id="statUndian">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Peserta Undian</div></div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-4 mb-6">
+          <div class="card p-4 md:p-5 lg:col-span-2">
+            <div class="flex items-center justify-between mb-4"><div><h3 class="font-bold text-base md:text-lg">Kehadiran Peserta</h3><p class="text-xs text-ink-2">7 hari terakhir</p></div><div class="flex gap-1"><button class="px-3 py-1 text-xs rounded-lg bg-merah text-white">Minggu</button><button class="px-3 py-1 text-xs rounded-lg hover:bg-merah-soft">Bulan</button></div></div>
+            <div class="h-48 md:h-64"><canvas id="chartKehadiran"></canvas></div>
+          </div>
+          <div class="card p-4 md:p-5"><div class="mb-4"><h3 class="font-bold text-base md:text-lg">Distribusi Agenda</h3><p class="text-xs text-ink-2">Berdasarkan kategori</p></div><div class="h-48 md:h-64 flex items-center justify-center"><canvas id="chartKategori"></canvas></div></div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-4">
+          <div class="card p-4 md:p-5 lg:col-span-2">
+            <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-base md:text-lg">Agenda Mendatang</h3><button onclick="goPage('agenda')" class="text-xs md:text-sm text-merah font-bold flex items-center gap-1">Lihat semua <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></button></div>
+            <div class="space-y-2" id="dashAgendaList"></div>
+          </div>
+          <div class="card p-4 md:p-5">
+            <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-base md:text-lg">Aktivitas Terbaru</h3><span class="live-dot"></span></div>
+            <div class="space-y-4" id="dashActivity"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-agenda" class="dash-page hidden-x">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div><h1 class="font-display text-2xl lg:text-4xl">KELOLA AGENDA</h1><p class="text-ink-2 mt-1 text-sm">Kelola seluruh rangkaian acara HUT RI ke-81.</p></div>
+          <button onclick="openAgendaModal()" class="btn btn-primary"><i data-lucide="plus" class="w-4 h-4"></i> Tambah Agenda</button>
+        </div>
+        <div class="card p-3 md:p-4 mb-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="relative flex-1 min-w-[150px]"><i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-2"></i><input type="text" id="agendaSearch" oninput="renderAgendaTable()" class="input pl-10" placeholder="Cari agenda..."></div>
+            <select id="agendaFilterCat" onchange="renderAgendaTable()" class="input !w-auto"><option value="all">Semua Kategori</option><option value="upacara">Upacara</option><option value="lomba">Lomba</option><option value="budaya">Budaya</option><option value="sosial">Sosial</option></select>
+            <select id="agendaFilterStatus" onchange="renderAgendaTable()" class="input !w-auto"><option value="all">Semua Status</option><option value="draft">Draft</option><option value="aktif">Aktif</option><option value="selesai">Selesai</option></select>
+          </div>
+        </div>
+        <div class="card overflow-hidden">
+          <div class="table-wrap">
+            <table class="w-full text-sm">
+              <thead class="bg-cream-2 text-xs uppercase tracking-wider text-ink-2">
+                <tr>
+                  <th class="text-left px-4 py-3 font-bold">Agenda</th>
+                  <th class="text-left px-4 py-3 font-bold">Kategori</th>
+                  <th class="text-left px-4 py-3 font-bold">Tanggal</th>
+                  <th class="text-left px-4 py-3 font-bold">Lokasi</th>
+                  <th class="text-left px-4 py-3 font-bold">Status</th>
+                  <th class="text-right px-4 py-3 font-bold">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="agendaTableBody" class="divide-y divide-line"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-panitia" class="dash-page hidden-x">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div><h1 class="font-display text-2xl lg:text-4xl">KELOLA PANITIA</h1><p class="text-ink-2 mt-1 text-sm">Daftar anggota panitia penyelenggara.</p></div>
+          <button onclick="openPanitiaModal()" class="btn btn-primary"><i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Panitia</button>
+        </div>
+        <div id="panitiaTableBody" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"></div>
+      </section>
+
+      <section id="page-galeri" class="dash-page hidden-x">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div><h1 class="font-display text-2xl lg:text-4xl">KELOLA GALERI</h1><p class="text-ink-2 mt-1 text-sm">Unggah dan kelola dokumentasi kegiatan.</p></div>
+          <button onclick="openGaleriModal()" class="btn btn-primary"><i data-lucide="upload" class="w-4 h-4"></i> Unggah Foto</button>
+        </div>
+        <div id="galeriGridAdmin" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"></div>
+      </section>
+
+      <section id="page-pengumuman" class="dash-page hidden-x">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div><h1 class="font-display text-2xl lg:text-4xl">KELOLA PENGUMUMAN</h1><p class="text-ink-2 mt-1 text-sm">Sampaikan informasi resmi kepada publik.</p></div>
+          <button onclick="openPengumumanModal()" class="btn btn-primary"><i data-lucide="plus" class="w-4 h-4"></i> Buat Pengumuman</button>
+        </div>
+        <div class="card overflow-hidden">
+          <div class="table-wrap">
+            <table class="w-full text-sm">
+              <thead class="bg-cream-2 text-xs uppercase tracking-wider text-ink-2">
+                <tr>
+                  <th class="text-left px-4 py-3 font-bold">Judul</th>
+                  <th class="text-left px-4 py-3 font-bold">Kategori</th>
+                  <th class="text-left px-4 py-3 font-bold">Tanggal</th>
+                  <th class="text-left px-4 py-3 font-bold">Status</th>
+                  <th class="text-right px-4 py-3 font-bold">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="pengumumanTableBody" class="divide-y divide-line"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-peserta" class="dash-page hidden-x">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div><h1 class="font-display text-2xl lg:text-4xl">PESERTA TERDAFTAR</h1><p class="text-ink-2 mt-1 text-sm">Daftar peserta seluruh lomba dan kegiatan.</p></div>
+          <button onclick="exportCSV('peserta')" class="btn btn-light"><i data-lucide="download" class="w-4 h-4"></i> Ekspor CSV</button>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+          <div class="card p-4 md:p-5"><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2">Total Peserta</div><div class="font-display text-xl md:text-3xl mt-1" id="statTotalPeserta">0</div></div>
+          <div class="card p-4 md:p-5"><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2">Lomba Rakyat</div><div class="font-display text-xl md:text-3xl mt-1" id="statLombaRakyat">0</div></div>
+          <div class="card p-4 md:p-5"><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2">Lomba Budaya</div><div class="font-display text-xl md:text-3xl mt-1" id="statLombaBudaya">0</div></div>
+          <div class="card p-4 md:p-5"><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2">Relawan</div><div class="font-display text-xl md:text-3xl mt-1" id="statRelawan">0</div></div>
+        </div>
+        <div class="card overflow-hidden">
+          <div class="table-wrap">
+            <table class="w-full text-sm">
+              <thead class="bg-cream-2 text-xs uppercase tracking-wider text-ink-2">
+                <tr>
+                  <th class="text-left px-4 py-3 font-bold">Nama</th>
+                  <th class="text-left px-4 py-3 font-bold">Kategori</th>
+                  <th class="text-left px-4 py-3 font-bold">Lomba</th>
+                  <th class="text-left px-4 py-3 font-bold">No. Telepon</th>
+                  <th class="text-left px-4 py-3 font-bold">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-line" id="pesertaTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-lomba" class="dash-page hidden-x">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div><h1 class="font-display text-2xl lg:text-4xl">PESERTA LOMBA</h1><p class="text-ink-2 mt-1 text-sm">Kelola pendaftaran dan verifikasi peserta lomba.</p></div>
+          <div class="flex gap-2">
+            <button onclick="exportCSV('lomba')" class="btn btn-light"><i data-lucide="download" class="w-4 h-4"></i> Ekspor CSV</button>
+            <button onclick="openLombaModal()" class="btn btn-primary"><i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Peserta</button>
+          </div>
+        </div>
+        <div id="lombaStatsGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6"></div>
+        <div class="card p-3 md:p-4 mb-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="relative flex-1 min-w-[150px]"><i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-2"></i><input type="text" id="lombaSearch" oninput="renderLombaTable()" class="input pl-10" placeholder="Cari nama / nomor..."></div>
+            <select id="lombaFilterJenis" onchange="renderLombaTable()" class="input !w-auto"><option value="all">Semua Lomba</option></select>
+            <select id="lombaFilterStatus" onchange="renderLombaTable()" class="input !w-auto"><option value="all">Semua Status</option><option value="pending">Pending</option><option value="terverifikasi">Terverifikasi</option><option value="menang">Pemenang</option><option value="gugur">Gugur</option></select>
+            <select id="lombaFilterGol" onchange="renderLombaTable()" class="input !w-auto"><option value="all">Semua Golongan</option><option value="anak">Anak-anak</option><option value="remaja">Remaja</option><option value="dewasa">Dewasa</option><option value="lansia">Lansia</option></select>
+          </div>
+        </div>
+        <div class="card overflow-hidden">
+          <div class="table-wrap">
+            <table class="w-full text-sm">
+              <thead class="bg-cream-2 text-xs uppercase tracking-wider text-ink-2">
+                <tr>
+                  <th class="text-left px-4 py-3 font-bold">No. Peserta</th>
+                  <th class="text-left px-4 py-3 font-bold">Nama</th>
+                  <th class="text-left px-4 py-3 font-bold">Lomba</th>
+                  <th class="text-left px-4 py-3 font-bold">Golongan</th>
+                  <th class="text-left px-4 py-3 font-bold">Status</th>
+                  <th class="text-right px-4 py-3 font-bold">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="lombaTableBody" class="divide-y divide-line"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-kepanitiaan" class="dash-page hidden-x">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div><h1 class="font-display text-2xl lg:text-4xl">KEPANITIAAN LOMBA</h1><p class="text-ink-2 mt-1 text-sm">Penugasan panitia untuk setiap lomba HUT RI 81.</p></div>
+          <button onclick="openKepanitiaanModal()" class="btn btn-primary"><i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Penugasan</button>
+        </div>
+        <div id="kepanitiaanStatsGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6"></div>
+        <div class="card p-3 md:p-4 mb-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="relative flex-1 min-w-[150px]"><i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-2"></i><input type="text" id="kepanitiaanSearch" oninput="renderKepanitiaanTable()" class="input pl-10" placeholder="Cari panitia / lomba..."></div>
+            <select id="kepanitiaanFilterLomba" onchange="renderKepanitiaanTable()" class="input !w-auto"><option value="all">Semua Lomba</option></select>
+            <select id="kepanitiaanFilterJabatan" onchange="renderKepanitiaanTable()" class="input !w-auto"><option value="all">Semua Jabatan</option></select>
+          </div>
+        </div>
+        <div class="card overflow-hidden">
+          <div class="table-wrap">
+            <table class="w-full text-sm">
+              <thead class="bg-cream-2 text-xs uppercase tracking-wider text-ink-2">
+                <tr>
+                  <th class="text-left px-4 py-3 font-bold">Panitia</th>
+                  <th class="text-left px-4 py-3 font-bold">Lomba</th>
+                  <th class="text-left px-4 py-3 font-bold">Jabatan</th>
+                  <th class="text-left px-4 py-3 font-bold">Tugas</th>
+                  <th class="text-right px-4 py-3 font-bold">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="kepanitiaanTableBody" class="divide-y divide-line"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-undian" class="dash-page hidden-x">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div><h1 class="font-display text-2xl lg:text-4xl">UNDIAN PENONTON 🎡</h1><p class="text-ink-2 mt-1 text-sm">Kelola daftar peserta dan hadiah undian doorprize.</p></div>
+          <div class="flex gap-2 flex-wrap">
+            <button onclick="openUndianScreen()" class="btn btn-primary" style="background:#4f46e5; box-shadow:0 8px 20px -8px rgba(79,70,229,.5);"><i data-lucide="monitor" class="w-4 h-4"></i> Mode Layar</button>
+            <button onclick="openAutoUndianPanel()" class="btn btn-gold"><i data-lucide="hash" class="w-4 h-4"></i> Buat Undian</button>
+            <button onclick="exportCSV('undian')" class="btn btn-light"><i data-lucide="download" class="w-4 h-4"></i> Ekspor CSV</button>
+            <button onclick="openUndianModal()" class="btn btn-light"><i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Manual</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+          <div class="card p-4 md:p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="users" class="w-5 h-5"></i></div></div><div class="font-display text-xl md:text-3xl" id="undStatTotal">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Total Peserta</div></div>
+          <div class="card p-4 md:p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center"><i data-lucide="ticket" class="w-5 h-5"></i></div></div><div class="font-display text-xl md:text-3xl" id="undStatEligible">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Belum Menang</div></div>
+          <div class="card p-4 md:p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center"><i data-lucide="award" class="w-5 h-5"></i></div></div><div class="font-display text-xl md:text-3xl" id="undStatMenang">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Pemenang</div></div>
+          <div class="card p-4 md:p-5"><div class="flex items-center justify-between mb-3"><div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center"><i data-lucide="gift" class="w-5 h-5"></i></div></div><div class="font-display text-xl md:text-3xl" id="undStatHadiah">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Total Hadiah</div></div>
+        </div>
+        
+        <div class="grid lg:grid-cols-3 gap-4 mb-6">
+          <div class="card p-4 md:p-6 lg:col-span-2">
+            <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+              <div><h3 class="font-bold text-base md:text-lg">Pratinjau Roda Undian</h3><p class="text-xs text-ink-2">Buka "Mode Layar" untuk memutar roda secara penuh</p></div>
+              <select id="undianHadiahSelect" class="input !w-auto !py-2"><option value="">Pilih Hadiah...</option></select>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="relative w-48 h-48 md:w-64 md:h-64 mb-6">
+                <div id="wheelPointerDash" class="wheel-pointer absolute top-[-10px] left-1/2 -translate-x-1/2 z-30 w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[24px] border-t-merah-deep"></div>
+                <div class="absolute inset-0 rounded-full wheel-glow overflow-hidden">
+                  <svg id="raffleWheel" class="raffle-wheel w-full h-full" viewBox="0 0 200 200"></svg>
+                </div>
+                <button id="spinBtnDash" onclick="spinWheel(false)" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 md:w-16 md:h-16 rounded-full bg-merah text-white font-display text-base md:text-lg shadow-2xl hover:scale-110 active:scale-95 transition z-20">PUTAR</button>
+              </div>
+              <div id="spinResultDash" class="text-center min-h-[60px] w-full max-w-md"></div>
+            </div>
+          </div>
+          <div class="card p-4 md:p-5">
+            <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-base md:text-lg">🎁 Daftar Hadiah</h3><button onclick="openHadiahModal()" class="text-xs md:text-sm text-merah font-bold flex items-center gap-1"><i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah</button></div>
+            <div id="hadiahList" class="space-y-2 max-h-96 overflow-y-auto"></div>
+          </div>
+        </div>
+        
+        <div class="card p-4 md:p-5 mb-6">
+          <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-base md:text-lg">🏆 Pemenang Undian</h3><button onclick="resetUndian()" class="text-xs md:text-sm text-rose-600 font-bold flex items-center gap-1"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Undian</button></div>
+          <div id="pemenangUndianList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+        </div>
+        <div class="card p-3 md:p-4 mb-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="relative flex-1 min-w-[150px]"><i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-2"></i><input type="text" id="undianSearch" oninput="renderUndianTable()" class="input pl-10" placeholder="Cari nama / nomor tiket..."></div>
+            <select id="undianFilterStatus" onchange="renderUndianTable()" class="input !w-auto"><option value="all">Semua Status</option><option value="eligible">Belum Menang</option><option value="menang">Pemenang</option></select>
+          </div>
+        </div>
+        <div class="card overflow-hidden">
+          <div class="table-wrap">
+            <table class="w-full text-sm">
+              <thead class="bg-cream-2 text-xs uppercase tracking-wider text-ink-2">
+                <tr>
+                  <th class="text-left px-4 py-3 font-bold">No. Tiket</th>
+                  <th class="text-left px-4 py-3 font-bold">Nama</th>
+                  <th class="text-left px-4 py-3 font-bold">Telepon</th>
+                  <th class="text-left px-4 py-3 font-bold">Asal</th>
+                  <th class="text-left px-4 py-3 font-bold">Status</th>
+                  <th class="text-left px-4 py-3 font-bold">Hadiah</th>
+                  <th class="text-right px-4 py-3 font-bold">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="undianTableBody" class="divide-y divide-line"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-laporan" class="dash-page hidden-x">
+        <div class="mb-6">
+          <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+            <div><h1 class="font-display text-2xl lg:text-4xl">LAPORAN &amp; ANALITIK</h1><p class="text-ink-2 mt-1 text-sm">Statistik dan laporan penyelenggaraan.</p></div>
+            <button onclick="exportReport()" class="btn btn-primary"><i data-lucide="file-down" class="w-4 h-4"></i> Unduh Laporan PDF</button>
+          </div>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-4 mb-4">
+          <div class="card p-4 md:p-5"><h3 class="font-bold text-base md:text-lg mb-4">Tren Pendaftaran</h3><div class="h-48 md:h-64"><canvas id="chartPendaftaran"></canvas></div></div>
+          <div class="card p-4 md:p-5"><h3 class="font-bold text-base md:text-lg mb-4">Partisipasi per Kategori</h3><div class="h-48 md:h-64"><canvas id="chartPartisipasi"></canvas></div></div>
+        </div>
+        <div class="card p-4 md:p-5">
+          <h3 class="font-bold text-base md:text-lg mb-4">Ringkasan Keuangan</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            <div class="p-3 md:p-4 bg-merah-soft rounded-xl"><div class="text-xs text-ink-2">Anggaran</div><div class="font-display text-lg md:text-2xl mt-1 text-merah">Rp 850 Jt</div></div>
+            <div class="p-3 md:p-4 bg-emerald-50 rounded-xl"><div class="text-xs text-ink-2">Terpakai</div><div class="font-display text-lg md:text-2xl mt-1 text-emerald-700">Rp 412 Jt</div></div>
+            <div class="p-3 md:p-4 bg-amber-50 rounded-xl"><div class="text-xs text-ink-2">Sisa</div><div class="font-display text-lg md:text-2xl mt-1 text-amber-700">Rp 438 Jt</div></div>
+            <div class="p-3 md:p-4 bg-indigo-50 rounded-xl"><div class="text-xs text-ink-2">Donasi</div><div class="font-display text-lg md:text-2xl mt-1 text-indigo-700">Rp 125 Jt</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-pengaturan" class="dash-page hidden-x">
+        <div class="mb-6">
+          <h1 class="font-display text-2xl lg:text-4xl">PENGATURAN</h1>
+          <p class="text-ink-2 mt-1 text-sm">Konfigurasi sistem dan tampilan website.</p>
+        </div>
+        <div class="grid lg:grid-cols-3 gap-4">
+          <div class="card p-4 md:p-6 lg:col-span-2">
+            <h3 class="font-bold text-base md:text-lg mb-4">Informasi Website</h3>
+            <form id="settingsForm" class="space-y-4">
+              <div><label class="label">Judul Website</label><input type="text" id="set_title" class="input" value="Panitia HUT RI ke-81"></div>
+              <div><label class="label">Tema Peringatan</label><input type="text" id="set_tema" class="input" value="Indonesia Berdaulat, Adil dan Makmur"></div>
+              <div class="grid grid-cols-2 gap-4"><div><label class="label">Tanggal Acara</label><input type="date" id="set_date" class="input" value="2026-08-17"></div><div><label class="label">Lokasi Utama</label><input type="text" id="set_lokasi" class="input" value="Lapangan Merdeka"></div></div>
+              <div><label class="label">Email Resmi</label><input type="email" id="set_email" class="input" value="panitia@hutri81.go.id"></div>
+              <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan Perubahan</button>
+            </form>
+          </div>
+          <div class="card p-4 md:p-6">
+            <h3 class="font-bold text-base md:text-lg mb-4">Preferensi</h3>
+            <div class="space-y-3">
+              <label class="flex items-center justify-between p-3 bg-cream-2 rounded-xl"><div><div class="font-semibold text-sm">Mode Gelap</div><div class="text-xs text-ink-2">Aktifkan tema gelap</div></div><input type="checkbox" id="darkModeToggle" onchange="toggleTheme()" class="w-5 h-5 accent-merah"></label>
+              <label class="flex items-center justify-between p-3 bg-cream-2 rounded-xl"><div><div class="font-semibold text-sm">Notifikasi Email</div><div class="text-xs text-ink-2">Kirim email notifikasi</div></div><input type="checkbox" checked class="w-5 h-5 accent-merah"></label>
+              <label class="flex items-center justify-between p-3 bg-cream-2 rounded-xl"><div><div class="font-semibold text-sm">Pendaftaran Publik</div><div class="text-xs text-ink-2">Buka pendaftaran online</div></div><input type="checkbox" checked class="w-5 h-5 accent-merah"></label>
+              <label class="flex items-center justify-between p-3 bg-cream-2 rounded-xl"><div><div class="font-semibold text-sm">Auto Verifikasi</div><div class="text-xs text-ink-2">Verifikasi otomatis peserta lomba</div></div><input type="checkbox" class="w-5 h-5 accent-merah"></label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card p-4 md:p-6 mt-8">
+          <h3 class="font-bold text-base md:text-lg mb-4 flex items-center gap-2"><i data-lucide="database" class="w-5 h-5 text-merah"></i> Konfigurasi Database Supabase</h3>
+          <div class="bg-amber-50 text-amber-700 p-3 rounded-lg text-sm mb-4">
+            Masukkan URL dan Anon Key dari project Supabase Anda untuk menyimpan data secara online (Cloud). Jika kosong, data akan disimpan di browser (localStorage).
+          </div>
+          <form id="supabaseForm" class="space-y-4">
+            <div><label class="label">Supabase URL</label><input type="text" id="supabaseUrl" class="input" placeholder="https://xxxx.supabase.co"></div>
+            <div><label class="label">Supabase Anon Key</label><input type="text" id="supabaseKey" class="input" placeholder="eyJhbGciOi..."></div>
+            <div class="flex gap-2 flex-wrap">
+              <button type="submit" class="btn btn-primary"><i data-lucide="plug" class="w-4 h-4"></i> Hubungkan & Simpan</button>
+              <button type="button" onclick="testSupabase()" class="btn btn-light"><i data-lucide="wifi" class="w-4 h-4"></i> Test Koneksi</button>
+            </div>
+            <div id="supabaseStatus" class="text-sm font-semibold mt-2"></div>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============================ HALAMAN LAYAR UNDIAN (FULLSCREEN TANPA SCROLL) ============================ -->
+<div id="screenUndian" class="hidden-x fixed inset-0 z-[200] flex flex-col items-center justify-between py-4 md:py-6 overflow-hidden" style="background: radial-gradient(circle at 50% 20%, #4a0e1f 0%, #160404 60%, #050101 100%);">
+  <div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: radial-gradient(circle, #FFB300 1px, transparent 1px); background-size: 40px 40px;"></div>
+  <div class="absolute -top-40 -left-40 w-96 h-96 bg-merah/30 rounded-full blur-[120px] animate-pulse"></div>
+  <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-gold/20 rounded-full blur-[120px] animate-pulse"></div>
+
+  <div id="countdownContainer" class="absolute inset-0 z-40 flex items-center justify-center pointer-events-none hidden-x"></div>
+
+  <button onclick="closeUndianScreen()" class="absolute top-4 right-4 md:top-6 md:right-6 z-50 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white border border-white/20 backdrop-blur">
+    <i data-lucide="x" class="w-6 h-6 md:w-8 md:h-8"></i>
+  </button>
+
+  <div class="text-center z-10 px-4 mt-2">
+    <h1 class="font-display text-xl md:text-5xl tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white to-[#FF3B5C] drop-shadow-2xl">DOORPRIZE HUT RI 81</h1>
+    <p class="text-white/60 mt-1 text-[10px] md:text-lg tracking-[0.3em] font-bold">UNDIAN BERHADIAH PENONTON</p>
+  </div>
+
+  <div class="flex-1 w-full flex items-center justify-center relative min-h-0">
+    <div id="screenSpinResult" class="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4 opacity-0 transition-opacity duration-500"></div>
+
+    <div class="relative w-[75vw] h-[75vw] max-w-[400px] max-h-[400px] md:w-[55vh] md:h-[55vh] lg:w-[60vh] lg:h-[60vh] lg:max-w-[600px] lg:max-h-[600px]">
+      <div id="wheelPointerScreen" class="wheel-pointer absolute top-[-15px] left-1/2 -translate-x-1/2 z-30 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-t-[35px] border-t-[#FF1F3D] drop-shadow-lg"></div>
+      <div class="absolute inset-0 rounded-full overflow-hidden" style="box-shadow: 0 0 80px rgba(255,31,61,.6), 0 0 40px rgba(255,179,0,.4), inset 0 0 40px rgba(0,0,0,.4);">
+        <svg id="raffleWheelScreen" class="raffle-wheel w-full h-full" viewBox="0 0 200 200"></svg>
+      </div>
+      <button id="spinBtnScreen" onclick="spinWheel(true)" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 md:w-32 md:h-32 rounded-full bg-white text-[#FF1F3D] font-display text-lg md:text-3xl shadow-2xl hover:scale-110 active:scale-95 transition z-20 border-4 md:border-8 border-[#FFB300]">PUTAR</button>
+    </div>
+  </div>
+
+  <div class="z-10 mb-2 md:mb-4 flex flex-col items-center gap-2">
+    <div class="flex items-center gap-3 bg-white/5 backdrop-blur-md px-4 py-2 md:px-6 md:py-3 rounded-xl md:rounded-2xl border border-white/20 shadow-2xl w-full max-w-xs md:max-w-none">
+      <i data-lucide="gift" class="w-5 h-5 md:w-7 md:h-7 text-[#FFB300]"></i>
+      <select id="screenHadiahSelect" class="bg-transparent text-white text-sm md:text-xl font-bold outline-none cursor-pointer w-full">
+        <option value="" class="text-black">Pilih Hadiah...</option>
+      </select>
+    </div>
+    <div class="text-white/40 text-[10px] md:text-sm">Tekan tombol PUTAR untuk memulai undian</div>
+  </div>
+</div>
+
+<div id="modalContainer"></div>
+<div id="toastContainer" class="fixed top-20 right-4 z-[100] space-y-2"></div>
+<div id="notifPanel" class="fixed top-20 right-4 z-[80] hidden-x"></div>
+
+<script>
+/* ============================================================
+   SUPABASE CONFIGURATION
+============================================================ */
+const SUPABASE_URL = 'https://bdhgahinhdjmkmuhcfyt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkaGdhaGluaGRqbWttdWhjZnl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NTc5ODksImV4cCI6MjEwMTQzMzk4OX0.BBekcTCGfPGuvmVc3p6F0kBlm1jzhnXD2mW8kDW467o';
+
+let supabaseClient = null;
+
+function initSupabase() {
+  const url = localStorage.getItem('supabase_url') || SUPABASE_URL;
+  const key = localStorage.getItem('supabase_key') || SUPABASE_ANON_KEY;
+  if (url && key && url !== 'https://your-project-id.supabase.co') {
+    try {
+      supabaseClient = supabase.createClient(url, key);
+      if($("#supabaseUrl")) $("#supabaseUrl").value = url;
+      if($("#supabaseKey")) $("#supabaseKey").value = key;
+      if($("#supabaseStatus")) $("#supabaseStatus").innerHTML = '<span class="text-emerald-600 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> Supabase Terhubung</span>';
+      lucide.createIcons();
+      return true;
+    } catch (e) { return false; }
+  }
+  return false;
+}
+
+async function testSupabase() {
+  const url = $("#supabaseUrl").value, key = $("#supabaseKey").value;
+  if(!url || !key) { toast("Harap isi URL dan Key Supabase", "warn"); return; }
+  try {
+    const testClient = supabase.createClient(url, key);
+    const { data, error } = await testClient.from('undian').select('*').limit(1);
+    if (error) throw error;
+    toast("Koneksi Supabase Berhasil!", "success");
+    $("#supabaseStatus").innerHTML = '<span class="text-emerald-600 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> Koneksi Berhasil</span>';
+    lucide.createIcons();
+  } catch (e) {
+    toast("Koneksi Gagal: " + e.message, "error");
+    $("#supabaseStatus").innerHTML = '<span class="text-rose-600 flex items-center gap-1"><i data-lucide="x-circle" class="w-4 h-4"></i> Koneksi Gagal</span>';
+    lucide.createIcons();
+  }
+}
+
+ $("#supabaseForm")?.addEventListener("submit", e => {
+  e.preventDefault();
+  const url = $("#supabaseUrl").value, key = $("#supabaseKey").value;
+  localStorage.setItem('supabase_url', url);
+  localStorage.setItem('supabase_key', key);
+  initSupabase();
+  toast("Pengaturan Supabase disimpan. Memuat ulang data...", "success");
+  setTimeout(() => location.reload(), 1000);
+});
+
+async function syncDataToSupabase(table, data) {
+  if (!supabaseClient) return;
+  try {
+    const { error: deleteError } = await supabaseClient.from(table).delete().neq('id', -1);
+    if (deleteError) throw deleteError;
+    if (!data || data.length === 0) return;
+
+    const cleanData = data.map(item => {
+      const cleanItem = { ...item };
+      const integerFields = ['id', 'peserta', 'panitiaId', 'panitia_id', 'hadiahId', 'hadiah_id', 'peringkat', 'jumlah', 'terpakai'];
+      integerFields.forEach(field => {
+        if (cleanItem.hasOwnProperty(field)) {
+          cleanItem[field] = cleanItem[field] === "" || cleanItem[field] === undefined ? null : parseInt(cleanItem[field]);
+        }
+      });
+      Object.keys(cleanItem).forEach(key => {
+        if (cleanItem[key] === undefined) delete cleanItem[key];
+      });
+      return cleanItem;
+    });
+
+    const { error: insertError } = await supabaseClient.from(table).insert(cleanData);
+    if (insertError) throw insertError;
+  } catch (e) {
+    console.error(`Sync ${table} error:`, e);
+    toast("Gagal sinkronisasi ke Supabase: " + e.message, "error");
+  }
+}
+
+async function loadDataFromSupabase(table) {
+  if (!supabaseClient) return null;
+  try {
+    const { data, error } = await supabaseClient.from(table).select('*');
+    if (error) throw error;
+    return data;
+  } catch (e) { return null; }
+}
+
+const STATE = {
+  agenda: [], panitia: [], galeri: [], pengumuman: [], peserta: [], lomba: [], kepanitiaanLomba: [], undian: [], hadiah: [],
+  activities: [
+    { icon:"user-plus", color:"merah", title:"Pendaftaran baru", desc:"Budi Santoso mendaftar lomba balap karung · 5 menit lalu" },
+    { icon:"check-circle-2", color:"emerald", title:"Agenda disetujui", desc:"Upacara bendera 17 Agustus · 1 jam lalu" },
+    { icon:"image", color:"amber", title:"Foto diunggah", desc:"12 foto baru ke galeri · 3 jam lalu" },
+    { icon:"megaphone", color:"rose", title:"Pengumuman baru", desc:"Jadwal lomba diperbarui · 5 jam lalu" },
+    { icon:"trophy", color:"indigo", title:"Pemenang diumumkan", desc:"Lomba tari tradisional · kemarin" }
+  ]
+};
+
+const KATEGORI_LABEL = { upacara:"Upacara", lomba:"Lomba", budaya:"Budaya", sosial:"Sosial" };
+const KATEGORI_COLOR = { upacara:"bg-rose-100 text-rose-700", lomba:"bg-amber-100 text-amber-700", budaya:"bg-indigo-100 text-indigo-700", sosial:"bg-emerald-100 text-emerald-700" };
+const STATUS_COLOR = { draft:"bg-gray-100 text-gray-700", aktif:"bg-emerald-100 text-emerald-700", selesai:"bg-blue-100 text-blue-700" };
+const LOMBA_STATUS_COLOR = { pending:"bg-amber-100 text-amber-700", terverifikasi:"bg-emerald-100 text-emerald-700", menang:"bg-gold/20 text-gold-deep", gugur:"bg-rose-100 text-rose-700" };
+const LOMBA_STATUS_LABEL = { pending:"Pending", terverifikasi:"Terverifikasi", menang:"Pemenang", gugur:"Gugur" };
+const GOL_LABEL = { anak:"Anak-anak", remaja:"Remaja", dewasa:"Dewasa", lansia:"Lansia" };
+const UND_STATUS_COLOR = { eligible:"bg-emerald-100 text-emerald-700", menang:"bg-gold/20 text-gold-deep" };
+const UND_STATUS_LABEL = { eligible:"Belum Menang", menang:"Pemenang" };
+const JABATAN_LIST = ["Penanggung Jawab", "Wakil Penanggung Jawab", "Sekretariat", "Juri 1", "Juri 2", "Juri 3", "Logistik", "Keamanan", "Medik", "Dokumentasi"];
+const WHEEL_COLORS = ["#FF1F3D", "#FFB300", "#FF6B6B", "#FFD54F", "#D60028", "#FFA040", "#FF4757", "#FFCA28", "#E60028", "#FFB74D", "#FF8A65", "#FFCC80"];
+
+function $(sel, parent=document){ return parent.querySelector(sel); }
+function $$(sel, parent=document){ return [...parent.querySelectorAll(sel)]; }
+function uid(){ return Date.now() + Math.floor(Math.random()*1000); }
+function fmtTanggal(iso){
+  if(!iso) return "-";
+  const d = new Date(iso);
+  const hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"][d.getDay()];
+  const bln = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"][d.getMonth()];
+  return `${hari}, ${d.getDate()} ${bln} ${d.getFullYear()}`;
+}
+function toast(msg, type="success"){
+  const colors = { success:"bg-emerald-600", error:"bg-rose-600", info:"bg-indigo-600", warn:"bg-amber-600" };
+  const icons = { success:"check-circle-2", error:"x-circle", info:"info", warn:"alert-triangle" };
+  const t = document.createElement("div");
+  t.className = `toast ${colors[type]} text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 min-w-[260px] max-w-sm`;
+  t.innerHTML = `<i data-lucide="${icons[type]}" class="w-5 h-5 flex-shrink-0"></i><div class="text-sm font-semibold">${msg}</div>`;
+  $("#toastContainer").appendChild(t);
+  lucide.createIcons();
+  setTimeout(()=>{ t.style.transition="all .35s"; t.style.opacity="0"; t.style.transform="translateX(20px)"; setTimeout(()=>t.remove(), 350); }, 3000);
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.classList.toggle('dark');
+  const updateIcon = (btn) => { if (!btn) return; btn.innerHTML = isDark ? '<i data-lucide="moon" class="w-5 h-5"></i>' : '<i data-lucide="sun" class="w-5 h-5"></i>'; };
+  updateIcon($("#themeBtn")); updateIcon($("#themeBtnDash"));
+  const darkToggle = $("#darkModeToggle"); if (darkToggle) darkToggle.checked = isDark;
+  if (chartKehadiran) updateChartColors(chartKehadiran);
+  if (chartKategori) updateChartColors(chartKategori);
+  if (chartPendaftaran) updateChartColors(chartPendaftaran);
+  if (chartPartisipasi) updateChartColors(chartPartisipasi);
+  lucide.createIcons();
+  if (!$("#page-undian").classList.contains("hidden-x")) buildWheel("#raffleWheel");
+  if (!$("#screenUndian").classList.contains("hidden-x")) buildWheel("#raffleWheelScreen");
+}
+function updateChartColors(chart) {
+  const textColor = document.documentElement.classList.contains('dark') ? '#D4D4D8' : '#475569';
+  const gridColor = document.documentElement.classList.contains('dark') ? 'rgba(255,255,255,0.1)' : 'rgba(15, 23, 42, 0.1)';
+  chart.options.scales = chart.options.scales || {};
+  if (chart.options.scales.x) { chart.options.scales.x.ticks = { ...chart.options.scales.x.ticks, color: textColor }; chart.options.scales.x.grid = { ...chart.options.scales.x.grid, color: gridColor }; }
+  if (chart.options.scales.y) { chart.options.scales.y.ticks = { ...chart.options.scales.y.ticks, color: textColor }; chart.options.scales.y.grid = { ...chart.options.scales.y.grid, color: gridColor }; }
+  if (chart.options.scales.r) { chart.options.scales.r.grid = { ...chart.options.scales.r.grid, color: gridColor }; chart.options.scales.r.ticks = { ...chart.options.scales.r.ticks, color: textColor }; }
+  if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels) chart.options.plugins.legend.labels.color = textColor;
+  chart.update();
+}
+
+function initHeroParticles(){
+  const c = $("#heroParticles"); if(!c) return;
+  for(let i=0;i<36;i++){
+    const p = document.createElement("div");
+    p.className = "particle";
+    const size = Math.random()*4 + 1;
+    p.style.width = p.style.height = size+"px";
+    p.style.left = Math.random()*100 + "%"; p.style.top = Math.random()*100 + "%";
+    p.style.background = Math.random() > .5 ? "rgba(255,255,255,.55)" : "rgba(255,179,0,.7)";
+    p.style.animation = `floatY ${4 + Math.random()*6}s ease-in-out infinite`;
+    p.style.animationDelay = (-Math.random()*6)+"s";
+    c.appendChild(p);
+  }
+}
+const TARGET_DATE = new Date("2026-08-17T07:00:00+07:00");
+function updateCountdown(){
+  const now = new Date();
+  let diff = Math.max(0, TARGET_DATE - now);
+  const days = Math.floor(diff / 86400000); diff -= days*86400000;
+  const hours = Math.floor(diff / 3600000); diff -= hours*3600000;
+  const mins = Math.floor(diff / 60000); diff -= mins*60000;
+  const secs = Math.floor(diff / 1000);
+  const set = (id,v)=>{ const el=document.getElementById(id); if(el) el.textContent = String(v).padStart(2,"0"); };
+  set("cd-days", days); set("cd-hours", hours); set("cd-mins", mins); set("cd-secs", secs);
+  const dash = document.getElementById("dashCountdown"); if(dash) dash.textContent = days;
+}
+function initReveal(){
+  const io = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold:.12 });
+  $$(".reveal").forEach(el=>io.observe(el));
+}
+function initCounters(){
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const el = e.target; const target = +el.dataset.counter;
+        let cur = 0; const step = Math.max(1, Math.floor(target/60));
+        const t = setInterval(()=>{ cur += step; if(cur >= target){ cur = target; clearInterval(t); } el.textContent = cur.toLocaleString("id-ID"); }, 24);
+        io.unobserve(el);
+      }
+    });
+  }, { threshold:.4 });
+  $$("[data-counter]").forEach(el=>io.observe(el));
+}
+
+let agendaActiveId = 1;
+function renderAgendaTimeline(filter="all"){
+  const wrap = $("#agendaTimeline"); if(!wrap) return;
+  const items = STATE.agenda.filter(a => filter==="all" || a.kategori===filter);
+  wrap.innerHTML = items.map(a=>{
+    const active = a.id === agendaActiveId;
+    return `<div class="relative cursor-pointer group" onclick="selectAgenda(${a.id})">
+      <div class="absolute -left-[1.65rem] top-1 w-4 h-4 rounded-full ${active?'bg-merah ring-4 ring-merah/20':'bg-bg-soft border-2 border-merah/40 group-hover:border-merah'} transition"></div>
+      <div class="${active?'opacity-100':'opacity-70 group-hover:opacity-100'} transition">
+        <div class="text-xs font-bold text-merah">${fmtTanggal(a.tanggal).split(",")[1]}</div>
+        <div class="font-bold text-sm leading-tight mt-0.5">${a.judul}</div>
+        <div class="text-xs text-ink-2 mt-0.5">${a.waktu} · ${a.lokasi}</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+function selectAgenda(id){ agendaActiveId = id; const filter = $("#agendaFilter .btn-primary")?.dataset.filter || "all"; renderAgendaTimeline(filter); renderAgendaDetail(); }
+function renderAgendaDetail(){
+  const a = STATE.agenda.find(x=>x.id===agendaActiveId); if(!a) return;
+  const wrap = $("#agendaDetail"); const img = `https://picsum.photos/seed/agenda${a.id}/800/500.jpg`;
+  wrap.innerHTML = `<div class="relative h-56 overflow-hidden"><img src="${img}" alt="${a.judul}" class="w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent"></div><div class="absolute bottom-4 left-5 right-5 text-white"><div class="flex items-center gap-2 mb-2"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${KATEGORI_COLOR[a.kategori]} bg-white/95">${KATEGORI_LABEL[a.kategori]}</span><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${STATUS_COLOR[a.status]} bg-white/95">${a.status}</span></div><h3 class="font-display text-2xl lg:text-3xl">${a.judul}</h3></div></div><div class="p-6"><div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="calendar" class="w-5 h-5"></i></div><div><div class="text-[10px] uppercase tracking-wider text-ink-2">Tanggal</div><div class="font-bold text-sm">${fmtTanggal(a.tanggal)}</div></div></div><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="clock" class="w-5 h-5"></i></div><div><div class="text-[10px] uppercase tracking-wider text-ink-2">Waktu</div><div class="font-bold text-sm">${a.waktu} WIB</div></div></div><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="map-pin" class="w-5 h-5"></i></div><div><div class="text-[10px] uppercase tracking-wider text-ink-2">Lokasi</div><div class="font-bold text-sm">${a.lokasi}</div></div></div></div><p class="text-ink-2 leading-relaxed mb-5">${a.deskripsi}</p><div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-line"><div class="flex items-center gap-3"><div class="flex -space-x-2">${[1,2,3].map(i=>`<div class="w-8 h-8 rounded-full bg-cream-2 border-2 border-white flex items-center justify-center text-xs font-bold text-ink-2">${String.fromCharCode(64+i)}</div>`).join("")}</div><div class="text-sm"><span class="font-bold">${a.peserta.toLocaleString("id-ID")}</span> <span class="text-ink-2">peserta terdaftar</span></div></div><button onclick="openDaftarLombaModal()" class="btn btn-primary"><i data-lucide="user-plus" class="w-4 h-4"></i> Daftar Sekarang</button></div></div>`;
+  lucide.createIcons();
+}
+function initAgendaFilter(){
+  $$("#agendaFilter button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      $$("#agendaFilter button").forEach(b=>{ b.classList.remove("btn-primary"); b.classList.add("btn-light"); });
+      btn.classList.add("btn-primary"); btn.classList.remove("btn-light");
+      const f = btn.dataset.filter; renderAgendaTimeline(f);
+      const first = STATE.agenda.find(a => f==="all" || a.kategori===f);
+      if(first) selectAgenda(first.id);
+    });
+  });
+}
+
+function renderLandingGaleri(){
+  const grid = $("#galleryGrid"); 
+  if(!grid) return;
+  grid.innerHTML = STATE.galeri.map(g=>`
+    <div class="gallery-item aspect-landscape cursor-pointer" onclick="openGaleriViewer('${g.id}')">
+      <img src="${g.img}" alt="${g.judul}" class="w-full h-full object-cover">
+      <div class="absolute inset-0 p-4 flex flex-col justify-end text-white z-10">
+        <div class="text-[10px] uppercase tracking-widest text-gold font-bold">${KATEGORI_LABEL[g.kategori] || g.kategori}</div>
+        <div class="font-bold text-sm leading-tight">${g.judul}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function openGaleriViewer(id) {
+  const g = STATE.galeri.find(x => x.id == id);
+  if (!g) return;
+  showModal(`
+    <div class="card max-w-4xl w-full modal-enter overflow-hidden">
+      <div class="relative">
+        <button onclick="closeModal()" class="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-md transition">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+        <img src="${g.img}" alt="${g.judul}" class="w-full max-h-[80vh] object-contain bg-black/10">
+      </div>
+      <div class="p-5 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-merah font-bold">${KATEGORI_LABEL[g.kategori] || g.kategori}</div>
+          <h3 class="font-display text-2xl leading-tight mt-1">${g.judul}</h3>
+        </div>
+        <button onclick="downloadImage('${g.img}', '${g.judul.replace(/'/g, "")}')" class="btn btn-primary">
+          <i data-lucide="download" class="w-5 h-5"></i> Download Gambar
+        </button>
+      </div>
+    </div>
+  `);
+}
+
+function downloadImage(imgUrl, fileName) {
+  toast("Mengunduh gambar...", "info");
+  if (imgUrl.startsWith('data:image')) {
+    const a = document.createElement('a');
+    a.href = imgUrl; a.download = fileName + '.jpg';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("Gambar berhasil diunduh!", "success");
+  } else {
+    fetch(imgUrl)
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = fileName + '.jpg';
+        document.body.appendChild(a); a.click();
+        window.URL.revokeObjectURL(url); document.body.removeChild(a);
+        toast("Gambar berhasil diunduh!", "success");
+      })
+      .catch(err => {
+        console.error("Error downloading image:", err);
+        window.open(imgUrl, '_blank');
+        toast("Membuka gambar di tab baru...", "info");
+      });
+  }
+}
+
+function getPanitiaFotoHtml(foto, textClass) {
+  const isImage = foto && (foto.startsWith('http') || foto.startsWith('data:image'));
+  if (isImage) {
+    return `<img src="${foto}" class="w-full h-full object-cover" alt="Foto Panitia">`;
+  }
+  return `<div class="absolute inset-0 flex items-center justify-center font-display ${textClass} text-white/95 group-hover:scale-110 transition-transform duration-700">${foto || '?'}</div>`;
+}
+
+function renderLandingPanitia(){
+  const grid = $("#panitiaGrid"); if(!grid) return;
+  grid.innerHTML = STATE.panitia.map(p=>`
+    <div class="card card-hover overflow-hidden group">
+      <div class="aspect-square bg-gradient-to-br from-merah to-merah-deep relative overflow-hidden">
+        ${getPanitiaFotoHtml(p.foto, 'text-6xl')}
+        <div class="absolute top-3 right-3 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-white/50"></div>
+      </div>
+      <div class="p-4 text-center">
+        <div class="font-bold text-sm mt-1 leading-tight">${p.nama}</div>
+        <div class="text-xs text-ink-2 mt-1">${p.jabatan}</div>
+        <div class="mt-3 pt-3 border-t border-line">
+          <span class="badge bg-merah-soft text-merah">Panitia HUT RI 81</span>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderPanitiaCards(){
+  const wrap = $("#panitiaTableBody"); if(!wrap) return;
+  wrap.innerHTML = STATE.panitia.map(p=>`
+    <div class="card overflow-hidden group">
+      <div class="aspect-square bg-gradient-to-br from-merah to-merah-deep relative">
+        ${getPanitiaFotoHtml(p.foto, 'text-7xl')}
+        <div class="absolute top-3 right-3 flex gap-1">
+          <button onclick="openPanitiaModal(${p.id})" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center backdrop-blur"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+          <button onclick="deletePanitia(${p.id})" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-rose-500 text-white flex items-center justify-center backdrop-blur"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <div class="p-4 text-center">
+        <div class="font-bold text-sm leading-tight">${p.nama}</div>
+        <div class="text-xs text-ink-2 mt-0.5">${p.jabatan}</div>
+        <div class="mt-3 pt-3 border-t border-line">
+          <span class="badge bg-merah-soft text-merah">Panitia HUT RI 81</span>
+        </div>
+      </div>
+    </div>
+  `).join("");
+  lucide.createIcons();
+}
+
+let tempPanitiaImg = null; 
+
+function openPanitiaModal(id){
+  tempPanitiaImg = null; 
+  const p = id ? STATE.panitia.find(x=>x.id===id) : null;
+  const currentFoto = p?.foto || '';
+  const isImage = currentFoto.startsWith('http') || currentFoto.startsWith('data:image');
+  
+  showModal(`
+    <div class="card max-w-lg w-full modal-enter">
+      <div class="px-6 py-4 border-b border-line flex items-center justify-between">
+        <h3 class="font-display text-2xl">${p?'EDIT':'TAMBAH'} PANITIA</h3>
+        <button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <form id="panitiaForm" class="p-6 space-y-4">
+        <div class="flex flex-col items-center mb-2">
+          <div id="panitiaImgPreview" class="w-28 h-28 rounded-full bg-cream-2 border-2 border-dashed border-line flex items-center justify-center font-display text-4xl text-ink-2 overflow-hidden mb-3">
+            ${isImage ? `<img src="${currentFoto}" class="w-full h-full object-cover">` : (currentFoto ? `<div class="font-display text-4xl text-ink">${currentFoto}</div>` : 'Foto')}
+          </div>
+          <div class="flex gap-2 w-full">
+            <input type="text" id="f_foto_text" class="input flex-1" placeholder="URL gambar atau Inisial (mis. AS)" value="${isImage ? '' : currentFoto}" oninput="updatePanitiaPreview(this.value)">
+            <label class="btn btn-light cursor-pointer flex-shrink-0"><i data-lucide="upload" class="w-4 h-4"></i> Pilih<input type="file" accept="image/*" class="hidden" onchange="handlePanitiaImgUpload(event)"></label>
+          </div>
+          <div class="text-xs text-ink-2 mt-1 text-center">Ketik URL, ketik Inisial, atau Unggah foto (Maks 2MB).</div>
+        </div>
+        <div class="grid grid-cols-1 gap-4">
+          <div><label class="label">Nama Lengkap</label><input type="text" id="f_nama" class="input" value="${p?.nama||''}" required></div>
+          <div><label class="label">Jabatan</label><input type="text" id="f_jabatan" class="input" value="${p?.jabatan||''}" required></div>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-4 border-t border-line">
+          <button type="button" onclick="closeModal()" class="btn btn-light">Batal</button>
+          <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button>
+        </div>
+      </form>
+    </div>
+  `);
+  
+  $("#panitiaForm").addEventListener("submit", async e=>{ 
+    e.preventDefault(); 
+    const finalFoto = tempPanitiaImg || $("#f_foto_text").value.toUpperCase() || 'XX';
+    const data = { nama:$("#f_nama").value, foto: finalFoto, jabatan:$("#f_jabatan").value }; 
+    if(p){ Object.assign(p, data); toast("Data panitia diperbarui", "success"); } 
+    else { STATE.panitia.unshift({ id: uid(), ...data }); toast("Panitia baru ditambahkan", "success"); } 
+    await syncDataToSupabase('panitia', STATE.panitia);
+    closeModal(); renderPanitiaCards(); renderLandingPanitia(); $("#statPanitia").textContent = STATE.panitia.length; 
+  });
+}
+
+async function handlePanitiaImgUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { toast("Ukuran file terlalu besar (Maks 2MB)", "warn"); return; }
+  toast("Memproses gambar...", "info");
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    tempPanitiaImg = event.target.result; 
+    $("#f_foto_text").value = ""; 
+    $("#panitiaImgPreview").innerHTML = `<img src="${tempPanitiaImg}" class="w-full h-full object-cover">`;
+    toast("Foto siap disimpan.", "success");
+  };
+  reader.readAsDataURL(file);
+}
+
+function updatePanitiaPreview(val) {
+  tempPanitiaImg = null; 
+  const p = $("#panitiaImgPreview");
+  if (!val) { p.innerHTML = 'Foto'; return; }
+  if (val.startsWith('http') || val.startsWith('data:image')) {
+    p.innerHTML = `<img src="${val}" class="w-full h-full object-cover">`;
+  } else {
+    p.innerHTML = `<div class="font-display text-4xl text-ink">${val.toUpperCase()}</div>`;
+  }
+}
+
+function renderLandingPengumuman(){
+  const wrap = $("#pengumumanList"); if(!wrap) return;
+  wrap.innerHTML = STATE.pengumuman.map(p=>`<div class="bg-white/5 border border-white/10 rounded-2xl p-5 hover:bg-white/10 transition cursor-pointer" onclick="openPengumumanDetail(${p.id})"><div class="flex items-start justify-between gap-4"><div class="flex-1"><div class="flex items-center gap-2 mb-2"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gold text-ink">${p.kategori}</span><span class="text-xs text-cream/60">${fmtTanggal(p.tanggal)}</span></div><h3 class="font-bold text-lg leading-tight">${p.judul}</h3><p class="text-sm text-cream/70 mt-2 line-clamp-2">${p.isi}</p></div><i data-lucide="chevron-right" class="w-5 h-5 text-cream/60 flex-shrink-0 mt-1"></i></div></div>`).join("");
+  lucide.createIcons();
+}
+function openPengumumanDetail(id){
+  const p = STATE.pengumuman.find(x=>x.id===id); if(!p) return;
+  showModal(` <div class="card max-w-2xl w-full p-0 overflow-hidden modal-enter"><div class="hero-mesh p-6 text-white relative"><button onclick="closeModal()" class="absolute top-4 right-4 w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button><div class="flex items-center gap-2 mb-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gold text-ink">${p.kategori}</span><span class="text-xs text-white/70">${fmtTanggal(p.tanggal)}</span></div><h3 class="font-display text-2xl lg:text-3xl leading-tight">${p.judul}</h3></div><div class="p-6"><p class="text-ink-2 leading-relaxed">${p.isi}</p><div class="mt-6 pt-6 border-t border-line flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-sm">PA</div><div><div class="font-bold text-sm">Panitia HUT RI 81</div><div class="text-xs text-ink-2">Sekretariat Resmi</div></div></div><button onclick="closeModal()" class="btn btn-light">Tutup</button></div></div></div>`);
+}
+
+function showModal(html){
+  const c = $("#modalContainer");
+  c.innerHTML = `<div class="fixed inset-0 z-[100] modal-backdrop flex items-start justify-center p-4 md:p-8 overflow-y-auto" onclick="if(event.target===this) closeModal()">${html}</div>`;
+  document.body.style.overflow = "hidden"; lucide.createIcons();
+}
+function closeModal(){ $("#modalContainer").innerHTML = ""; document.body.style.overflow = ""; }
+
+function openAdminLogin(){ $("#adminLoginModal").classList.remove("hidden-x"); document.body.style.overflow = "hidden"; lucide.createIcons(); }
+function closeAdminLogin(){ $("#adminLoginModal").classList.add("hidden-x"); document.body.style.overflow = ""; }
+function togglePass(id, btn){
+  const inp = document.getElementById(id);
+  if(inp.type === "password"){ inp.type="text"; btn.innerHTML='<i data-lucide="eye-off" class="w-4 h-4"></i>'; }
+  else { inp.type="password"; btn.innerHTML='<i data-lucide="eye" class="w-4 h-4"></i>'; }
+  lucide.createIcons();
+}
+ $("#loginForm").addEventListener("submit", e=>{ e.preventDefault(); const u = $("#loginUser").value.trim(); const p = $("#loginPass").value.trim(); if(u === "admin" && p === "admin123"){ closeAdminLogin(); enterDashboard(); toast("Selamat datang, Admin!", "success"); } else { toast("Username atau password salah", "error"); } });
+function enterDashboard(){ $("#landing").classList.add("hidden-x"); $("#dashboard").classList.remove("hidden-x"); window.scrollTo(0,0); initDashboard(); }
+function logoutAdmin(){ $("#dashboard").classList.add("hidden-x"); $("#landing").classList.remove("hidden-x"); window.scrollTo(0,0); toast("Anda telah keluar dari dashboard", "info"); }
+
+function openNotifPanel(){
+  const panel = $("#notifPanel");
+  if(!panel.classList.contains("hidden-x")){ panel.classList.add("hidden-x"); return; }
+  panel.classList.remove("hidden-x");
+  panel.innerHTML = `<div class="card w-80 p-0 overflow-hidden modal-enter"><div class="px-4 py-3 border-b border-line flex items-center justify-between bg-cream"><h4 class="font-bold">Notifikasi</h4><button onclick="markAllRead()" class="text-xs text-merah font-bold">Tandai dibaca</button></div><div class="max-h-96 overflow-y-auto"><div class="p-3 border-b border-line hover:bg-merah-soft cursor-pointer flex gap-3"><div class="w-9 h-9 rounded-lg bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="user-plus" class="w-4 h-4"></i></div><div class="text-sm"><div class="font-semibold">Pendaftaran baru</div><div class="text-xs text-ink-2">Budi Santoso mendaftar lomba balap karung</div><div class="text-[10px] text-ink-2 mt-1">5 menit lalu</div></div></div><div class="p-3 border-b border-line hover:bg-merah-soft cursor-pointer flex gap-3"><div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div><div class="text-sm"><div class="font-semibold">Agenda disetujui</div><div class="text-xs text-ink-2">Upacara bendera 17 Agustus</div><div class="text-[10px] text-ink-2 mt-1">1 jam lalu</div></div></div><div class="p-3 hover:bg-merah-soft cursor-pointer flex gap-3"><div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0"><i data-lucide="image" class="w-4 h-4"></i></div><div class="text-sm"><div class="font-semibold">Foto diunggah</div><div class="text-xs text-ink-2">12 foto baru ke galeri</div><div class="text-[10px] text-ink-2 mt-1">3 jam lalu</div></div></div></div><div class="p-2 border-t border-line text-center"><button onclick="$('#notifPanel').classList.add('hidden-x')" class="text-sm text-merah font-bold">Lihat semua</button></div></div>`;
+  lucide.createIcons();
+}
+function markAllRead(){ $("#notifCount").textContent = "0"; toast("Semua notifikasi ditandai dibaca", "success"); $("#notifPanel").classList.add("hidden-x"); }
+
+function goPage(page){
+  $$(".dash-page").forEach(p=>p.classList.add("hidden-x"));
+  $("#page-"+page).classList.remove("hidden-x");
+  $$(".sidebar-item").forEach(s=>s.classList.toggle("active", s.dataset.page===page));
+  if(page === "dashboard") initDashboardCharts();
+  if(page === "lomba") initLombaPage();
+  if(page === "kepanitiaan") initKepanitiaanPage();
+  if(page === "undian") initUndianPage();
+  if(page === "laporan") initLaporanCharts();
+  if(page === "peserta") initPesertaPage();
+  closeSidebar(); window.scrollTo(0,0);
+}
+ $$(".sidebar-item").forEach(s=>s.addEventListener("click", ()=>goPage(s.dataset.page)));
+function openSidebar(){ $("#sidebar").classList.remove("-translate-x-full"); $("#sidebarOverlay").classList.remove("hidden-x"); }
+function closeSidebar(){ $("#sidebar").classList.add("-translate-x-full"); $("#sidebarOverlay").classList.add("hidden-x"); }
+ $("#sidebarToggle")?.addEventListener("click", openSidebar);
+function exportCSV(type){
+  let data = [], filename = "";
+  if(type === "peserta"){ data = STATE.peserta; filename = "peserta.csv"; }
+  else if(type === "lomba"){ data = STATE.lomba; filename = "peserta-lomba.csv"; }
+  else if(type === "undian"){ data = STATE.undian; filename = "peserta-undian.csv"; }
+  else if(type === "kepanitiaan"){ data = STATE.kepanitiaanLomba.map(k => ({...k, panitia: STATE.panitia.find(p=>p.id===k.panitiaId)?.nama || ""})); filename = "kepanitiaan-lomba.csv"; }
+  if(data.length === 0){ toast("Tidak ada data untuk diekspor", "warn"); return; }
+  const headers = Object.keys(data[0]);
+  const csv = [headers.join(","), ...data.map(row => headers.map(h => `"${row[h] ?? ""}"`).join(","))].join("\n");
+  const blob = new Blob([csv], { type:"text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+  toast(`Data ${type} berhasil diekspor`, "success");
+}
+function exportReport(){ toast("Laporan PDF sedang diproses, mohon tunggu...", "info"); setTimeout(()=>toast("Laporan berhasil diunduh: Laporan-HUT-RI-81.pdf", "success"), 2000); }
+
+async function initDashboard(){
+  if (supabaseClient) {
+    try {
+      const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'peserta', 'peserta_lomba', 'kepanitiaan_lomba', 'undian', 'hadiah'];
+      for (const table of tables) {
+        const data = await loadDataFromSupabase(table);
+        if (data && data.length > 0) {
+          const key = table === 'kepanitiaan_lomba' ? 'kepanitiaanLomba' : (table === 'peserta_lomba' ? 'lomba' : table);
+          STATE[key] = data.map(item => {
+            const mapped = { ...item };
+            if (mapped.panitia_id) mapped.panitiaId = mapped.panitia_id;
+            if (mapped.hadiah_id) mapped.hadiahId = mapped.hadiah_id;
+            return mapped;
+          });
+        }
+      }
+    } catch (e) { console.error("Error loading dashboard data:", e); }
+  }
+  $("#statAgenda").textContent = STATE.agenda.length;
+  $("#statPanitia").textContent = STATE.panitia.length;
+  $("#statPesertaLomba").textContent = STATE.lomba.length;
+  $("#statUndian").textContent = STATE.undian.length;
+  const upcoming = [...STATE.agenda].filter(a=>a.status==="aktif").slice(0,5);
+  $("#dashAgendaList").innerHTML = upcoming.map(a=>`<div class="flex items-center gap-3 p-3 rounded-xl hover:bg-cream-2/50 transition"><div class="w-12 h-12 rounded-xl bg-merah-soft text-merah flex flex-col items-center justify-center flex-shrink-0"><div class="text-[10px] font-bold uppercase">${new Date(a.tanggal).toLocaleDateString("id-ID",{month:"short"})}</div><div class="font-display text-lg leading-none">${new Date(a.tanggal).getDate()}</div></div><div class="flex-1 min-w-0"><div class="font-bold text-sm truncate">${a.judul}</div><div class="text-xs text-ink-2 flex items-center gap-2 mt-0.5"><i data-lucide="clock" class="w-3 h-3"></i> ${a.waktu} · <i data-lucide="map-pin" class="w-3 h-3"></i> ${a.lokasi}</div></div><span class="px-2 py-1 rounded-full text-[10px] font-bold ${KATEGORI_COLOR[a.kategori]}">${KATEGORI_LABEL[a.kategori]}</span></div>`).join("");
+  const colorMap = { merah:"bg-merah-soft text-merah", emerald:"bg-emerald-50 text-emerald-600", amber:"bg-amber-50 text-amber-600", rose:"bg-rose-50 text-rose-600", indigo:"bg-indigo-50 text-indigo-600" };
+  $("#dashActivity").innerHTML = STATE.activities.map(a=>`<div class="flex gap-3"><div class="w-8 h-8 rounded-lg ${colorMap[a.color]} flex items-center justify-center flex-shrink-0"><i data-lucide="${a.icon}" class="w-4 h-4"></i></div><div class="text-sm"><div class="font-semibold">${a.title}</div><div class="text-xs text-ink-2">${a.desc}</div></div></div>`).join("");
+  lucide.createIcons();
+  initDashboardCharts(); renderAgendaTable(); renderPanitiaCards(); renderGaleriAdmin(); renderPengumumanTable(); renderPesertaTable();
+  renderLandingGaleri(); renderLandingPanitia(); renderLandingPengumuman(); renderAgendaTimeline(); renderAgendaDetail();
+}
+
+let chartKehadiran, chartKategori, chartPendaftaran, chartPartisipasi;
+function getChartTextColor() { return document.documentElement.classList.contains('dark') ? '#D4D4D8' : '#475569'; }
+function getChartGridColor() { return document.documentElement.classList.contains('dark') ? 'rgba(255,255,255,0.1)' : 'rgba(15, 23, 42, 0.1)'; }
+function initDashboardCharts(){
+  if(chartKehadiran) chartKehadiran.destroy();
+  if(chartKategori) chartKategori.destroy();
+  const ctx1 = $("#chartKehadiran");
+  if(ctx1){
+    const grad = ctx1.getContext("2d").createLinearGradient(0,0,0,260);
+    grad.addColorStop(0,"rgba(255,31,61,.35)"); grad.addColorStop(1,"rgba(255,31,61,0)");
+    chartKehadiran = new Chart(ctx1, { type:"line", data:{ labels:["Sen","Sel","Rab","Kam","Jum","Sab","Min"], datasets:[{ label:"Peserta Hadir", data:[820,950,1240,1100,1380,1620,1480], borderColor:"#FF1F3D", backgroundColor:grad, fill:true, tension:.4, borderWidth:3, pointBackgroundColor:"#FF1F3D", pointBorderColor:"#fff", pointBorderWidth:2, pointRadius:5, pointHoverRadius:7 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ y:{ grid:{color:getChartGridColor()}, ticks:{color:getChartTextColor()} }, x:{ grid:{display:false}, ticks:{color:getChartTextColor()} } } } });
+  }
+  const ctx2 = $("#chartKategori");
+  if(ctx2){
+    const counts = { upacara:0, lomba:0, budaya:0, sosial:0 };
+    STATE.agenda.forEach(a=>counts[a.kategori]++);
+    chartKategori = new Chart(ctx2, { type:"doughnut", data:{ labels:["Upacara","Lomba","Budaya","Sosial"], datasets:[{ data:[counts.upacera, counts.lomba, counts.budaya, counts.sosial], backgroundColor:["#FF1F3D","#FFB300","#D60028","#1A0F0A"], borderWidth:4, borderColor:"var(--bg-soft)" }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:"65%", plugins:{ legend:{ position:"bottom", labels:{ color:getChartTextColor(), font:{family:"Plus Jakarta Sans", size:11}, padding:12, usePointStyle:true, pointStyle:"circle" } } } } });
+  }
+}
+function initLaporanCharts(){
+  if(chartPendaftaran) chartPendaftaran.destroy();
+  if(chartPartisipasi) chartPartisipasi.destroy();
+  const ctx1 = $("#chartPendaftaran");
+  if(ctx1){ chartPendaftaran = new Chart(ctx1, { type:"bar", data:{ labels:["Ming 1","Ming 2","Ming 3","Ming 4","Ming 5","Ming 6"], datasets:[{ label:"Lomba Rakyat", data:[120,180,240,320,420,642], backgroundColor:"#FF1F3D", borderRadius:6 }, { label:"Lomba Budaya", data:[40,80,120,180,240,318], backgroundColor:"#FFB300", borderRadius:6 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:"bottom", labels:{color:getChartTextColor(), usePointStyle:true, pointStyle:"circle"} } }, scales:{ y:{ grid:{color:getChartGridColor()}, ticks:{color:getChartTextColor()} }, x:{ grid:{display:false}, ticks:{color:getChartTextColor()} } } } }); }
+  const ctx2 = $("#chartPartisipasi");
+  if(ctx2){ chartPartisipasi = new Chart(ctx2, { type:"polarArea", data:{ labels:["Balap Karung","Panjat Pinang","Tari","Vokal","Donor Darah","Relawan"], datasets:[{ data:[120,80,64,40,150,288], backgroundColor:["#FF1F3D","#FFB300","#D60028","#1A0F0A","#E07A5F","#3D405B"] }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:"bottom", labels:{color:getChartTextColor(), font:{size:10}, usePointStyle:true, pointStyle:"circle"} } }, scales:{ r:{ grid:{color:getChartGridColor()}, ticks:{display:false} } } } }); }
+}
+
+function renderAgendaTable(){
+  const q = ($("#agendaSearch")?.value || "").toLowerCase();
+  const fc = $("#agendaFilterCat")?.value || "all";
+  const fs = $("#agendaFilterStatus")?.value || "all";
+  const items = STATE.agenda.filter(a=> (a.judul.toLowerCase().includes(q) || a.lokasi.toLowerCase().includes(q)) && (fc==="all" || a.kategori===fc) && (fs==="all" || a.status===fs));
+  const body = $("#agendaTableBody");
+  if(items.length === 0){ body.innerHTML = `<tr><td colspan="6" class="text-center py-12 text-ink-2"><i data-lucide="calendar-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada agenda ditemukan</div></td></tr>`; lucide.createIcons(); return; }
+  body.innerHTML = items.map(a=>`<tr class="row-hover transition"><td class="px-4 py-3"><div class="font-bold text-sm">${a.judul}</div><div class="text-xs text-ink-2">${a.waktu} WIB</div></td><td class="px-4 py-3"><span class="badge ${KATEGORI_COLOR[a.kategori]}">${KATEGORI_LABEL[a.kategori]}</span></td><td class="px-4 py-3 text-sm">${fmtTanggal(a.tanggal)}</td><td class="px-4 py-3 text-sm">${a.lokasi}</td><td class="px-4 py-3"><span class="badge ${STATUS_COLOR[a.status]}">${a.status}</span></td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="viewAgenda(${a.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="eye" class="w-4 h-4"></i></button><button onclick="openAgendaModal(${a.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="deleteAgenda(${a.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`).join("");
+  lucide.createIcons();
+}
+function openAgendaModal(id){
+  const a = id ? STATE.agenda.find(x=>x.id===id) : null;
+  showModal(`<div class="card max-w-2xl w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">${a?'EDIT':'TAMBAH'} AGENDA</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="agendaForm" class="p-6 space-y-4"><div><label class="label">Judul Agenda</label><input type="text" id="f_judul" class="input" value="${a?.judul||''}" required></div><div class="grid grid-cols-2 gap-4"><div><label class="label">Kategori</label><select id="f_kategori" class="input">${Object.entries(KATEGORI_LABEL).map(([k,v])=>`<option value="${k}" ${a?.kategori===k?'selected':''}>${v}</option>`).join("")}</select></div><div><label class="label">Status</label><select id="f_status" class="input">${["draft","aktif","selesai"].map(s=>`<option value="${s}" ${a?.status===s?'selected':''}>${s[0].toUpperCase()+s.slice(1)}</option>`).join("")}</select></div></div><div class="grid grid-cols-2 gap-4"><div><label class="label">Tanggal</label><input type="date" id="f_tanggal" class="input" value="${a?.tanggal||'2026-08-17'}" required></div><div><label class="label">Waktu</label><input type="time" id="f_waktu" class="input" value="${a?.waktu||'08:00'}" required></div></div><div><label class="label">Lokasi</label><input type="text" id="f_lokasi" class="input" value="${a?.lokasi||''}" required></div><div><label class="label">Deskripsi</label><textarea id="f_deskripsi" class="input" rows="3" required>${a?.deskripsi||''}</textarea></div><div><label class="label">Jumlah Peserta</label><input type="number" id="f_peserta" class="input" value="${a?.peserta||0}"></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> ${a?'Simpan Perubahan':'Tambah Agenda'}</button></div></form></div>`);
+  $("#agendaForm").addEventListener("submit", async e=>{ 
+    e.preventDefault(); 
+    const data = { judul:$("#f_judul").value, kategori:$("#f_kategori").value, status:$("#f_status").value, tanggal:$("#f_tanggal").value, waktu:$("#f_waktu").value, lokasi:$("#f_lokasi").value, deskripsi:$("#f_deskripsi").value, peserta:+$("#f_peserta").value||0 }; 
+    if(a){ Object.assign(a, data); toast("Agenda berhasil diperbarui", "success"); } 
+    else { STATE.agenda.unshift({ id: uid(), ...data }); toast("Agenda baru ditambahkan", "success"); } 
+    await syncDataToSupabase('agenda', STATE.agenda);
+    closeModal(); renderAgendaTable(); renderAgendaTimeline(); renderAgendaDetail(); $("#statAgenda").textContent = STATE.agenda.length; 
+  });
+}
+function viewAgenda(id){ const a = STATE.agenda.find(x=>x.id===id); if(!a) return; showModal(`<div class="card max-w-xl w-full modal-enter overflow-hidden"><div class="hero-mesh p-6 text-white relative"><button onclick="closeModal()" class="absolute top-4 right-4 w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button><div class="flex items-center gap-2 mb-2"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/95 text-merah">${KATEGORI_LABEL[a.kategori]}</span></div><h3 class="font-display text-2xl">${a.judul}</h3></div><div class="p-6 space-y-3"><div class="grid grid-cols-2 gap-3 text-sm"><div><div class="text-xs text-ink-2 uppercase">Tanggal</div><div class="font-bold">${fmtTanggal(a.tanggal)}</div></div><div><div class="text-xs text-ink-2 uppercase">Waktu</div><div class="font-bold">${a.waktu} WIB</div></div><div><div class="text-xs text-ink-2 uppercase">Lokasi</div><div class="font-bold">${a.lokasi}</div></div><div><div class="text-xs text-ink-2 uppercase">Peserta</div><div class="font-bold">${a.peserta.toLocaleString("id-ID")}</div></div></div><div><div class="text-xs text-ink-2 uppercase mb-1">Deskripsi</div><p class="text-sm text-ink-2 leading-relaxed">${a.deskripsi}</p></div></div></div>`); }
+function deleteAgenda(id){ showModal(`<div class="card max-w-md w-full p-6 modal-enter text-center"><div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4"><i data-lucide="alert-triangle" class="w-8 h-8"></i></div><h3 class="font-display text-2xl">Hapus Agenda?</h3><p class="text-sm text-ink-2 mt-2 mb-6">Agenda yang dihapus tidak dapat dikembalikan.</p><div class="flex gap-2"><button onclick="closeModal()" class="btn btn-light flex-1 justify-center">Batal</button><button onclick="confirmDeleteAgenda(${id})" class="btn btn-primary flex-1 justify-center" style="background:#e11d48"><i data-lucide="trash-2" class="w-4 h-4"></i> Hapus</button></div></div>`); }
+async function confirmDeleteAgenda(id){ 
+  STATE.agenda = STATE.agenda.filter(a=>a.id!==id); 
+  await syncDataToSupabase('agenda', STATE.agenda);
+  closeModal(); renderAgendaTable(); renderAgendaTimeline(); renderAgendaDetail(); $("#statAgenda").textContent = STATE.agenda.length; toast("Agenda telah dihapus", "info"); 
+}
+
+function renderGaleriAdmin(){
+  const wrap = $("#galeriGridAdmin"); if(!wrap) return;
+  wrap.innerHTML = STATE.galeri.map(g=>`<div class="card overflow-hidden group"><div class="aspect-landscape relative overflow-hidden"><img src="${g.img}" alt="${g.judul}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"><div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition"></div><div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition"><button onclick="deleteGaleri(${g.id})" class="w-8 h-8 rounded-lg bg-white/95 hover:bg-rose-500 hover:text-white text-ink flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></div><div class="p-3"><div class="text-[10px] uppercase tracking-widest text-merah font-bold">${KATEGORI_LABEL[g.kategori]||g.kategori}</div><div class="font-bold text-sm mt-0.5 truncate">${g.judul}</div></div></div>`).join("");
+  lucide.createIcons();
+}
+function openGaleriModal(){
+  showModal(`<div class="card max-w-lg w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">UNGGAH FOTO</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="galeriForm" class="p-6 space-y-4"><div><label class="label">Judul Foto</label><input type="text" id="f_judul" class="input" placeholder="Mis. Upacara Bendera" required></div><div><label class="label">Kategori</label><select id="f_kategori" class="input">${Object.entries(KATEGORI_LABEL).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></div><div><label class="label">Pratinjau Gambar</label><div id="imgPreview" class="aspect-landscape bg-cream-2 rounded-xl border-2 border-dashed border-line flex items-center justify-center text-ink-2 text-sm"><div class="text-center"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2"></i><div>Pratinjau akan muncul di sini</div></div></div></div><div><label class="label">URL Gambar (atau unggah)</label><div class="flex gap-2"><input type="text" id="f_img" class="input flex-1" placeholder="https://..." oninput="updateImgPreview(this.value)"><label class="btn btn-light cursor-pointer"><i data-lucide="upload" class="w-4 h-4"></i> Pilih<input type="file" accept="image/*" class="hidden" onchange="handleImgUpload(event)"></label></div><div class="text-xs text-ink-2 mt-1">Kosongkan untuk menggunakan gambar acak. Gambar yang diunggah akan dikompres otomatis.</div></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Unggah</button></div></form></div>`);
+  $("#galeriForm").addEventListener("submit", async e=>{ 
+    e.preventDefault(); 
+    const judul = $("#f_judul").value, kategori = $("#f_kategori").value; 
+    const img = $("#f_img").value || `https://picsum.photos/seed/${judul.replace(/\s/g,'-')}/800/800.jpg`; 
+    STATE.galeri.unshift({ id: uid(), judul, kategori, img }); 
+    await syncDataToSupabase('galeri', STATE.galeri);
+    closeModal(); renderGaleriAdmin(); renderLandingGaleri(); toast("Foto berhasil diunggah", "success"); 
+  });
+}
+function updateImgPreview(url){ 
+  const p = $("#imgPreview"); 
+  if(url){ p.innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded-xl">`; } else {
+    p.innerHTML = `<div class="text-center"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2"></i><div>Pratinjau akan muncul di sini</div></div>`;
+  }
+}
+async function handleImgUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  toast("Memproses dan mengompres gambar...", "info");
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const img = new Image();
+    img.src = event.target.result;
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      let width = img.width; let height = img.height;
+      const MAX_WIDTH = 800; const MAX_HEIGHT = 800;
+      if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
+      else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
+      canvas.width = width; canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+      $("#f_img").value = compressedBase64;
+      updateImgPreview(compressedBase64);
+      toast("Gambar siap disimpan. Klik 'Unggah'.", "success");
+    };
+  };
+  reader.readAsDataURL(file);
+}
+async function deleteGaleri(id){ 
+  STATE.galeri = STATE.galeri.filter(g=>g.id!==id); 
+  await syncDataToSupabase('galeri', STATE.galeri);
+  renderGaleriAdmin(); renderLandingGaleri(); toast("Foto dihapus", "info"); 
+}
+
+function renderPengumumanTable(){
+  const body = $("#pengumumanTableBody"); if(!body) return;
+  body.innerHTML = STATE.pengumuman.map(p=>`<tr class="row-hover transition"><td class="px-4 py-3"><div class="font-bold text-sm">${p.judul}</div><div class="text-xs text-ink-2 line-clamp-1">${p.isi}</div></td><td class="px-4 py-3"><span class="badge bg-gold/20 text-gold-deep">${p.kategori}</span></td><td class="px-4 py-3 text-sm">${fmtTanggal(p.tanggal)}</td><td class="px-4 py-3"><span class="badge ${STATUS_COLOR[p.status]}">${p.status}</span></td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openPengumumanModal(${p.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="deletePengumuman(${p.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`).join("");
+  lucide.createIcons();
+}
+function openPengumumanModal(id){
+  const p = id ? STATE.pengumuman.find(x=>x.id===id) : null;
+  showModal(`<div class="card max-w-2xl w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">${p?'EDIT':'BUAT'} PENGUMUMAN</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="pengumumanForm" class="p-6 space-y-4"><div><label class="label">Judul Pengumuman</label><input type="text" id="f_judul" class="input" value="${p?.judul||''}" required></div><div class="grid grid-cols-2 gap-4"><div><label class="label">Kategori</label><input type="text" id="f_kategori" class="input" value="${p?.kategori||'Umum'}" required></div><div><label class="label">Status</label><select id="f_status" class="input">${["draft","aktif"].map(s=>`<option value="${s}" ${p?.status===s?'selected':''}>${s[0].toUpperCase()+s.slice(1)}</option>`).join("")}</select></div></div><div><label class="label">Tanggal</label><input type="date" id="f_tanggal" class="input" value="${p?.tanggal||new Date().toISOString().slice(0,10)}" required></div><div><label class="label">Isi Pengumuman</label><textarea id="f_isi" class="input" rows="5" required>${p?.isi||''}</textarea></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button></div></form></div>`);
+  $("#pengumumanForm").addEventListener("submit", async e=>{ 
+    e.preventDefault(); 
+    const data = { judul:$("#f_judul").value, kategori:$("#f_kategori").value, status:$("#f_status").value, tanggal:$("#f_tanggal").value, isi:$("#f_isi").value }; 
+    if(p){ Object.assign(p, data); toast("Pengumuman diperbarui", "success"); } 
+    else { STATE.pengumuman.unshift({ id: uid(), ...data }); toast("Pengumuman dibuat", "success"); } 
+    await syncDataToSupabase('pengumuman', STATE.pengumuman);
+    closeModal(); renderPengumumanTable(); renderLandingPengumuman(); 
+  });
+}
+async function deletePengumuman(id){ 
+  STATE.pengumuman = STATE.pengumuman.filter(p=>p.id!==id); 
+  await syncDataToSupabase('pengumuman', STATE.pengumuman);
+  renderPengumumanTable(); renderLandingPengumuman(); toast("Pengumuman dihapus", "info"); 
+}
+
+function initPesertaPage(){
+  $("#statTotalPeserta").textContent = STATE.peserta.length;
+  $("#statLombaRakyat").textContent = STATE.peserta.filter(p=>p.kategori==="Lomba Rakyat").length;
+  $("#statLombaBudaya").textContent = STATE.peserta.filter(p=>p.kategori==="Lomba Budaya").length;
+  $("#statRelawan").textContent = STATE.peserta.filter(p=>p.kategori==="Relawan").length;
+  renderPesertaTable();
+}
+function renderPesertaTable(){
+  const body = $("#pesertaTableBody"); if(!body) return;
+  body.innerHTML = STATE.peserta.map(p=>{ const initials = p.nama.split(" ").map(s=>s[0]).slice(0,2).join(""); const statusColor = p.status === "Terkonfirmasi" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"; return `<tr class="row-hover transition"><td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-xs">${initials}</div><div class="font-bold text-sm">${p.nama}</div></div></td><td class="px-4 py-3 text-sm">${p.kategori}</td><td class="px-4 py-3 text-sm">${p.lomba}</td><td class="px-4 py-3 text-sm">${p.telp}</td><td class="px-4 py-3"><span class="badge ${statusColor}">${p.status}</span></td></tr>`; }).join("");
+}
+
+function initLombaPage(){
+  const jenisLomba = [...new Set(STATE.lomba.map(l=>l.jenis))];
+  const sel = $("#lombaFilterJenis");
+  sel.innerHTML = '<option value="all">Semua Lomba</option>' + jenisLomba.map(j=>`<option value="${j}">${j}</option>`).join("");
+  const statsGrid = $("#lombaStatsGrid");
+  statsGrid.innerHTML = jenisLomba.map(j=>{ const count = STATE.lomba.filter(l=>l.jenis===j).length; return `<div class="card p-4 text-center"><div class="font-display text-2xl text-merah">${count}</div><div class="text-[10px] uppercase tracking-wider text-ink-2 mt-1">${j}</div></div>`; }).join("");
+  renderLombaTable();
+}
+
+function renderLombaTable(){
+  const q = ($("#lombaSearch")?.value || "").toLowerCase();
+  const fj = $("#lombaFilterJenis")?.value || "all";
+  const fs = $("#lombaFilterStatus")?.value || "all";
+  const fg = $("#lombaFilterGol")?.value || "all";
+  const items = STATE.lomba.filter(l => (l.nama.toLowerCase().includes(q) || l.nomor.toLowerCase().includes(q)) && (fj==="all" || l.jenis===fj) && (fs==="all" || l.status===fs) && (fg==="all" || l.golongan===fg));
+  const body = $("#lombaTableBody");
+  if(items.length === 0){ body.innerHTML = `<tr><td colspan="6" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada peserta ditemukan</div></td></tr>`; lucide.createIcons(); return; }
+  
+  body.innerHTML = items.map(l=>`
+    <tr class="row-hover transition">
+      <td class="px-4 py-3"><div class="font-mono font-bold text-sm text-merah">${l.nomor}</div></td>
+      <td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-xs">${l.nama.split(" ").map(s=>s[0]).slice(0,2).join("")}</div><div class="font-bold text-sm">${l.nama}</div></div></td>
+      <td class="px-4 py-3 text-sm">${l.jenis}</td>
+      <td class="px-4 py-3"><span class="badge bg-indigo-50 text-indigo-700">${GOL_LABEL[l.golongan]}</span></td>
+      <td class="px-4 py-3"><span class="badge ${LOMBA_STATUS_COLOR[l.status]}">${LOMBA_STATUS_LABEL[l.status]}</span>${l.peringkat?` <span class="text-xs font-bold text-gold-deep">#${l.peringkat}</span>`:""}</td>
+      <td class="px-4 py-3"><div class="flex items-center justify-end gap-1">
+        ${l.status==="pending" ? `<button onclick="verifyLomba(${l.id})" class="w-8 h-8 rounded-lg hover:bg-emerald-50 text-ink-2 hover:text-emerald-600 flex items-center justify-center transition" title="Verifikasi"><i data-lucide="check" class="w-4 h-4"></i></button>` : ""}
+        ${l.status==="terverifikasi" ? `<button onclick="setMenang(${l.id})" class="w-8 h-8 rounded-lg hover:bg-amber-50 text-ink-2 hover:text-amber-600 flex items-center justify-center transition" title="Jadikan Pemenang"><i data-lucide="trophy" class="w-4 h-4"></i></button>` : ""}
+        <button onclick="openLombaModal(${l.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+        <button onclick="deleteLomba(${l.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+      </div></td>
+    </tr>
+  `).join("");
+  lucide.createIcons();
+}
+
+function openLombaModal(id){
+  const l = id ? STATE.lomba.find(x=>x.id===id) : null;
+  const jenisLombaExist = [...new Set(STATE.lomba.map(x=>x.jenis))];
+  const datalistOptions = jenisLombaExist.map(j=>`<option value="${j}">`).join("");
+  
+  showModal(`
+    <div class="card max-w-2xl w-full modal-enter">
+      <div class="px-6 py-4 border-b border-line flex items-center justify-between">
+        <h3 class="font-display text-2xl">${l?'EDIT':'TAMBAH'} PESERTA LOMBA</h3>
+        <button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <form id="lombaForm" class="p-6 space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="label">Nomor Peserta</label><input type="text" id="f_nomor" class="input font-mono" value="${l?.nomor||'LMBA-'+String(STATE.lomba.length+1).padStart(3,'0')}" required></div>
+          <div><label class="label">Status</label><select id="f_status" class="input">${Object.entries(LOMBA_STATUS_LABEL).map(([k,v])=>`<option value="${k}" ${l?.status===k?'selected':''}>${v}</option>`).join("")}</select></div>
+        </div>
+        <div><label class="label">Nama Lengkap</label><input type="text" id="f_nama" class="input" value="${l?.nama||''}" required></div>
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="label">Jenis Lomba (Ketik Bebas)</label><input type="text" id="f_jenis" class="input" value="${l?.jenis||''}" placeholder="Ketik jenis lomba..." list="jenisLombaList" required><datalist id="jenisLombaList">${datalistOptions}</datalist></div>
+          <div><label class="label">Golongan</label><select id="f_gol" class="input">${Object.entries(GOL_LABEL).map(([k,v])=>`<option value="${k}" ${l?.golongan===k?'selected':''}>${v}</option>`).join("")}</select></div>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-4 border-t border-line">
+          <button type="button" onclick="closeModal()" class="btn btn-light">Batal</button>
+          <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button>
+        </div>
+      </form>
+    </div>
+  `);
+  
+  $("#lombaForm").addEventListener("submit", async e=>{ 
+    e.preventDefault(); 
+    const data = { 
+      nomor:$("#f_nomor").value, 
+      status:$("#f_status").value, 
+      nama:$("#f_nama").value, 
+      jenis:$("#f_jenis").value, 
+      golongan:$("#f_gol").value
+    }; 
+    if(l){ Object.assign(l, data); toast("Data peserta diperbarui", "success"); } 
+    else { STATE.lomba.unshift({ id: uid(), ...data }); toast("Peserta lomba ditambahkan", "success"); } 
+    await syncDataToSupabase('peserta_lomba', STATE.lomba);
+    closeModal(); initLombaPage(); $("#statPesertaLomba").textContent = STATE.lomba.length; 
+  });
+}
+
+async function verifyLomba(id){ const l = STATE.lomba.find(x=>x.id===id); if(!l) return; l.status = "terverifikasi"; await syncDataToSupabase('peserta_lomba', STATE.lomba); renderLombaTable(); toast(`${l.nama} telah diverifikasi`, "success"); }
+function setMenang(id){ const l = STATE.lomba.find(x=>x.id===id); if(!l) return; showModal(`<div class="card max-w-md w-full p-6 modal-enter"><div class="text-center mb-4"><div class="w-16 h-16 rounded-full bg-gold/20 text-gold-deep flex items-center justify-center mx-auto mb-4"><i data-lucide="trophy" class="w-8 h-8"></i></div><h3 class="font-display text-2xl">JADIKAN PEMENANG?</h3><p class="text-sm text-ink-2 mt-2">${l.nama} - ${l.jenis}</p></div><div class="mb-4"><label class="label">Peringkat</label><select id="f_peringkat" class="input"><option value="1">Juara 1</option><option value="2">Juara 2</option><option value="3">Juara 3</option></select></div><div class="flex gap-2"><button onclick="closeModal()" class="btn btn-light flex-1 justify-center">Batal</button><button onclick="confirmMenang(${id})" class="btn btn-gold flex-1 justify-center"><i data-lucide="trophy" class="w-4 h-4"></i> Konfirmasi</button></div></div>`); }
+async function confirmMenang(id){ const l = STATE.lomba.find(x=>x.id===id); if(!l) return; l.status = "menang"; l.peringkat = +$("#f_peringkat").value; await syncDataToSupabase('peserta_lomba', STATE.lomba); closeModal(); renderLombaTable(); toast(`${l.nama} ditetapkan sebagai Juara ${l.peringkat}!`, "success"); }
+async function deleteLomba(id){ STATE.lomba = STATE.lomba.filter(l=>l.id!==id); await syncDataToSupabase('peserta_lomba', STATE.lomba); renderLombaTable(); $("#statPesertaLomba").textContent = STATE.lomba.length; initLombaPage(); toast("Peserta dihapus", "info"); }
+
+function initKepanitiaanPage(){
+  const jenisLomba = [...new Set(STATE.lomba.map(l=>l.jenis))];
+  const selLomba = $("#kepanitiaanFilterLomba");
+  selLomba.innerHTML = '<option value="all">Semua Lomba</option>' + jenisLomba.map(j=>`<option value="${j}">${j}</option>`).join("");
+  const selJabatan = $("#kepanitiaanFilterJabatan");
+  selJabatan.innerHTML = '<option value="all">Semua Jabatan</option>' + JABATAN_LIST.map(j=>`<option value="${j}">${j}</option>`).join("");
+  const statsGrid = $("#kepanitiaanStatsGrid");
+  statsGrid.innerHTML = jenisLomba.map(j=>{ const count = STATE.kepanitiaanLomba.filter(k=>k.lomba===j).length; return `<div class="card p-4 text-center"><div class="font-display text-2xl text-merah">${count}</div><div class="text-[10px] uppercase tracking-wider text-ink-2 mt-1">${j}</div></div>`; }).join("");
+  renderKepanitiaanTable();
+}
+function renderKepanitiaanTable(){
+  const q = ($("#kepanitiaanSearch")?.value || "").toLowerCase();
+  const fl = $("#kepanitiaanFilterLomba")?.value || "all";
+  const fj = $("#kepanitiaanFilterJabatan")?.value || "all";
+  const items = STATE.kepanitiaanLomba.filter(k => { const panitia = STATE.panitia.find(p=>p.id===k.panitiaId); const panitiaName = panitia ? panitia.nama.toLowerCase() : ""; return (panitiaName.includes(q) || k.lomba.toLowerCase().includes(q) || k.jabatan.toLowerCase().includes(q)) && (fl==="all" || k.lomba===fl) && (fj==="all" || k.jabatan===fj); });
+  const body = $("#kepanitiaanTableBody");
+  if(items.length === 0){ body.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada penugasan ditemukan</div></td></tr>`; lucide.createIcons(); return; }
+  body.innerHTML = items.map(k=>{ const p = STATE.panitia.find(x=>x.id===k.panitiaId); const initials = p ? p.nama.split(" ").map(s=>s[0]).slice(0,2).join("") : "?"; const jabatanColor = k.jabatan.includes("Juri") ? "bg-indigo-50 text-indigo-700" : k.jabatan.includes("Penanggung Jawab") ? "bg-merah-soft text-merah" : "bg-amber-50 text-amber-700"; return `<tr class="row-hover transition"><td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-xs">${initials}</div><div><div class="font-bold text-sm">${p?.nama||"Panitia Dihapus"}</div><div class="text-xs text-ink-2">${p?.divisi||""}</div></div></div></td><td class="px-4 py-3 text-sm font-semibold">${k.lomba}</td><td class="px-4 py-3"><span class="badge ${jabatanColor}">${k.jabatan}</span></td><td class="px-4 py-3 text-sm text-ink-2">${k.tugas}</td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openKepanitiaanModal(${k.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="deleteKepanitiaan(${k.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`; }).join("");
+  lucide.createIcons();
+}
+function openKepanitiaanModal(id){
+  const k = id ? STATE.kepanitiaanLomba.find(x=>x.id===id) : null;
+  const jenisLomba = [...new Set(STATE.lomba.map(l=>l.jenis))];
+  showModal(`<div class="card max-w-lg w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">${k?'EDIT':'TAMBAH'} PENUGASAN</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="kepanitiaanForm" class="p-6 space-y-4"><div><label class="label">Pilih Panitia</label><select id="f_panitia" class="input" required>${STATE.panitia.map(p=>`<option value="${p.id}" ${k?.panitiaId===p.id?'selected':''}>${p.nama} (${p.jabatan})</option>`).join("")}</select></div><div><label class="label">Lomba</label><select id="f_lomba" class="input" required>${jenisLomba.map(j=>`<option value="${j}" ${k?.lomba===j?'selected':''}>${j}</option>`).join("")}</select></div><div><label class="label">Jabatan di Lomba</label><select id="f_jabatan" class="input" required>${JABATAN_LIST.map(j=>`<option value="${j}" ${k?.jabatan===j?'selected':''}>${j}</option>`).join("")}</select></div><div><label class="label">Tugas / Deskripsi</label><textarea id="f_tugas" class="input" rows="3" required>${k?.tugas||''}</textarea></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button></div></form></div>`);
+  $("#kepanitiaanForm").addEventListener("submit", async e=>{ 
+    e.preventDefault(); 
+    const data = { panitiaId: +$("#f_panitia").value, panitia_id: +$("#f_panitia").value, lomba: $("#f_lomba").value, jabatan: $("#f_jabatan").value, tugas: $("#f_tugas").value }; 
+    if(k){ Object.assign(k, data); toast("Penugasan diperbarui", "success"); } 
+    else { STATE.kepanitiaanLomba.unshift({ id: uid(), ...data }); toast("Penugasan baru ditambahkan", "success"); } 
+    await syncDataToSupabase('kepanitiaan_lomba', STATE.kepanitiaanLomba);
+    closeModal(); initKepanitiaanPage(); 
+  });
+}
+async function deleteKepanitiaan(id){ STATE.kepanitiaanLomba = STATE.kepanitiaanLomba.filter(k=>k.id!==id); await syncDataToSupabase('kepanitiaan_lomba', STATE.kepanitiaanLomba); initKepanitiaanPage(); toast("Penugasan dihapus", "info"); }
+
+let isSpinning = false;
+let wheelCurrentRotationDash = 0;
+let wheelCurrentRotationScreen = 0;
+
+function buildWheel(svgId = "#raffleWheel") {
+  const wheel = $(svgId);
+  if(!wheel) return;
+  let eligible = STATE.undian.filter(u=>u.status==="eligible");
+  if(eligible.length === 0){
+    wheel.innerHTML = `<circle cx="100" cy="100" r="98" fill="var(--bg-soft)" stroke="var(--merah)" stroke-width="3"/><circle cx="100" cy="100" r="80" fill="none" stroke="var(--gold)" stroke-width="2" stroke-dasharray="4 4"/><text x="100" y="95" text-anchor="middle" font-family="Anton" font-size="14" fill="var(--merah)">TIDAK ADA</text><text x="100" y="115" text-anchor="middle" font-family="Anton" font-size="14" fill="var(--merah)">PESERTA</text>`;
+    return;
+  }
+  for(let i = eligible.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [eligible[i], eligible[j]] = [eligible[j], eligible[i]]; }
+  const segments = eligible.slice(0, 12);
+  const anglePer = 360 / segments.length;
+  let svg = `<circle cx="100" cy="100" r="98" fill="var(--bg-soft)" stroke="var(--merah)" stroke-width="3"/>`;
+  segments.forEach((p, i) => {
+    const startAngle = i * anglePer - 90, endAngle = (i + 1) * anglePer - 90;
+    const startRad = startAngle * Math.PI / 180, endRad = endAngle * Math.PI / 180;
+    const x1 = 100 + 95 * Math.cos(startRad), y1 = 100 + 95 * Math.sin(startRad);
+    const x2 = 100 + 95 * Math.cos(endRad), y2 = 100 + 95 * Math.sin(endRad);
+    const largeArc = anglePer > 180 ? 1 : 0, color = WHEEL_COLORS[i % WHEEL_COLORS.length];
+    svg += `<path d="M 100 100 L ${x1} ${y1} A 95 95 0 ${largeArc} 1 ${x2} ${y2} Z" fill="${color}" stroke="white" stroke-width="1.5" opacity="0.92"/>`;
+    const midAngle = (startAngle + endAngle) / 2, midRad = midAngle * Math.PI / 180, textRadius = 65;
+    const tx = 100 + textRadius * Math.cos(midRad), ty = 100 + textRadius * Math.sin(midRad), rotation = midAngle + 90;
+    
+    // Perbaikan: Dinamis ukuran font agar tidak tumpuk
+    const numStr = p.nomor ? p.nomor.toString() : "";
+    let fontSize = 11;
+    if (numStr.length > 4) fontSize = 9;
+    if (numStr.length > 6) fontSize = 7;
+    
+    svg += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" font-size="${fontSize}" font-weight="800" fill="white" transform="rotate(${rotation} ${tx} ${ty})" style="font-family: 'Plus Jakarta Sans', sans-serif;">${numStr}</text>`;
+  });
+  svg += `<circle cx="100" cy="100" r="22" fill="var(--merah)" stroke="white" stroke-width="3"/><circle cx="100" cy="100" r="22" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="100" cy="100" r="95" fill="none" stroke="var(--gold)" stroke-width="2" stroke-dasharray="6 4"/>`;
+  wheel.innerHTML = svg;
+}
+
+function initUndianPage(){
+  const sel = $("#undianHadiahSelect");
+  sel.innerHTML = '<option value="">Pilih Hadiah...</option>' + STATE.hadiah.map(h=>`<option value="${h.id}">${h.nama} (${h.nilai}) - Sisa: ${h.jumlah-h.terpakai}</option>`).join("");
+  // Tampilkan tombol putar kembali & hapus hasil saat hadiah diganti
+  sel.onchange = () => {
+    if($("#spinBtnDash")) $("#spinBtnDash").classList.remove("hidden-x");
+    if($("#spinResultDash")) $("#spinResultDash").innerHTML = "";
+  };
+  $("#undStatTotal").textContent = STATE.undian.length;
+  $("#undStatEligible").textContent = STATE.undian.filter(u=>u.status==="eligible").length;
+  $("#undStatMenang").textContent = STATE.undian.filter(u=>u.status==="menang").length;
+  $("#undStatHadiah").textContent = STATE.hadiah.reduce((a,h)=>a+h.terpakai,0);
+  buildWheel("#raffleWheel"); renderHadiahList(); renderPemenangUndian(); renderUndianTable();
+}
+function openUndianScreen() {
+  $("#dashboard").classList.add("hidden-x"); $("#screenUndian").classList.remove("hidden-x"); document.body.style.overflow = "hidden";
+  const sel = $("#screenHadiahSelect");
+  sel.innerHTML = '<option value="" class="text-black">Pilih Hadiah...</option>' + STATE.hadiah.map(h=>`<option value="${h.id}" class="text-black">${h.nama} (${h.nilai}) - Sisa: ${h.jumlah-h.terpakai}</option>`).join("");
+  // Tampilkan tombol putar kembali & hapus hasil saat hadiah diganti
+  sel.onchange = () => {
+    if($("#spinBtnScreen")) $("#spinBtnScreen").classList.remove("hidden-x");
+    const res = $("#screenSpinResult");
+    if(res) { res.style.opacity = "0"; res.innerHTML = ""; }
+  };
+  buildWheel("#raffleWheelScreen");
+  $("#screenSpinResult").style.opacity = "0"; $("#screenSpinResult").innerHTML = "";
+  document.addEventListener("keydown", escKeyListener);
+}
+function escKeyListener(e) { if (e.key === "Escape") closeUndianScreen(); }
+function closeUndianScreen() {
+  $("#screenUndian").classList.add("hidden-x"); $("#dashboard").classList.remove("hidden-x"); document.body.style.overflow = "";
+  document.removeEventListener("keydown", escKeyListener); initUndianPage();
+}
+
+function openAutoUndianPanel() {
+  showModal(`
+    <div class="card max-w-3xl w-full modal-enter">
+      <div class="px-6 py-4 border-b border-line flex items-center justify-between">
+        <h3 class="font-display text-2xl">PANEL BUAT UNDIAN</h3>
+        <button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-6 space-y-6">
+        <div class="bg-merah-soft p-4 rounded-xl text-sm text-ink-2">
+          <strong>Panduan:</strong> Masukkan nomor secara custom (misal: 1-1000 atau 1, 5, 12, 45) atau gunakan generator otomatis berdasarkan prefix.
+        </div>
+        <div class="border border-line rounded-xl p-4 space-y-3">
+          <h4 class="font-bold text-lg">1. Input Nomor Custom / Range</h4>
+          <div>
+            <label class="label">Masukkan Nomor (Pisahkan dengan koma atau gunakan strip untuk range)</label>
+            <textarea id="customNumbers" class="input" rows="3" placeholder="Contoh: 1-1000 atau 1, 5, 12, 45"></textarea>
+            <div class="text-xs text-ink-2 mt-1">Nomor yang sudah ada akan diabaikan (tidak duplikat). Sistem otomatis memberi 0 di depan jika range melebihi 100 (misal 0001).</div>
+          </div>
+          <button onclick="generateCustomUndian()" class="btn btn-primary w-full justify-center"><i data-lucide="plus-circle" class="w-4 h-4"></i> Generate Nomor Custom</button>
+        </div>
+        <div class="border border-line rounded-xl p-4 space-y-3">
+          <h4 class="font-bold text-lg">2. Generator Otomatis (Prefix)</h4>
+          <form id="autoUndianForm" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div><label class="label">Prefix (Awalan)</label><input type="text" id="autoPrefix" class="input" value="HUT81-" placeholder="Misal: HUT81-"></div>
+              <div><label class="label">Jumlah Undian</label><input type="number" id="autoCount" class="input" value="50" min="1" max="1000"></div>
+              <div><label class="label">Digit Angka</label><input type="number" id="autoPad" class="input" value="3" min="1" max="6"></div>
+            </div>
+            <div class="bg-cream-2 p-3 rounded-lg text-sm text-ink-2"><strong>Contoh format:</strong> <span class="font-mono font-bold text-merah">HUT81-001</span> s/d <span class="font-mono font-bold text-merah">HUT81-050</span></div>
+            <button type="submit" class="btn btn-primary w-full justify-center"><i data-lucide="plus-circle" class="w-4 h-4"></i> Generate & Simpan Nomor</button>
+          </form>
+        </div>
+        <div class="flex flex-col gap-3 pt-4 border-t border-line">
+          <button type="button" onclick="previewTickets()" class="btn btn-light w-full justify-center"><i data-lucide="eye" class="w-4 h-4"></i> Tampilkan Pratinjau Kupon</button>
+          <button type="button" onclick="clearAllTickets()" class="text-sm text-rose-600 font-bold flex items-center justify-center gap-1 pt-2"><i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Semua Tiket</button>
+        </div>
+        <div id="ticketPreviewArea" class="mt-6 hidden-x">
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="font-bold text-lg">Pratinjau Kupon Undian</h4>
+            <button onclick="printTickets()" class="btn btn-primary !py-2"><i data-lucide="printer" class="w-4 h-4"></i> Cetak / Print (PDF)</button>
+          </div>
+          <div class="bg-cream-2 p-4 rounded-xl max-h-[400px] overflow-y-auto ticket-grid" id="ticketPreviewGrid"></div>
+        </div>
+      </div>
+    </div>
+  `);
+
+  $("#autoUndianForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const prefix = $("#autoPrefix").value || "TKT-", count = parseInt($("#autoCount").value) || 10, pad = parseInt($("#autoPad").value) || 3;
+    let maxNum = 0;
+    const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`^${escapedPrefix}(\\d+)$`);
+    STATE.undian.forEach(u => {
+      const match = u.nomor.match(regex);
+      if (match) {
+        const num = parseInt(match[1]);
+        if (num > maxNum) maxNum = num;
+      }
+    });
+    for(let i=1; i<=count; i++) {
+      maxNum++;
+      const numStr = String(maxNum).padStart(pad, "0");
+      STATE.undian.push({ id: uid(), nomor: `${prefix}${numStr}`, nama: `${prefix}${numStr}`, telepon: "-", asal: "Undian Otomatis", status: "eligible" });
+    }
+    await syncDataToSupabase('undian', STATE.undian); 
+    initUndianPage(); 
+    toast(`${count} nomor undian berhasil dibuat!`, "success"); 
+    previewTickets();
+  });
+}
+
+async function generateCustomUndian() {
+  const customStr = $("#customNumbers").value.trim();
+  if(!customStr) { toast("Harap masukkan nomor custom atau range", "warn"); return; }
+  let nums = [];
+  if(customStr.includes('-')) {
+    const parts = customStr.split('-');
+    if(parts.length === 2) {
+      const start = parseInt(parts[0].trim());
+      const end = parseInt(parts[1].trim());
+      if(!isNaN(start) && !isNaN(end) && start <= end) {
+        // Tentukan panjang padding berdasarkan angka terakhir
+        const padLength = end.toString().length;
+        for(let i=start; i<=end; i++) {
+          nums.push(i.toString().padStart(padLength, '0'));
+        }
+      }
+    }
+  } else if (customStr.includes(',')) {
+    nums = customStr.split(',').map(s => s.trim()).filter(s => s !== "");
+  } else {
+    nums = [customStr];
+  }
+  if(nums.length === 0) { toast("Format nomor tidak valid", "error"); return; }
+  let addedCount = 0;
+  nums.forEach(numStr => {
+    if(!STATE.undian.some(u => u.nomor === numStr)) {
+      STATE.undian.push({ id: uid(), nomor: numStr, nama: numStr, telepon: "-", asal: "Undian Custom", status: "eligible" });
+      addedCount++;
+    }
+  });
+  await syncDataToSupabase('undian', STATE.undian);
+  initUndianPage();
+  toast(`${addedCount} nomor custom berhasil ditambahkan!`, "success");
+  $("#customNumbers").value = "";
+  previewTickets();
+}
+
+function previewTickets() {
+  if(STATE.undian.length === 0) { toast("Belum ada tiket untuk ditampilkan", "warn"); return; }
+  let html = ''; STATE.undian.forEach(u => { html += `<div class="print-ticket"><p>HUT RI ke-81</p><h2>${u.nomor}</h2><p>Doorprize Penonton</p></div>`; });
+  $("#ticketPreviewGrid").innerHTML = html; $("#ticketPreviewArea").classList.remove("hidden-x"); lucide.createIcons();
+  $("#ticketPreviewArea").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function printTickets() {
+  if(STATE.undian.length === 0) { toast("Belum ada tiket untuk dicetak", "warn"); return; }
+  let html = `<div style="text-align:center; width:100%;"><h1 style="font-family: 'Anton', sans-serif; font-size: 32px; color: #FF1F3D; margin-bottom: 5px;">UNDIAN HUT RI ke-81</h1><p style="font-size: 14px; margin-bottom: 20px;">Panitia Peringatan Kemerdekaan RI</p><div style="display: flex; flex-wrap: wrap; justify-content: center;">`;
+  STATE.undian.forEach(u => { html += `<div class="print-ticket"><p>HUT RI ke-81</p><h2>${u.nomor}</h2><p>Doorprize Penonton</p></div>`; });
+  html += `</div></div>`;
+  $("#printArea").innerHTML = html; $("#printArea").classList.remove("hidden-x"); window.print();
+  setTimeout(() => { $("#printArea").classList.add("hidden-x"); $("#printArea").innerHTML = ""; }, 500);
+}
+async function clearAllTickets() { STATE.undian = []; await syncDataToSupabase('undian', STATE.undian); closeModal(); initUndianPage(); toast("Semua tiket undian telah dihapus", "info"); }
+
+function renderHadiahList(){
+  $("#hadiahList").innerHTML = STATE.hadiah.map(h=>`<div class="p-3 rounded-xl border border-line hover:border-merah/30 transition group"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="${h.ikon}" class="w-5 h-5"></i></div><div class="flex-1 min-w-0"><div class="font-bold text-sm truncate">${h.nama}</div><div class="text-xs text-ink-2">${h.nilai}</div><div class="text-[10px] text-ink-2 mt-0.5">Terpakai: ${h.terpakai}/${h.jumlah}</div></div><button onclick="deleteHadiah(${h.id})" class="w-7 h-7 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition opacity-0 group-hover:opacity-100"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div><div class="mt-2 h-1.5 bg-cream-2 rounded-full overflow-hidden"><div class="h-full bg-merah rounded-full transition-all" style="width:${(h.terpakai/h.jumlah)*100}%"></div></div></div>`).join("");
+  lucide.createIcons();
+}
+function openHadiahModal(){
+  showModal(`<div class="card max-w-md w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">TAMBAH HADIAH</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="hadiahForm" class="p-6 space-y-4"><div><label class="label">Nama Hadiah</label><input type="text" id="f_hnama" class="input" placeholder="Mis. Sepeda Motor" required></div><div><label class="label">Nilai / Nominal</label><input type="text" id="f_hnilai" class="input" placeholder="Rp 15.000.000" required></div><div class="grid grid-cols-2 gap-4"><div><label class="label">Jumlah</label><input type="number" id="f_hjumlah" class="input" value="1" min="1" required></div><div><label class="label">Ikon</label><select id="f_hikon" class="input"><option value="gift">Gift</option><option value="bike">Motor</option><option value="smartphone">HP</option><option value="shopping-cart">Voucher</option><option value="package">Paket</option><option value="shirt">Kaos</option><option value="tv">TV</option><option value="laptop">Laptop</option></select></div></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button></div></form></div>`);
+  $("#hadiahForm").addEventListener("submit", async e=>{ e.preventDefault(); STATE.hadiah.push({ id: uid(), nama:$("#f_hnama").value, nilai:$("#f_hnilai").value, ikon:$("#f_hikon").value, jumlah:+$("#f_hjumlah").value, terpakai:0 }); await syncDataToSupabase('hadiah', STATE.hadiah); closeModal(); initUndianPage(); toast("Hadiah baru ditambahkan", "success"); });
+}
+async function deleteHadiah(id){ STATE.hadiah = STATE.hadiah.filter(h=>h.id!==id); await syncDataToSupabase('hadiah', STATE.hadiah); initUndianPage(); toast("Hadiah dihapus", "info"); }
+function renderPemenangUndian(){
+  const wrap = $("#pemenangUndianList"), pemenang = STATE.undian.filter(u=>u.status==="menang");
+  if(pemenang.length === 0){ wrap.innerHTML = `<div class="col-span-full text-center py-8 text-ink-2"><i data-lucide="trophy" class="w-12 h-12 mx-auto mb-2 opacity-40"></i><div>Belum ada pemenang undian</div><div class="text-xs mt-1">Putar roda untuk memilih pemenang</div></div>`; lucide.createIcons(); return; }
+  wrap.innerHTML = pemenang.map(u=>{ const h = STATE.hadiah.find(x=>x.id===u.hadiahId); return `<div class="p-4 rounded-xl bg-gradient-to-br from-gold/10 to-merah-soft border border-gold/30"><div class="flex items-start justify-between mb-2"><div class="w-10 h-10 rounded-lg bg-gold text-ink flex items-center justify-center"><i data-lucide="${h?.ikon||'gift'}" class="w-5 h-5"></i></div><span class="badge bg-gold text-ink">MENANG</span></div><div class="font-bold text-sm">${u.nama}</div><div class="text-xs text-ink-2">${u.nomor} · ${u.asal}</div><div class="mt-2 pt-2 border-t border-gold/20"><div class="text-[10px] uppercase tracking-wider text-gold-deep font-bold">Hadiah</div><div class="text-sm font-bold">${h?.nama||"-"}</div><div class="text-xs text-ink-2">${h?.nilai||""}</div></div></div>`; }).join("");
+  lucide.createIcons();
+}
+function renderUndianTable(){
+  const q = ($("#undianSearch")?.value || "").toLowerCase(), fs = $("#undianFilterStatus")?.value || "all";
+  const items = STATE.undian.filter(u => (u.nama.toLowerCase().includes(q) || u.nomor.toLowerCase().includes(q)) && (fs==="all" || u.status===fs));
+  const body = $("#undianTableBody");
+  if(items.length === 0){ body.innerHTML = `<tr><td colspan="7" class="text-center py-12 text-ink-2"><i data-lucide="ticket-x" class="w-10 h-10 mx-auto mb-2 opacity:50"></i><div>Tidak ada peserta undian</div></td></tr>`; lucide.createIcons(); return; }
+  body.innerHTML = items.map(u=>{ const h = STATE.hadiah.find(x=>x.id===u.hadiahId); return `<tr class="row-hover transition"><td class="px-4 py-3"><div class="font-mono font-bold text-sm text-merah">${u.nomor}</div></td><td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-xs">${u.nama.split(" ").map(s=>s[0]).slice(0,2).join("")}</div><div class="font-bold text-sm">${u.nama}</div></div></td><td class="px-4 py-3 text-sm">${u.telepon}</td><td class="px-4 py-3 text-sm">${u.asal}</td><td class="px-4 py-3"><span class="badge ${UND_STATUS_COLOR[u.status]}">${UND_STATUS_LABEL[u.status]}</span></td><td class="px-4 py-3 text-sm">${h?`<span class="font-bold text-gold-deep">${h.nama}</span>`:"-"}</td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openUndianModal(${u.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="deleteUndian(${u.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`; }).join("");
+  lucide.createIcons();
+}
+function openUndianModal(id){
+  const u = id ? STATE.undian.find(x=>x.id===id) : null;
+  showModal(`<div class="card max-w-lg w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">${u?'EDIT':'TAMBAH'} PESERTA UNDIAN</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="undianForm" class="p-6 space-y-4"><div><label class="label">Nomor Tiket</label><input type="text" id="f_unomor" class="input font-mono" value="${u?.nomor||'TKT-'+String(STATE.undian.length+1).padStart(3,'0')}" required></div><div><label class="label">Nama Lengkap</label><input type="text" id="f_unama" class="input" value="${u?.nama||''}" required></div><div class="grid grid-cols-2 gap-4"><div><label class="label">Telepon</label><input type="tel" id="f_utelepon" class="input" value="${u?.telepon||''}" required></div><div><label class="label">Asal Daerah</label><input type="text" id="f_uasal" class="input" value="${u?.asal||''}" required></div></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button></div></form></div>`);
+  $("#undianForm").addEventListener("submit", async e => { 
+    e.preventDefault(); 
+    const data = { nomor:$("#f_unomor").value, nama:$("#f_unama").value, telepon:$("#f_utelepon").value, asal:$("#f_uasal").value, status:"eligible" }; 
+    if(u){ Object.assign(u, data); toast("Data peserta diperbarui", "success"); } 
+    else { STATE.undian.unshift({ id: uid(), ...data }); toast("Peserta undian ditambahkan", "success"); } 
+    await syncDataToSupabase('undian', STATE.undian);
+    closeModal(); initUndianPage(); $("#statUndian").textContent = STATE.undian.length; 
+  });
+}
+async function deleteUndian(id){ STATE.undian = STATE.undian.filter(u=>u.id!==id); await syncDataToSupabase('undian', STATE.undian); initUndianPage(); $("#statUndian").textContent = STATE.undian.length; toast("Peserta undian dihapus", "info"); }
+
+function spinWheel(isScreen = false) {
+  if(isSpinning) return;
+  const hadiahSel = isScreen ? "#screenHadiahSelect" : "#undianHadiahSelect", wheelEl = isScreen ? "#raffleWheelScreen" : "#raffleWheel", btnEl = isScreen ? "#spinBtnScreen" : "#spinBtnDash", resEl = isScreen ? "#screenSpinResult" : "#spinResultDash", pointerEl = isScreen ? "#wheelPointerScreen" : "#wheelPointerDash";
+  const hadiahId = $(hadiahSel).value;
+  if(!hadiahId){ toast("Pilih hadiah terlebih dahulu!", "warn"); return; }
+  const hadiah = STATE.hadiah.find(h=>h.id===+hadiahId);
+  if(hadiah.terpakai >= hadiah.jumlah){ toast("Hadiah ini sudah habis!", "warn"); return; }
+  const eligible = STATE.undian.filter(u=>u.status==="eligible");
+  if(eligible.length === 0){ toast("Tidak ada peserta eligible!", "warn"); return; }
+  isSpinning = true; const btn = $(btnEl); if(btn) { btn.disabled = true; btn.classList.add("opacity-0", "pointer-events-none"); }
+  if (isScreen) {
+    const countdownContainer = $("#countdownContainer"); let count = 3;
+    countdownContainer.classList.remove("hidden-x"); countdownContainer.innerHTML = `<div class="countdown-num">${count}</div>`;
+    const countdownInterval = setInterval(() => { count--; if (count > 0) { countdownContainer.innerHTML = `<div class="countdown-num">${count}</div>`; } else { clearInterval(countdownInterval); countdownContainer.innerHTML = `<div class="countdown-num" style="font-size: 8rem;">PUTAR!</div>`; executeSpin(isScreen, wheelEl, pointerEl, resEl, btnEl, eligible, hadiah); } }, 1000);
+  } else { executeSpin(false, wheelEl, pointerEl, resEl, btnEl, eligible, hadiah); }
+}
+function executeSpin(isScreen, wheelEl, pointerEl, resEl, btnEl, eligible, hadiah) {
+  const wheel = $(wheelEl), pointer = $(pointerEl), btn = $(btnEl), res = $(resEl);
+  pointer.classList.add("pointer-spinning");
+  const winner = eligible[Math.floor(Math.random() * eligible.length)];
+  let segments = [];
+  if(eligible.length <= 12) { segments = eligible; } else { segments.push(winner); const others = eligible.filter(e => e.id !== winner.id); for(let i = others.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [others[i], others[j]] = [others[j], others[i]]; } segments = segments.concat(others.slice(0, 11)); for(let i = segments.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [segments[i], segments[j]] = [segments[j], segments[i]]; } }
+  const winnerIndex = segments.findIndex(s => s.id === winner.id), segmentsCount = segments.length, anglePer = 360 / segmentsCount;
+  const targetSegmentCenter = winnerIndex * anglePer + anglePer / 2, targetRotation = 360 - targetSegmentCenter, extraRotations = 10 + Math.floor(Math.random() * 5);
+  let currentRot = isScreen ? wheelCurrentRotationScreen : wheelCurrentRotationDash, currentMod = currentRot % 360, deltaToTarget = targetRotation - currentMod;
+  if (deltaToTarget < 0) deltaToTarget += 360;
+  const innerOffset = (Math.random() - 0.5) * (anglePer * 0.6), finalRotation = currentRot + extraRotations * 360 + deltaToTarget + innerOffset;
+  if(isScreen) wheelCurrentRotationScreen = finalRotation; else wheelCurrentRotationDash = finalRotation;
+  wheel.style.transform = `rotate(${finalRotation}deg)`;
+  if(isScreen) { res.style.opacity = "0"; res.innerHTML = ""; } else { res.innerHTML = ""; }
+  setTimeout(async () => {
+    pointer.classList.remove("pointer-spinning"); $("#countdownContainer").classList.add("hidden-x");
+    winner.status = "menang"; winner.hadiahId = hadiah.id; winner.hadiah_id = hadiah.id; hadiah.terpakai++;
+    if(isScreen) { res.style.opacity = "0"; setTimeout(() => { res.innerHTML = `<div class="text-center bg-black/60 backdrop-blur-md p-6 md:p-10 rounded-3xl border-2 border-[#FFB300]/50 shadow-2xl max-w-3xl pointer-events-auto"><div class="text-[#FFB300] font-bold tracking-widest text-lg md:text-3xl mb-4">🎉 SELAMAT KEPADA PEMENANG 🎉</div><div class="font-display text-5xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-b from-white to-[#FF1F3D] drop-shadow-2xl break-all">${winner.nama}</div><div class="text-white/80 mt-6 text-xl md:text-2xl font-bold">Memenangkan: <span class="text-[#FFB300]">${hadiah.nama}</span> (${hadiah.nilai})</div><div class="text-white/50 mt-2 text-lg md:text-xl">Nomor Tiket: ${winner.nomor}</div></div>`; res.style.opacity = "1"; }, 300); } 
+    else { res.innerHTML = `<div class="p-5 rounded-xl bg-gradient-to-br from-gold/20 to-merah-soft border-2 border-gold/40 shadow-lg"><div class="flex items-center justify-center gap-2 mb-2"><span class="text-2xl">🎉</span><div class="text-xs uppercase tracking-wider text-gold-deep font-bold">PEMENANG DOORPRIZE</div><span class="text-2xl">🎉</span></div><div class="font-display text-3xl text-merah">${winner.nama}</div><div class="text-sm text-ink-2 mt-1">Tiket: <span class="font-mono font-bold">${winner.nomor}</span> ${winner.asal !== 'Undian Angka' ? '· '+winner.asal : ''}</div><div class="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold text-ink font-bold text-sm shadow-md"><i data-lucide="${hadiah.ikon}" class="w-4 h-4"></i> ${hadiah.nama} (${hadiah.nilai})</div></div>`; }
+    await syncDataToSupabase('undian', STATE.undian); await syncDataToSupabase('hadiah', STATE.hadiah);
+    launchConfetti(isScreen); isSpinning = false; if(btn) { btn.classList.add("hidden-x"); }
+    if(!isScreen) initUndianPage(); else { const sel = $("#screenHadiahSelect"); sel.innerHTML = '<option value="" class="text-black">Pilih Hadiah...</option>' + STATE.hadiah.map(h=>`<option value="${h.id}" class="text-black">${h.nama} (${h.nilai}) - Sisa: ${h.jumlah-h.terpakai}</option>`).join(""); }
+    lucide.createIcons();
+  }, 10200); 
+}
+function launchConfetti(isScreen = false){
+  const colors = ["#FF1F3D","#FFB300","#FFF","#FFE5E9","#E69500","#FF6B6B","#FFD54F"];
+  for(let i=0;i<80;i++){ const c = document.createElement("div"); c.className = "confetti"; c.style.left = Math.random()*100 + "vw"; c.style.top = "-20px"; c.style.background = colors[Math.floor(Math.random()*colors.length)]; c.style.animationDelay = Math.random()*1 + "s"; c.style.animationDuration = (2 + Math.random()*2) + "s"; c.style.transform = `rotate(${Math.random()*360}deg)`; if(Math.random() > .5) c.style.borderRadius = "50%"; document.body.appendChild(c); setTimeout(()=>c.remove(), 5000); }
+}
+async function resetUndian(){ showModal(`<div class="card max-w-md w-full p-6 modal-enter text-center"><div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4"><i data-lucide="rotate-ccw" class="w-8 h-8"></i></div><h3 class="font-display text-2xl">RESET UNDIAN?</h3><p class="text-sm text-ink-2 mt-2 mb-6">Semua pemenang akan dikembalikan ke status "Belum Menang" dan hadiah direset.</p><div class="flex gap-2"><button onclick="closeModal()" class="btn btn-light flex-1 justify-center">Batal</button><button onclick="confirmResetUndian()" class="btn btn-primary flex-1 justify-center" style="background:#e11d48"><i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset</button></div></div>`); }
+async function confirmResetUndian(){
+  STATE.undian.forEach(u=>{ u.status = "eligible"; delete u.hadiahId; delete u.hadiah_id; }); STATE.hadiah.forEach(h=> h.terpakai = 0);
+  await syncDataToSupabase('undian', STATE.undian); await syncDataToSupabase('hadiah', STATE.hadiah);
+  closeModal(); initUndianPage(); $("#spinResultDash").innerHTML = "";
+  wheelCurrentRotationDash = 0; wheelCurrentRotationScreen = 0;
+  const wheel1 = $("#raffleWheel"), wheel2 = $("#raffleWheelScreen");
+  wheel1.style.transition = "none"; wheel1.style.transform = "rotate(0deg)"; wheel2.style.transition = "none"; wheel2.style.transform = "rotate(0deg)";
+  setTimeout(()=>{ wheel1.style.transition = ""; wheel2.style.transition = ""; }, 50);
+  toast("Undian telah direset", "info");
+}
+
+ $("#contactForm").addEventListener("submit", e=>{ e.preventDefault(); toast("Pesan Anda telah terkirim. Panitia akan menghubungi segera.", "success"); e.target.reset(); });
+ $("#newsletterForm").addEventListener("submit", e=>{ e.preventDefault(); toast("Berhasil berlangganan newsletter!", "success"); e.target.reset(); });
+ $("#settingsForm").addEventListener("submit", e=>{ e.preventDefault(); toast("Pengaturan berhasil disimpan", "success"); });
+ $("#mobileMenuBtn").addEventListener("click", ()=>{ $("#mobileMenu").classList.toggle("hidden"); });
+ $$("#mobileMenu a").forEach(a=>a.addEventListener("click", ()=>$("#mobileMenu").classList.add("hidden")));
+
+function openDaftarLombaModal() {
+  const jenisLombaExist = [...new Set(STATE.lomba.map(x=>x.jenis))];
+  const datalistOptions = jenisLombaExist.map(j=>`<option value="${j}">`).join("");
+  
+  showModal(`
+    <div class="card max-w-2xl w-full modal-enter">
+      <div class="px-6 py-4 border-b border-line flex items-center justify-between">
+        <h3 class="font-display text-2xl">DAFTAR LOMBA HUT RI 81</h3>
+        <button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <form id="daftarLombaForm" class="p-6 space-y-4">
+        <div class="grid grid-cols-1 gap-4">
+          <div><label class="label">Nama Lengkap</label><input type="text" id="dl_nama" class="input" placeholder="Nama Anda" required></div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="label">Golongan</label><select id="dl_gol" class="input">${Object.entries(GOL_LABEL).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></div>
+          <div><label class="label">Jenis Lomba (Ketik Bebas)</label><input type="text" id="dl_jenis" class="input" placeholder="Ketik jenis lomba yang diinginkan..." list="daftarJenisList" required><datalist id="daftarJenisList">${datalistOptions}</datalist></div>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-4 border-t border-line">
+          <button type="button" onclick="closeModal()" class="btn btn-light">Batal</button>
+          <button type="submit" class="btn btn-primary"><i data-lucide="user-plus" class="w-4 h-4"></i> Daftar</button>
+        </div>
+      </form>
+    </div>
+  `);
+  
+  $("#daftarLombaForm").addEventListener("submit", async e=>{ 
+    e.preventDefault(); 
+    const data = { 
+      id: uid(), nomor: 'LMBA-'+String(STATE.lomba.length+1).padStart(3,'0'), nama: $("#dl_nama").value, jenis: $("#dl_jenis").value, 
+      golongan: $("#dl_gol").value, status: "pending"
+    }; 
+    STATE.lomba.unshift(data); 
+    await syncDataToSupabase('peserta_lomba', STATE.lomba);
+    closeModal(); toast("Pendaftaran lomba berhasil! Status: Pending (menunggu verifikasi).", "success"); 
+  });
+}
+
+function init(){
+  lucide.createIcons();
+  initSupabase();
+  initHeroParticles();
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  initReveal();
+  initCounters();
+  renderAgendaTimeline();
+  renderAgendaDetail();
+  initAgendaFilter();
+  renderLandingGaleri();
+  renderLandingPanitia();
+  renderLandingPengumuman();
+}
+init();
+</script>
+</body>
+</html>
