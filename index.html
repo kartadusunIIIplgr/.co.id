@@ -385,7 +385,7 @@
           <h2 class="font-display text-3xl md:text-4xl lg:text-5xl leading-tight mb-4 md:mb-6">TERLIBAT<br>DALAM PERINGATAN?</h2>
           <p class="text-ink-2 mb-6 md:mb-8 text-sm md:text-base">Untuk pendaftaran lomba, kerja sama sponsor, atau pertanyaan seputar kegiatan, silakan hubungi panitia.</p>
           <div class="space-y-3 md:space-y-4">
-            <div class="flex items-start gap-3 md:gap-4"><div class="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="map-pin" class="w-5 h-5 md:w-6 md:h-6"></i></div><div><div class="text-[10px] md:text-xs uppercase tracking-widest text-ink-2 mb-1">Sekretariat</div><div class="font-semibold text-sm md:text-base">Gedung Serbaguna, Jl. Merdeka No. 81, Jakarta Pusat</div></div></div>
+            <div class="flex items-start gap-3 md:gap-4"><div class="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="map-pin" class="w-5 h-5 md:w-6 md:h-6"></i></div><div><div class="text-[10px] md:text-xs uppercase tracking-widest text-ink-2 mb-1">Sekretariat</div><div class="font-semibold text-sm md:text-base">jl. Kurungan Nyawa I Kec. Buay Madang Kab. OKU Timur</div></div></div>
             <div class="flex items-start gap-3 md:gap-4"><div class="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="phone" class="w-5 h-5 md:w-6 md:h-6"></i></div><div><div class="text-[10px] md:text-xs uppercase tracking-widest text-ink-2 mb-1">Telepon / WA</div><div class="font-semibold text-sm md:text-base">+62 21 381 0000 · +62 812 8100 2026</div></div></div>
             <div class="flex items-start gap-3 md:gap-4"><div class="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="mail" class="w-5 h-5 md:w-6 md:h-6"></i></div><div><div class="text-[10px] md:text-xs uppercase tracking-widest text-ink-2 mb-1">Email</div><div class="font-semibold text-sm md:text-base">panitia@hutri81.go.id</div></div></div>
             <div class="flex gap-2 md:gap-3 pt-3 md:pt-4">
@@ -435,7 +435,7 @@
       </div>
       <div class="pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-cream/60">
         <div>© 2026 Panitia HUT RI ke-81. Hak Cipta Dilindungi.</div>
-        <div class="flex items-center gap-2"><span>Dibuat dengan</span><i data-lucide="heart" class="w-3.5 h-3.5 text-merah"></i><span>untuk Nusantara</span></div>
+        <div class="flex items-center gap-2"><span>Dibuat dengan</span><i data-lucide="heart" class="w-3.5 h-3.5 text-merah"></i><span>untuk Karang Taruna Pematang Langgar</span></div>
       </div>
     </div>
   </footer>
@@ -1731,7 +1731,6 @@ function buildWheel(svgId = "#raffleWheel") {
     const midAngle = (startAngle + endAngle) / 2, midRad = midAngle * Math.PI / 180, textRadius = 65;
     const tx = 100 + textRadius * Math.cos(midRad), ty = 100 + textRadius * Math.sin(midRad), rotation = midAngle + 90;
     
-    // Perbaikan: Dinamis ukuran font agar tidak tumpuk
     const numStr = p.nomor ? p.nomor.toString() : "";
     let fontSize = 11;
     if (numStr.length > 4) fontSize = 9;
@@ -1746,7 +1745,6 @@ function buildWheel(svgId = "#raffleWheel") {
 function initUndianPage(){
   const sel = $("#undianHadiahSelect");
   sel.innerHTML = '<option value="">Pilih Hadiah...</option>' + STATE.hadiah.map(h=>`<option value="${h.id}">${h.nama} (${h.nilai}) - Sisa: ${h.jumlah-h.terpakai}</option>`).join("");
-  // Tampilkan tombol putar kembali & hapus hasil saat hadiah diganti
   sel.onchange = () => {
     if($("#spinBtnDash")) $("#spinBtnDash").classList.remove("hidden-x");
     if($("#spinResultDash")) $("#spinResultDash").innerHTML = "";
@@ -1761,7 +1759,6 @@ function openUndianScreen() {
   $("#dashboard").classList.add("hidden-x"); $("#screenUndian").classList.remove("hidden-x"); document.body.style.overflow = "hidden";
   const sel = $("#screenHadiahSelect");
   sel.innerHTML = '<option value="" class="text-black">Pilih Hadiah...</option>' + STATE.hadiah.map(h=>`<option value="${h.id}" class="text-black">${h.nama} (${h.nilai}) - Sisa: ${h.jumlah-h.terpakai}</option>`).join("");
-  // Tampilkan tombol putar kembali & hapus hasil saat hadiah diganti
   sel.onchange = () => {
     if($("#spinBtnScreen")) $("#spinBtnScreen").classList.remove("hidden-x");
     const res = $("#screenSpinResult");
@@ -1859,7 +1856,6 @@ async function generateCustomUndian() {
       const start = parseInt(parts[0].trim());
       const end = parseInt(parts[1].trim());
       if(!isNaN(start) && !isNaN(end) && start <= end) {
-        // Tentukan panjang padding berdasarkan angka terakhir
         const padLength = end.toString().length;
         for(let i=start; i<=end; i++) {
           nums.push(i.toString().padStart(padLength, '0'));
@@ -1972,7 +1968,24 @@ function executeSpin(isScreen, wheelEl, pointerEl, resEl, btnEl, eligible, hadia
   setTimeout(async () => {
     pointer.classList.remove("pointer-spinning"); $("#countdownContainer").classList.add("hidden-x");
     winner.status = "menang"; winner.hadiahId = hadiah.id; winner.hadiah_id = hadiah.id; hadiah.terpakai++;
-    if(isScreen) { res.style.opacity = "0"; setTimeout(() => { res.innerHTML = `<div class="text-center bg-black/60 backdrop-blur-md p-6 md:p-10 rounded-3xl border-2 border-[#FFB300]/50 shadow-2xl max-w-3xl pointer-events-auto"><div class="text-[#FFB300] font-bold tracking-widest text-lg md:text-3xl mb-4">🎉 SELAMAT KEPADA PEMENANG 🎉</div><div class="font-display text-5xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-b from-white to-[#FF1F3D] drop-shadow-2xl break-all">${winner.nama}</div><div class="text-white/80 mt-6 text-xl md:text-2xl font-bold">Memenangkan: <span class="text-[#FFB300]">${hadiah.nama}</span> (${hadiah.nilai})</div><div class="text-white/50 mt-2 text-lg md:text-xl">Nomor Tiket: ${winner.nomor}</div></div>`; res.style.opacity = "1"; }, 300); } 
+    if(isScreen) { 
+      res.style.opacity = "0"; 
+      setTimeout(() => { 
+        res.innerHTML = `
+          <button onclick="hideWinnerResult()" class="absolute top-4 right-4 md:top-8 md:right-8 z-50 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white border border-white/20 backdrop-blur pointer-events-auto transition">
+            <i data-lucide="x" class="w-6 h-6 md:w-8 md:h-8 pointer-events-none"></i>
+          </button>
+          <div class="text-center bg-black/60 backdrop-blur-md p-6 md:p-10 rounded-3xl border-2 border-[#FFB300]/50 shadow-2xl max-w-3xl pointer-events-auto relative">
+            <div class="text-[#FFB300] font-bold tracking-widest text-lg md:text-3xl mb-4">🎉 SELAMAT KEPADA PEMENANG 🎉</div>
+            <div class="font-display text-5xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-b from-white to-[#FF1F3D] drop-shadow-2xl break-all">${winner.nama}</div>
+            <div class="text-white/80 mt-6 text-xl md:text-2xl font-bold">Memenangkan: <span class="text-[#FFB300]">${hadiah.nama}</span> (${hadiah.nilai})</div>
+            <div class="text-white/50 mt-2 text-lg md:text-xl">Nomor Tiket: ${winner.nomor}</div>
+          </div>
+        `; 
+        res.style.opacity = "1"; 
+        lucide.createIcons();
+      }, 300); 
+    } 
     else { res.innerHTML = `<div class="p-5 rounded-xl bg-gradient-to-br from-gold/20 to-merah-soft border-2 border-gold/40 shadow-lg"><div class="flex items-center justify-center gap-2 mb-2"><span class="text-2xl">🎉</span><div class="text-xs uppercase tracking-wider text-gold-deep font-bold">PEMENANG DOORPRIZE</div><span class="text-2xl">🎉</span></div><div class="font-display text-3xl text-merah">${winner.nama}</div><div class="text-sm text-ink-2 mt-1">Tiket: <span class="font-mono font-bold">${winner.nomor}</span> ${winner.asal !== 'Undian Angka' ? '· '+winner.asal : ''}</div><div class="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold text-ink font-bold text-sm shadow-md"><i data-lucide="${hadiah.ikon}" class="w-4 h-4"></i> ${hadiah.nama} (${hadiah.nilai})</div></div>`; }
     await syncDataToSupabase('undian', STATE.undian); await syncDataToSupabase('hadiah', STATE.hadiah);
     launchConfetti(isScreen); isSpinning = false; if(btn) { btn.classList.add("hidden-x"); }
@@ -1980,6 +1993,19 @@ function executeSpin(isScreen, wheelEl, pointerEl, resEl, btnEl, eligible, hadia
     lucide.createIcons();
   }, 10200); 
 }
+
+// Fungsi Tambahan untuk menyembunyikan hasil tanpa menutup layar penuh
+function hideWinnerResult() {
+  const res = $("#screenSpinResult");
+  if(res) { 
+    res.style.opacity = "0"; 
+    setTimeout(() => { res.innerHTML = ""; }, 500);
+  }
+  const btn = $("#spinBtnScreen");
+  if(btn) btn.classList.remove("hidden-x", "opacity-0", "pointer-events-none");
+  if(btn) btn.disabled = false;
+}
+
 function launchConfetti(isScreen = false){
   const colors = ["#FF1F3D","#FFB300","#FFF","#FFE5E9","#E69500","#FF6B6B","#FFD54F"];
   for(let i=0;i<80;i++){ const c = document.createElement("div"); c.className = "confetti"; c.style.left = Math.random()*100 + "vw"; c.style.top = "-20px"; c.style.background = colors[Math.floor(Math.random()*colors.length)]; c.style.animationDelay = Math.random()*1 + "s"; c.style.animationDuration = (2 + Math.random()*2) + "s"; c.style.transform = `rotate(${Math.random()*360}deg)`; if(Math.random() > .5) c.style.borderRadius = "50%"; document.body.appendChild(c); setTimeout(()=>c.remove(), 5000); }
