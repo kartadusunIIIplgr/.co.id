@@ -117,11 +117,17 @@
   .particle{ position:absolute; border-radius:50%; pointer-events:none; }
   .aspect-landscape{ aspect-ratio: 4/3; }
   .hidden-x{ display:none !important; }
-  .gallery-item{ position:relative; overflow:hidden; border-radius:1rem; }
-  .gallery-item img{ transition: transform .8s cubic-bezier(.2,.7,.2,1); width: 100%; height: 100%; object-fit: cover; }
-  .gallery-item:hover img{ transform: scale(1.08); }
-  .gallery-item::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 40%, rgba(0,0,0,.85) 100%); opacity:0; transition:opacity .4s; }
-  .gallery-item:hover::after{ opacity:1; }
+  
+  /* CSS Galeri yang Diperbaiki */
+  .gallery-item{ position:relative; overflow:hidden; border-radius:1rem; background: var(--bg-soft); border: 1px solid var(--line); transition: transform .4s, box-shadow .4s; }
+  .gallery-item .img-wrap { position: relative; width: 100%; height: 180px; overflow: hidden; }
+  .gallery-item img{ width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+  .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 15px 40px -15px rgba(255,31,61,.4); border-color: rgba(255,31,61,.3); }
+  .gallery-item:hover img{ transform: scale(1.1); }
+  .gallery-caption { padding: 12px 15px; text-align: left; }
+  .gallery-caption .cat { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--merah); font-weight: 800; }
+  .gallery-caption .title { font-size: 14px; font-weight: 700; color: var(--ink); margin-top: 4px; line-height: 1.3; }
+  
   .hero-logo-img{ filter: drop-shadow(0 20px 40px rgba(0,0,0,.4)); }
   .live-dot{ width:8px; height:8px; border-radius:50%; background:#22c55e; position:relative; }
   .live-dot::before{ content:""; position:absolute; inset:0; border-radius:50%; background:#22c55e; animation: pulseRing 1.6s ease-out infinite; }
@@ -456,11 +462,11 @@
       <p class="text-sm text-ink-2 mt-1">Masuk ke dashboard panitia HUT RI 81</p>
     </div>
     <form id="loginForm" class="space-y-4">
-      <div><label class="label">Username</label><div class="relative"><i data-lucide="user" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-2"></i><input type="text" id="loginUser" class="input pl-10" placeholder="karangtarunaplgr" value="username"></div></div>
-      <div><label class="label">Password</label><div class="relative"><i data-lucide="lock" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-2"></i><input type="password" id="loginPass" class="input pl-10" placeholder="••••••••" value="kartadusun3plgr"><button type="button" onclick="togglePass('loginPass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-ink-2"><i data-lucide="eye" class="w-4 h-4"></i></button></div></div>
+      <div><label class="label">Username</label><div class="relative"><i data-lucide="user" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-2"></i><input type="text" id="loginUser" class="input pl-10" placeholder="" value=""></div></div>
+      <div><label class="label">Password</label><div class="relative"><i data-lucide="lock" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-2"></i><input type="password" id="loginPass" class="input pl-10" placeholder="" value=""><button type="button" onclick="togglePass('loginPass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-ink-2"><i data-lucide="eye" class="w-4 h-4"></i></button></div></div>
       <div class="flex items-center justify-between text-sm"><label class="flex items-center gap-2 text-ink-2"><input type="checkbox" class="rounded"> Ingat saya</label><button type="button" onclick="toast('Silakan hubungi sekretariat untuk reset password','info')" class="text-merah font-semibold">Lupa password?</button></div>
       <button type="submit" class="btn btn-primary w-full justify-center"><i data-lucide="log-in" class="w-4 h-4"></i> Masuk ke Dashboard</button>
-      <div class="text-xs text-center text-ink-2 bg-cream-2 p-3 rounded-lg"><strong></strong> username dan password <code class="text-merah"></code> jangan disebar luaskan <code class="text-merah"></code></div>
+      <div class="text-xs text-center text-ink-2 bg-cream-2 p-3 rounded-lg"><strong></strong> KARANG TARUNA <code class="text-merah"></code> DUSUN III PEMATANG LANGGAR <code class="text-merah"></code></div>
     </form>
   </div>
 </div>
@@ -845,6 +851,22 @@
             </div>
           </div>
         </div>
+        
+        <div class="card p-4 md:p-6 mt-8">
+          <h3 class="font-bold text-base md:text-lg mb-4 flex items-center gap-2"><i data-lucide="database" class="w-5 h-5 text-merah"></i> Konfigurasi Database Supabase</h3>
+          <div class="bg-amber-50 text-amber-700 p-3 rounded-lg text-sm mb-4">
+            Masukkan URL dan Anon Key dari project Supabase Anda untuk menyimpan data secara online (Cloud). Jika kosong, data akan disimpan di browser (localStorage).
+          </div>
+          <form id="supabaseForm" class="space-y-4">
+            <div><label class="label">Supabase URL</label><input type="text" id="supabaseUrl" class="input" placeholder="https://xxxx.supabase.co"></div>
+            <div><label class="label">Supabase Anon Key</label><input type="text" id="supabaseKey" class="input" placeholder="eyJhbGciOi..."></div>
+            <div class="flex gap-2 flex-wrap">
+              <button type="submit" class="btn btn-primary"><i data-lucide="plug" class="w-4 h-4"></i> Hubungkan & Simpan</button>
+              <button type="button" onclick="testSupabase()" class="btn btn-light"><i data-lucide="wifi" class="w-4 h-4"></i> Test Koneksi</button>
+            </div>
+            <div id="supabaseStatus" class="text-sm font-semibold mt-2"></div>
+          </form>
+        </div>
       </section>
 
     </main>
@@ -897,12 +919,55 @@
 
 <script>
 /* ============================================================
-   SUPABASE AUTO CONFIG (HARDCODED)
+   SUPABASE CONFIGURATION
 ============================================================ */
 const SUPABASE_URL = 'https://bdhgahinhdjmkmuhcfyt.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkaGdhaGluaGRqbWttdWhjZnl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NTc5ODksImV4cCI6MjEwMTQzMzk4OX0.BBekcTCGfPGuvmVc3p6F0kBlm1jzhnXD2mW8kDW467o';
 
-let supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let supabaseClient = null;
+
+function initSupabase() {
+  const url = localStorage.getItem('supabase_url') || SUPABASE_URL;
+  const key = localStorage.getItem('supabase_key') || SUPABASE_ANON_KEY;
+  if (url && key && url !== 'https://your-project-id.supabase.co') {
+    try {
+      supabaseClient = supabase.createClient(url, key);
+      if($("#supabaseUrl")) $("#supabaseUrl").value = url;
+      if($("#supabaseKey")) $("#supabaseKey").value = key;
+      if($("#supabaseStatus")) $("#supabaseStatus").innerHTML = '<span class="text-emerald-600 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> Supabase Terhubung</span>';
+      lucide.createIcons();
+      return true;
+    } catch (e) { return false; }
+  }
+  return false;
+}
+
+async function testSupabase() {
+  const url = $("#supabaseUrl").value, key = $("#supabaseKey").value;
+  if(!url || !key) { toast("Harap isi URL dan Key Supabase", "warn"); return; }
+  try {
+    const testClient = supabase.createClient(url, key);
+    const { data, error } = await testClient.from('undian').select('*').limit(1);
+    if (error) throw error;
+    toast("Koneksi Supabase Berhasil!", "success");
+    $("#supabaseStatus").innerHTML = '<span class="text-emerald-600 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> Koneksi Berhasil</span>';
+    lucide.createIcons();
+  } catch (e) {
+    toast("Koneksi Gagal: " + e.message, "error");
+    $("#supabaseStatus").innerHTML = '<span class="text-rose-600 flex items-center gap-1"><i data-lucide="x-circle" class="w-4 h-4"></i> Koneksi Gagal</span>';
+    lucide.createIcons();
+  }
+}
+
+ $("#supabaseForm")?.addEventListener("submit", e => {
+  e.preventDefault();
+  const url = $("#supabaseUrl").value, key = $("#supabaseKey").value;
+  localStorage.setItem('supabase_url', url);
+  localStorage.setItem('supabase_key', key);
+  initSupabase();
+  toast("Pengaturan Supabase disimpan. Memuat ulang data...", "success");
+  setTimeout(() => location.reload(), 1000);
+});
 
 async function syncDataToSupabase(table, data) {
   if (!supabaseClient) return;
@@ -929,11 +994,7 @@ async function syncDataToSupabase(table, data) {
     if (insertError) throw insertError;
   } catch (e) {
     console.error(`Sync ${table} error:`, e);
-    let errMsg = e.message;
-    if (e.message.includes("payload") || e.message.includes("413") || e.message.includes("length")) {
-      errMsg = "Ukuran data terlalu besar. Gunakan URL gambar alih-alih unggah file langsung untuk foto besar.";
-    }
-    toast("Gagal sinkronisasi: " + errMsg, "error");
+    toast("Gagal sinkronisasi ke Supabase: " + e.message, "error");
   }
 }
 
@@ -995,10 +1056,10 @@ function toggleTheme() {
   const updateIcon = (btn) => { if (!btn) return; btn.innerHTML = isDark ? '<i data-lucide="moon" class="w-5 h-5"></i>' : '<i data-lucide="sun" class="w-5 h-5"></i>'; };
   updateIcon($("#themeBtn")); updateIcon($("#themeBtnDash"));
   const darkToggle = $("#darkModeToggle"); if (darkToggle) darkToggle.checked = isDark;
-  if (typeof chartKehadiran !== 'undefined' && chartKehadiran) updateChartColors(chartKehadiran);
-  if (typeof chartKategori !== 'undefined' && chartKategori) updateChartColors(chartKategori);
-  if (typeof chartPendaftaran !== 'undefined' && chartPendaftaran) updateChartColors(chartPendaftaran);
-  if (typeof chartPartisipasi !== 'undefined' && chartPartisipasi) updateChartColors(chartPartisipasi);
+  if (chartKehadiran) updateChartColors(chartKehadiran);
+  if (chartKategori) updateChartColors(chartKategori);
+  if (chartPendaftaran) updateChartColors(chartPendaftaran);
+  if (chartPartisipasi) updateChartColors(chartPartisipasi);
   lucide.createIcons();
   if (!$("#page-undian").classList.contains("hidden-x")) buildWheel("#raffleWheel");
   if (!$("#screenUndian").classList.contains("hidden-x")) buildWheel("#raffleWheelScreen");
@@ -1062,7 +1123,7 @@ let agendaActiveId = 1;
 function renderAgendaTimeline(filter="all"){
   const wrap = $("#agendaTimeline"); if(!wrap) return;
   const items = STATE.agenda.filter(a => filter==="all" || a.kategori===filter);
-  wrap.innerHTML = items.length === 0 ? `<div class="text-sm text-ink-2 pl-2">Belum ada agenda.</div>` : items.map(a=>{
+  wrap.innerHTML = items.map(a=>{
     const active = a.id === agendaActiveId;
     return `<div class="relative cursor-pointer group" onclick="selectAgenda(${a.id})">
       <div class="absolute -left-[1.65rem] top-1 w-4 h-4 rounded-full ${active?'bg-merah ring-4 ring-merah/20':'bg-bg-soft border-2 border-merah/40 group-hover:border-merah'} transition"></div>
@@ -1093,19 +1154,18 @@ function initAgendaFilter(){
   });
 }
 
+// Fungsi Galeri yang Diperbarui agar teks tidak menumpuk
 function renderLandingGaleri(){
   const grid = $("#galleryGrid"); 
   if(!grid) return;
-  if(STATE.galeri.length === 0) {
-    grid.innerHTML = `<div class="col-span-full text-center text-ink-2 text-sm py-8">Belum ada dokumentasi.</div>`;
-    return;
-  }
   grid.innerHTML = STATE.galeri.map(g=>`
-    <div class="gallery-item aspect-landscape cursor-pointer" onclick="openGaleriViewer('${g.id}')">
-      <img src="${g.img}" alt="${g.judul}" class="w-full h-full object-cover">
-      <div class="absolute inset-0 p-4 flex flex-col justify-end text-white z-10">
-        <div class="text-[10px] uppercase tracking-widest text-gold font-bold">${KATEGORI_LABEL[g.kategori] || g.kategori}</div>
-        <div class="font-bold text-sm leading-tight">${g.judul}</div>
+    <div class="gallery-item cursor-pointer" onclick="openGaleriViewer('${g.id}')">
+      <div class="img-wrap">
+        <img src="${g.img}" alt="${g.judul}" class="w-full h-full object-cover">
+      </div>
+      <div class="gallery-caption">
+        <div class="cat">${KATEGORI_LABEL[g.kategori] || g.kategori}</div>
+        <div class="title">${g.judul}</div>
       </div>
     </div>
   `).join("");
@@ -1171,10 +1231,6 @@ function getPanitiaFotoHtml(foto, textClass) {
 
 function renderLandingPanitia(){
   const grid = $("#panitiaGrid"); if(!grid) return;
-  if(STATE.panitia.length === 0) {
-    grid.innerHTML = `<div class="col-span-full text-center text-ink-2 text-sm py-8">Belum ada data panitia.</div>`;
-    return;
-  }
   grid.innerHTML = STATE.panitia.map(p=>`
     <div class="card card-hover overflow-hidden group">
       <div class="aspect-square bg-gradient-to-br from-merah to-merah-deep relative overflow-hidden">
@@ -1291,10 +1347,6 @@ function updatePanitiaPreview(val) {
 
 function renderLandingPengumuman(){
   const wrap = $("#pengumumanList"); if(!wrap) return;
-  if(STATE.pengumuman.length === 0) {
-    wrap.innerHTML = `<div class="text-center text-cream/70 text-sm py-8">Belum ada pengumuman.</div>`;
-    return;
-  }
   wrap.innerHTML = STATE.pengumuman.map(p=>`<div class="bg-white/5 border border-white/10 rounded-2xl p-5 hover:bg-white/10 transition cursor-pointer" onclick="openPengumumanDetail(${p.id})"><div class="flex items-start justify-between gap-4"><div class="flex-1"><div class="flex items-center gap-2 mb-2"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gold text-ink">${p.kategori}</span><span class="text-xs text-cream/60">${fmtTanggal(p.tanggal)}</span></div><h3 class="font-bold text-lg leading-tight">${p.judul}</h3><p class="text-sm text-cream/70 mt-2 line-clamp-2">${p.isi}</p></div><i data-lucide="chevron-right" class="w-5 h-5 text-cream/60 flex-shrink-0 mt-1"></i></div></div>`).join("");
   lucide.createIcons();
 }
@@ -1318,7 +1370,7 @@ function togglePass(id, btn){
   else { inp.type="password"; btn.innerHTML='<i data-lucide="eye" class="w-4 h-4"></i>'; }
   lucide.createIcons();
 }
- $("#loginForm").addEventListener("submit", e=>{ e.preventDefault(); const u = $("#loginUser").value.trim(); const p = $("#loginPass").value.trim(); if(u === "admin" && p === "admin123"){ closeAdminLogin(); enterDashboard(); toast("Selamat datang, Admin!", "success"); } else { toast("Username atau password salah", "error"); } });
+ $("#loginForm").addEventListener("submit", e=>{ e.preventDefault(); const u = $("#loginUser").value.trim(); const p = $("#loginPass").value.trim(); if(u === "karangtarunaplgr" && p === "kartadusun3plgr"){ closeAdminLogin(); enterDashboard(); toast("Selamat datang, Admin!", "success"); } else { toast("Username atau password salah", "error"); } });
 function enterDashboard(){ $("#landing").classList.add("hidden-x"); $("#dashboard").classList.remove("hidden-x"); window.scrollTo(0,0); initDashboard(); }
 function logoutAdmin(){ $("#dashboard").classList.add("hidden-x"); $("#landing").classList.remove("hidden-x"); window.scrollTo(0,0); toast("Anda telah keluar dari dashboard", "info"); }
 
@@ -1387,7 +1439,7 @@ async function initDashboard(){
   $("#statPesertaLomba").textContent = STATE.lomba.length;
   $("#statUndian").textContent = STATE.undian.length;
   const upcoming = [...STATE.agenda].filter(a=>a.status==="aktif").slice(0,5);
-  $("#dashAgendaList").innerHTML = upcoming.length === 0 ? `<div class="text-sm text-ink-2 p-3">Belum ada agenda aktif.</div>` : upcoming.map(a=>`<div class="flex items-center gap-3 p-3 rounded-xl hover:bg-cream-2/50 transition"><div class="w-12 h-12 rounded-xl bg-merah-soft text-merah flex flex-col items-center justify-center flex-shrink-0"><div class="text-[10px] font-bold uppercase">${new Date(a.tanggal).toLocaleDateString("id-ID",{month:"short"})}</div><div class="font-display text-lg leading-none">${new Date(a.tanggal).getDate()}</div></div><div class="flex-1 min-w-0"><div class="font-bold text-sm truncate">${a.judul}</div><div class="text-xs text-ink-2 flex items-center gap-2 mt-0.5"><i data-lucide="clock" class="w-3 h-3"></i> ${a.waktu} · <i data-lucide="map-pin" class="w-3 h-3"></i> ${a.lokasi}</div></div><span class="px-2 py-1 rounded-full text-[10px] font-bold ${KATEGORI_COLOR[a.kategori]}">${KATEGORI_LABEL[a.kategori]}</span></div>`).join("");
+  $("#dashAgendaList").innerHTML = upcoming.map(a=>`<div class="flex items-center gap-3 p-3 rounded-xl hover:bg-cream-2/50 transition"><div class="w-12 h-12 rounded-xl bg-merah-soft text-merah flex flex-col items-center justify-center flex-shrink-0"><div class="text-[10px] font-bold uppercase">${new Date(a.tanggal).toLocaleDateString("id-ID",{month:"short"})}</div><div class="font-display text-lg leading-none">${new Date(a.tanggal).getDate()}</div></div><div class="flex-1 min-w-0"><div class="font-bold text-sm truncate">${a.judul}</div><div class="text-xs text-ink-2 flex items-center gap-2 mt-0.5"><i data-lucide="clock" class="w-3 h-3"></i> ${a.waktu} · <i data-lucide="map-pin" class="w-3 h-3"></i> ${a.lokasi}</div></div><span class="px-2 py-1 rounded-full text-[10px] font-bold ${KATEGORI_COLOR[a.kategori]}">${KATEGORI_LABEL[a.kategori]}</span></div>`).join("");
   const colorMap = { merah:"bg-merah-soft text-merah", emerald:"bg-emerald-50 text-emerald-600", amber:"bg-amber-50 text-amber-600", rose:"bg-rose-50 text-rose-600", indigo:"bg-indigo-50 text-indigo-600" };
   $("#dashActivity").innerHTML = STATE.activities.map(a=>`<div class="flex gap-3"><div class="w-8 h-8 rounded-lg ${colorMap[a.color]} flex items-center justify-center flex-shrink-0"><i data-lucide="${a.icon}" class="w-4 h-4"></i></div><div class="text-sm"><div class="font-semibold">${a.title}</div><div class="text-xs text-ink-2">${a.desc}</div></div></div>`).join("");
   lucide.createIcons();
@@ -1486,13 +1538,13 @@ async function handleImgUpload(e) {
     img.onload = function() {
       const canvas = document.createElement('canvas');
       let width = img.width; let height = img.height;
-      const MAX_WIDTH = 600; const MAX_HEIGHT = 600;
+      const MAX_WIDTH = 800; const MAX_HEIGHT = 800;
       if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
       else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
       canvas.width = width; canvas.height = height;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
-      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7); // Kompresi lebih kecil agar muat di Supabase
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
       $("#f_img").value = compressedBase64;
       updateImgPreview(compressedBase64);
       toast("Gambar siap disimpan. Klik 'Unggah'.", "success");
@@ -2023,45 +2075,20 @@ function openDaftarLombaModal() {
   });
 }
 
-// FUNGSI BARU: Memuat data dari Supabase untuk Halaman Depan (Landing Page)
-async function initLanding() {
-  if (supabaseClient) {
-    try {
-      const tables = ['agenda', 'panitia', 'galeri', 'pengumuman'];
-      for (const table of tables) {
-        const data = await loadDataFromSupabase(table);
-        if (data && data.length > 0) {
-          const key = table;
-          STATE[key] = data.map(item => {
-            const mapped = { ...item };
-            if (mapped.panitia_id) mapped.panitiaId = mapped.panitia_id;
-            if (mapped.hadiah_id) mapped.hadiahId = mapped.hadiah_id;
-            return mapped;
-          });
-        }
-      }
-    } catch (e) {
-      console.error("Error loading landing data:", e);
-    }
-  }
-  
-  renderLandingGaleri();
-  renderLandingPanitia();
-  renderLandingPengumuman();
-  renderAgendaTimeline();
-  renderAgendaDetail();
-  if (typeof lucide !== 'undefined') lucide.createIcons();
-}
-
 function init(){
-  if (typeof lucide !== 'undefined') lucide.createIcons();
+  lucide.createIcons();
+  initSupabase();
   initHeroParticles();
   updateCountdown();
   setInterval(updateCountdown, 1000);
   initReveal();
   initCounters();
+  renderAgendaTimeline();
+  renderAgendaDetail();
   initAgendaFilter();
-  initLanding(); // Langsung ambil data dari Supabase saat website dibuka
+  renderLandingGaleri();
+  renderLandingPanitia();
+  renderLandingPengumuman();
 }
 init();
 </script>
