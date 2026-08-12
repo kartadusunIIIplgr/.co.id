@@ -845,22 +845,6 @@
             </div>
           </div>
         </div>
-        
-        <div class="card p-4 md:p-6 mt-8">
-          <h3 class="font-bold text-base md:text-lg mb-4 flex items-center gap-2"><i data-lucide="database" class="w-5 h-5 text-merah"></i> Konfigurasi Database Supabase</h3>
-          <div class="bg-amber-50 text-amber-700 p-3 rounded-lg text-sm mb-4">
-            Masukkan URL dan Anon Key dari project Supabase Anda untuk menyimpan data secara online (Cloud). Jika kosong, data akan disimpan di browser (localStorage).
-          </div>
-          <form id="supabaseForm" class="space-y-4">
-            <div><label class="label">Supabase URL</label><input type="text" id="supabaseUrl" class="input" placeholder="https://xxxx.supabase.co"></div>
-            <div><label class="label">Supabase Anon Key</label><input type="text" id="supabaseKey" class="input" placeholder="eyJhbGciOi..."></div>
-            <div class="flex gap-2 flex-wrap">
-              <button type="submit" class="btn btn-primary"><i data-lucide="plug" class="w-4 h-4"></i> Hubungkan & Simpan</button>
-              <button type="button" onclick="testSupabase()" class="btn btn-light"><i data-lucide="wifi" class="w-4 h-4"></i> Test Koneksi</button>
-            </div>
-            <div id="supabaseStatus" class="text-sm font-semibold mt-2"></div>
-          </form>
-        </div>
       </section>
 
     </main>
@@ -913,55 +897,12 @@
 
 <script>
 /* ============================================================
-   SUPABASE CONFIGURATION
+   SUPABASE AUTO CONFIG (HARDCODED)
 ============================================================ */
 const SUPABASE_URL = 'https://bdhgahinhdjmkmuhcfyt.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkaGdhaGluaGRqbWttdWhjZnl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NTc5ODksImV4cCI6MjEwMTQzMzk4OX0.BBekcTCGfPGuvmVc3p6F0kBlm1jzhnXD2mW8kDW467o';
 
-let supabaseClient = null;
-
-function initSupabase() {
-  const url = localStorage.getItem('supabase_url') || SUPABASE_URL;
-  const key = localStorage.getItem('supabase_key') || SUPABASE_ANON_KEY;
-  if (url && key && url !== 'https://your-project-id.supabase.co') {
-    try {
-      supabaseClient = supabase.createClient(url, key);
-      if($("#supabaseUrl")) $("#supabaseUrl").value = url;
-      if($("#supabaseKey")) $("#supabaseKey").value = key;
-      if($("#supabaseStatus")) $("#supabaseStatus").innerHTML = '<span class="text-emerald-600 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> Supabase Terhubung</span>';
-      lucide.createIcons();
-      return true;
-    } catch (e) { return false; }
-  }
-  return false;
-}
-
-async function testSupabase() {
-  const url = $("#supabaseUrl").value, key = $("#supabaseKey").value;
-  if(!url || !key) { toast("Harap isi URL dan Key Supabase", "warn"); return; }
-  try {
-    const testClient = supabase.createClient(url, key);
-    const { data, error } = await testClient.from('undian').select('*').limit(1);
-    if (error) throw error;
-    toast("Koneksi Supabase Berhasil!", "success");
-    $("#supabaseStatus").innerHTML = '<span class="text-emerald-600 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> Koneksi Berhasil</span>';
-    lucide.createIcons();
-  } catch (e) {
-    toast("Koneksi Gagal: " + e.message, "error");
-    $("#supabaseStatus").innerHTML = '<span class="text-rose-600 flex items-center gap-1"><i data-lucide="x-circle" class="w-4 h-4"></i> Koneksi Gagal</span>';
-    lucide.createIcons();
-  }
-}
-
- $("#supabaseForm")?.addEventListener("submit", e => {
-  e.preventDefault();
-  const url = $("#supabaseUrl").value, key = $("#supabaseKey").value;
-  localStorage.setItem('supabase_url', url);
-  localStorage.setItem('supabase_key', key);
-  initSupabase();
-  toast("Pengaturan Supabase disimpan. Memuat ulang data...", "success");
-  setTimeout(() => location.reload(), 1000);
-});
+let supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function syncDataToSupabase(table, data) {
   if (!supabaseClient) return;
@@ -2068,7 +2009,6 @@ function openDaftarLombaModal() {
 
 function init(){
   lucide.createIcons();
-  initSupabase();
   initHeroParticles();
   updateCountdown();
   setInterval(updateCountdown, 1000);
