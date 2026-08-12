@@ -1392,7 +1392,7 @@ function closeSidebar(){ $("#sidebar").classList.add("-translate-x-full"); $("#s
  $("#sidebarToggle")?.addEventListener("click", openSidebar);
 function exportCSV(type){
   let data = [], filename = "";
-    else if(type === "peserta"){ data = STATE.lomba; filename = "peserta-lomba.csv"; }
+  if(type === "peserta"){ data = STATE.lomba; filename = "peserta-lomba.csv"; }
   else if(type === "lomba"){ data = STATE.lomba; filename = "peserta-lomba.csv"; }
   else if(type === "undian"){ data = STATE.undian; filename = "peserta-undian.csv"; }
   else if(type === "kepanitiaan"){ data = STATE.kepanitiaanLomba.map(k => ({...k, panitia: STATE.panitia.find(p=>p.id===k.panitiaId)?.nama || ""})); filename = "kepanitiaan-lomba.csv"; }
@@ -1917,7 +1917,7 @@ function renderUndianTable(){
   const q = ($("#undianSearch")?.value || "").toLowerCase(), fs = $("#undianFilterStatus")?.value || "all";
   const items = STATE.undian.filter(u => (u.nama.toLowerCase().includes(q) || u.nomor.toLowerCase().includes(q)) && (fs==="all" || u.status===fs));
   const body = $("#undianTableBody");
-  if(items.length === 0){ body.innerHTML = `<tr><td colspan="7" class="text-center py-12 text-ink-2"><i data-lucide="ticket-x" class="w-10 h-10 mx-auto mb-2 opacity:50"></i><div>Tidak ada peserta undian</div></td></tr>`; lucide.createIcons(); return; }
+  if(items.length === 0){ body.innerHTML = `<tr><td colspan="7" class="text-center py-12 text-ink-2"><i data-lucide="ticket-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada peserta undian</div></td></tr>`; lucide.createIcons(); return; }
   body.innerHTML = items.map(u=>{ const h = STATE.hadiah.find(x=>x.id===u.hadiahId); return `<tr class="row-hover transition"><td class="px-4 py-3"><div class="font-mono font-bold text-sm text-merah">${u.nomor}</div></td><td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-xs">${u.nama.split(" ").map(s=>s[0]).slice(0,2).join("")}</div><div class="font-bold text-sm">${u.nama}</div></div></td><td class="px-4 py-3 text-sm">${u.telepon}</td><td class="px-4 py-3 text-sm">${u.asal}</td><td class="px-4 py-3"><span class="badge ${UND_STATUS_COLOR[u.status]}">${UND_STATUS_LABEL[u.status]}</span></td><td class="px-4 py-3 text-sm">${h?`<span class="font-bold text-gold-deep">${h.nama}</span>`:"-"}</td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openUndianModal(${u.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="deleteUndian(${u.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`; }).join("");
   lucide.createIcons();
 }
