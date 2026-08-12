@@ -1010,6 +1010,26 @@ async function loadDataFromSupabase(table) {
   } catch (e) { return null; }
 }
 
+async function loadInitialData() {
+  if (supabaseClient) {
+    try {
+      const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'peserta', 'peserta_lomba', 'kepanitiaan_lomba', 'undian', 'hadiah'];
+      for (const table of tables) {
+        const data = await loadDataFromSupabase(table);
+        if (data && data.length > 0) {
+          const key = table === 'kepanitiaan_lomba' ? 'kepanitiaanLomba' : (table === 'peserta_lomba' ? 'lomba' : table);
+          STATE[key] = data.map(item => {
+            const mapped = { ...item };
+            if (mapped.panitia_id) mapped.panitiaId = mapped.panitia_id;
+            if (mapped.hadiah_id) mapped.hadiahId = mapped.hadiah_id;
+            return mapped;
+          });
+        }
+      }
+    } catch (e) { console.error("Error loading initial data:", e); }
+  }
+}
+
 const STATE = {
   agenda: [], panitia: [], galeri: [], pengumuman: [], peserta: [], lomba: [], kepanitiaanLomba: [], undian: [], hadiah: [],
   activities: [
@@ -1481,23 +1501,7 @@ function exportCSV(type){
 function exportReport(){ toast("Laporan PDF sedang diproses, mohon tunggu...", "info"); setTimeout(()=>toast("Laporan berhasil diunduh: Laporan-HUT-RI-81.pdf", "success"), 2000); }
 
 async function initDashboard(){
-  if (supabaseClient) {
-    try {
-      const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'peserta', 'peserta_lomba', 'kepanitiaan_lomba', 'undian', 'hadiah'];
-      for (const table of tables) {
-        const data = await loadDataFromSupabase(table);
-        if (data && data.length > 0) {
-          const key = table === 'kepanitiaan_lomba' ? 'kepanitiaanLomba' : (table === 'peserta_lomba' ? 'lomba' : table);
-          STATE[key] = data.map(item => {
-            const mapped = { ...item };
-            if (mapped.panitia_id) mapped.panitiaId = mapped.panitia_id;
-            if (mapped.hadiah_id) mapped.hadiahId = mapped.hadiah_id;
-            return mapped;
-          });
-        }
-      }
-    } catch (e) { console.error("Error loading dashboard data:", e); }
-  }
+  await loadInitialData(); // Muat ulang data terbaru saat masuk dashboard
   $("#statAgenda").textContent = STATE.agenda.length;
   $("#statPanitia").textContent = STATE.panitia.length;
   $("#statPesertaLomba").textContent = STATE.lomba.length;
@@ -1550,7 +1554,6 @@ function renderAgendaTable(){
   lucide.createIcons();
 }
 
-// === UBAH DI SINI: Penambahan Upload Foto Agenda ===
 function openAgendaModal(id){
   const a = id ? STATE.agenda.find(x=>x.id===id) : null;
   showModal(`
@@ -1645,7 +1648,6 @@ function updateImgPreview(url){
   }
 }
 
-// Dibuat generic untuk dipakai di Galeri, Agenda, dan Pengumuman
 async function handleImgUploadGeneric(e, inputId, previewId) {
   const file = e.target.files[0];
   if (!file) return;
@@ -1686,7 +1688,6 @@ function renderPengumumanTable(){
   lucide.createIcons();
 }
 
-// === UBAH DI SINI: Penambahan Upload Foto Pengumuman ===
 function openPengumumanModal(id){
   const p = id ? STATE.pengumuman.find(x=>x.id===id) : null;
   showModal(`
@@ -2162,7 +2163,6 @@ function executeSpin(isScreen, wheelEl, pointerEl, resEl, btnEl, eligible, hadia
   }, 10200); 
 }
 
-// Fungsi Tambahan untuk menyembunyikan hasil tanpa menutup layar penuh
 function hideWinnerResult() {
   const res = $("#screenSpinResult");
   if(res) { 
@@ -2234,9 +2234,10 @@ function openDaftarLombaModal() {
   });
 }
 
-function init(){
+async function init(){
   lucide.createIcons();
   initSupabase();
+  await loadInitialData(); // Pastikan data dari Supabase sudah dimuat sebelum render halaman depan
   initHeroParticles();
   updateCountdown();
   setInterval(updateCountdown, 1000);
