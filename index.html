@@ -1392,7 +1392,7 @@ function closeSidebar(){ $("#sidebar").classList.add("-translate-x-full"); $("#s
  $("#sidebarToggle")?.addEventListener("click", openSidebar);
 function exportCSV(type){
   let data = [], filename = "";
-  if(type === "peserta"){ data = STATE.peserta; filename = "peserta.csv"; }
+    else if(type === "peserta"){ data = STATE.lomba; filename = "peserta-lomba.csv"; }
   else if(type === "lomba"){ data = STATE.lomba; filename = "peserta-lomba.csv"; }
   else if(type === "undian"){ data = STATE.undian; filename = "peserta-undian.csv"; }
   else if(type === "kepanitiaan"){ data = STATE.kepanitiaanLomba.map(k => ({...k, panitia: STATE.panitia.find(p=>p.id===k.panitiaId)?.nama || ""})); filename = "kepanitiaan-lomba.csv"; }
