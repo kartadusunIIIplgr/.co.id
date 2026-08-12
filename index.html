@@ -52,7 +52,7 @@
 
   .batik-bg{
     background-color:var(--cream);
-    background-image:
+    background-image=
       radial-gradient(circle at 25% 25%, rgba(255,31,61,.05) 0, transparent 40%),
       radial-gradient(circle at 75% 75%, rgba(255,179,0,.05) 0, transparent 45%),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23FF1F3D' stroke-opacity='0.05' stroke-width='1.2'%3E%3Cpath d='M40 5 L75 40 L40 75 L5 40 Z'/%3E%3Ccircle cx='40' cy='40' r='14'/%3E%3Cpath d='M40 26 L54 40 L40 54 L26 40 Z'/%3E%3C/g%3E%3C/svg%3E");
@@ -1141,7 +1141,8 @@ function renderAgendaTimeline(filter="all"){
 function selectAgenda(id){ agendaActiveId = id; const filter = $("#agendaFilter .btn-primary")?.dataset.filter || "all"; renderAgendaTimeline(filter); renderAgendaDetail(); }
 function renderAgendaDetail(){
   const a = STATE.agenda.find(x=>x.id===agendaActiveId); if(!a) return;
-  const wrap = $("#agendaDetail"); const img = `https://picsum.photos/seed/agenda${a.id}/800/500.jpg`;
+  const wrap = $("#agendaDetail"); 
+  const img = a.img || `https://picsum.photos/seed/agenda${a.id}/800/500.jpg`;
   wrap.innerHTML = `<div class="relative h-56 overflow-hidden"><img src="${img}" alt="${a.judul}" class="w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent"></div><div class="absolute bottom-4 left-5 right-5 text-white"><div class="flex items-center gap-2 mb-2"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${KATEGORI_COLOR[a.kategori]} bg-white/95">${KATEGORI_LABEL[a.kategori]}</span><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${STATUS_COLOR[a.status]} bg-white/95">${a.status}</span></div><h3 class="font-display text-2xl lg:text-3xl">${a.judul}</h3></div></div><div class="p-6"><div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="calendar" class="w-5 h-5"></i></div><div><div class="text-[10px] uppercase tracking-wider text-ink-2">Tanggal</div><div class="font-bold text-sm">${fmtTanggal(a.tanggal)}</div></div></div><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="clock" class="w-5 h-5"></i></div><div><div class="text-[10px] uppercase tracking-wider text-ink-2">Waktu</div><div class="font-bold text-sm">${a.waktu} WIB</div></div></div><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="map-pin" class="w-5 h-5"></i></div><div><div class="text-[10px] uppercase tracking-wider text-ink-2">Lokasi</div><div class="font-bold text-sm">${a.lokasi}</div></div></div></div><p class="text-ink-2 leading-relaxed mb-5">${a.deskripsi}</p><div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-line"><div class="flex items-center gap-3"><div class="flex -space-x-2">${[1,2,3].map(i=>`<div class="w-8 h-8 rounded-full bg-cream-2 border-2 border-white flex items-center justify-center text-xs font-bold text-ink-2">${String.fromCharCode(64+i)}</div>`).join("")}</div><div class="text-sm"><span class="font-bold">${a.peserta.toLocaleString("id-ID")}</span> <span class="text-ink-2">peserta terdaftar</span></div></div><button onclick="openDaftarLombaModal()" class="btn btn-primary"><i data-lucide="user-plus" class="w-4 h-4"></i> Daftar Sekarang</button></div></div>`;
   lucide.createIcons();
 }
@@ -1368,12 +1369,54 @@ async function confirmDeletePanitia(id){
 
 function renderLandingPengumuman(){
   const wrap = $("#pengumumanList"); if(!wrap) return;
-  wrap.innerHTML = STATE.pengumuman.map(p=>`<div class="bg-white/5 border border-white/10 rounded-2xl p-5 hover:bg-white/10 transition cursor-pointer" onclick="openPengumumanDetail(${p.id})"><div class="flex items-start justify-between gap-4"><div class="flex-1"><div class="flex items-center gap-2 mb-2"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gold text-ink">${p.kategori}</span><span class="text-xs text-cream/60">${fmtTanggal(p.tanggal)}</span></div><h3 class="font-bold text-lg leading-tight">${p.judul}</h3><p class="text-sm text-cream/70 mt-2 line-clamp-2">${p.isi}</p></div><i data-lucide="chevron-right" class="w-5 h-5 text-cream/60 flex-shrink-0 mt-1"></i></div></div>`).join("");
+  wrap.innerHTML = STATE.pengumuman.map(p=>`
+    <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition cursor-pointer flex" onclick="openPengumumanDetail(${p.id})">
+      ${p.img ? `<div class="w-24 h-full flex-shrink-0"><img src="${p.img}" class="w-full h-full object-cover"></div>` : ''}
+      <div class="p-5 flex-1">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gold text-ink">${p.kategori}</span>
+          <span class="text-xs text-cream/60">${fmtTanggal(p.tanggal)}</span>
+        </div>
+        <h3 class="font-bold text-lg leading-tight">${p.judul}</h3>
+        <p class="text-sm text-cream/70 mt-2 line-clamp-2">${p.isi}</p>
+      </div>
+    </div>
+  `).join("");
   lucide.createIcons();
 }
+
 function openPengumumanDetail(id){
   const p = STATE.pengumuman.find(x=>x.id===id); if(!p) return;
-  showModal(` <div class="card max-w-2xl w-full p-0 overflow-hidden modal-enter"><div class="hero-mesh p-6 text-white relative"><button onclick="closeModal()" class="absolute top-4 right-4 w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button><div class="flex items-center gap-2 mb-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gold text-ink">${p.kategori}</span><span class="text-xs text-white/70">${fmtTanggal(p.tanggal)}</span></div><h3 class="font-display text-2xl lg:text-3xl leading-tight">${p.judul}</h3></div><div class="p-6"><p class="text-ink-2 leading-relaxed">${p.isi}</p><div class="mt-6 pt-6 border-t border-line flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-sm">PA</div><div><div class="font-bold text-sm">Panitia HUT RI 81</div><div class="text-xs text-ink-2">Sekretariat Resmi</div></div></div><button onclick="closeModal()" class="btn btn-light">Tutup</button></div></div></div>`);
+  showModal(`
+    <div class="card max-w-2xl w-full p-0 overflow-hidden modal-enter">
+      <div class="relative h-48 overflow-hidden">
+        ${p.img ? `<img src="${p.img}" class="w-full h-full object-cover">` : `<div class="hero-mesh w-full h-full"></div>`}
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
+        <button onclick="closeModal()" class="absolute top-4 right-4 w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white backdrop-blur"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <div class="absolute bottom-4 left-6 right-6 text-white">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gold text-ink">${p.kategori}</span>
+            <span class="text-xs text-white/70">${fmtTanggal(p.tanggal)}</span>
+          </div>
+          <h3 class="font-display text-2xl lg:text-3xl leading-tight">${p.judul}</h3>
+        </div>
+      </div>
+      <div class="p-6">
+        <p class="text-ink-2 leading-relaxed whitespace-pre-line">${p.isi}</p>
+        <div class="mt-6 pt-6 border-t border-line flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-sm">PA</div>
+            <div>
+              <div class="font-bold text-sm">Panitia HUT RI 81</div>
+              <div class="text-xs text-ink-2">Sekretariat Resmi</div>
+            </div>
+          </div>
+          <button onclick="closeModal()" class="btn btn-light">Tutup</button>
+        </div>
+      </div>
+    </div>
+  `);
+  lucide.createIcons();
 }
 
 function showModal(html){
@@ -1506,18 +1549,65 @@ function renderAgendaTable(){
   body.innerHTML = items.map(a=>`<tr class="row-hover transition"><td class="px-4 py-3"><div class="font-bold text-sm">${a.judul}</div><div class="text-xs text-ink-2">${a.waktu} WIB</div></td><td class="px-4 py-3"><span class="badge ${KATEGORI_COLOR[a.kategori]}">${KATEGORI_LABEL[a.kategori]}</span></td><td class="px-4 py-3 text-sm">${fmtTanggal(a.tanggal)}</td><td class="px-4 py-3 text-sm">${a.lokasi}</td><td class="px-4 py-3"><span class="badge ${STATUS_COLOR[a.status]}">${a.status}</span></td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="viewAgenda(${a.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="eye" class="w-4 h-4"></i></button><button onclick="openAgendaModal(${a.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="deleteAgenda(${a.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`).join("");
   lucide.createIcons();
 }
+
+// === UBAH DI SINI: Penambahan Upload Foto Agenda ===
 function openAgendaModal(id){
   const a = id ? STATE.agenda.find(x=>x.id===id) : null;
-  showModal(`<div class="card max-w-2xl w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">${a?'EDIT':'TAMBAH'} AGENDA</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="agendaForm" class="p-6 space-y-4"><div><label class="label">Judul Agenda</label><input type="text" id="f_judul" class="input" value="${a?.judul||''}" required></div><div class="grid grid-cols-2 gap-4"><div><label class="label">Kategori</label><select id="f_kategori" class="input">${Object.entries(KATEGORI_LABEL).map(([k,v])=>`<option value="${k}" ${a?.kategori===k?'selected':''}>${v}</option>`).join("")}</select></div><div><label class="label">Status</label><select id="f_status" class="input">${["draft","aktif","selesai"].map(s=>`<option value="${s}" ${a?.status===s?'selected':''}>${s[0].toUpperCase()+s.slice(1)}</option>`).join("")}</select></div></div><div class="grid grid-cols-2 gap-4"><div><label class="label">Tanggal</label><input type="date" id="f_tanggal" class="input" value="${a?.tanggal||'2026-08-17'}" required></div><div><label class="label">Waktu</label><input type="time" id="f_waktu" class="input" value="${a?.waktu||'08:00'}" required></div></div><div><label class="label">Lokasi</label><input type="text" id="f_lokasi" class="input" value="${a?.lokasi||''}" required></div><div><label class="label">Deskripsi</label><textarea id="f_deskripsi" class="input" rows="3" required>${a?.deskripsi||''}</textarea></div><div><label class="label">Jumlah Peserta</label><input type="number" id="f_peserta" class="input" value="${a?.peserta||0}"></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> ${a?'Simpan Perubahan':'Tambah Agenda'}</button></div></form></div>`);
+  showModal(`
+    <div class="card max-w-2xl w-full modal-enter">
+      <div class="px-6 py-4 border-b border-line flex items-center justify-between">
+        <h3 class="font-display text-2xl">${a?'EDIT':'TAMBAH'} AGENDA</h3>
+        <button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <form id="agendaForm" class="p-6 space-y-4">
+        <div>
+          <label class="label">Foto Agenda (Opsional)</label>
+          <div id="agendaImgPreview" class="aspect-video bg-cream-2 rounded-xl border-2 border-dashed border-line flex items-center justify-center text-ink-2 text-sm mb-2 overflow-hidden">
+            ${a?.img ? `<img src="${a.img}" class="w-full h-full object-cover rounded-xl">` : `<div class="text-center"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2"></i><div>Pratinjau akan muncul di sini</div></div>`}
+          </div>
+          <input type="text" id="f_img_agenda" class="input hidden" value="${a?.img||''}">
+          <label class="btn btn-light cursor-pointer w-full"><i data-lucide="upload" class="w-4 h-4"></i> Pilih Gambar<input type="file" accept="image/*" class="hidden" onchange="handleImgUploadGeneric(event, 'f_img_agenda', 'agendaImgPreview')"></label>
+        </div>
+        <div><label class="label">Judul Agenda</label><input type="text" id="f_judul" class="input" value="${a?.judul||''}" required></div>
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="label">Kategori</label><select id="f_kategori" class="input">${Object.entries(KATEGORI_LABEL).map(([k,v])=>`<option value="${k}" ${a?.kategori===k?'selected':''}>${v}</option>`).join("")}</select></div>
+          <div><label class="label">Status</label><select id="f_status" class="input">${["draft","aktif","selesai"].map(s=>`<option value="${s}" ${a?.status===s?'selected':''}>${s[0].toUpperCase()+s.slice(1)}</option>`).join("")}</select></div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="label">Tanggal</label><input type="date" id="f_tanggal" class="input" value="${a?.tanggal||'2026-08-17'}" required></div>
+          <div><label class="label">Waktu</label><input type="time" id="f_waktu" class="input" value="${a?.waktu||'08:00'}" required></div>
+        </div>
+        <div><label class="label">Lokasi</label><input type="text" id="f_lokasi" class="input" value="${a?.lokasi||''}" required></div>
+        <div><label class="label">Deskripsi</label><textarea id="f_deskripsi" class="input" rows="3" required>${a?.deskripsi||''}</textarea></div>
+        <div><label class="label">Jumlah Peserta</label><input type="number" id="f_peserta" class="input" value="${a?.peserta||0}"></div>
+        <div class="flex items-center justify-end gap-2 pt-4 border-t border-line">
+          <button type="button" onclick="closeModal()" class="btn btn-light">Batal</button>
+          <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> ${a?'Simpan Perubahan':'Tambah Agenda'}</button>
+        </div>
+      </form>
+    </div>
+  `);
   $("#agendaForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
-    const data = { judul:$("#f_judul").value, kategori:$("#f_kategori").value, status:$("#f_status").value, tanggal:$("#f_tanggal").value, waktu:$("#f_waktu").value, lokasi:$("#f_lokasi").value, deskripsi:$("#f_deskripsi").value, peserta:+$("#f_peserta").value||0 }; 
+    const imgVal = $("#f_img_agenda").value;
+    const data = { 
+      judul:$("#f_judul").value, 
+      kategori:$("#f_kategori").value, 
+      status:$("#f_status").value, 
+      tanggal:$("#f_tanggal").value, 
+      waktu:$("#f_waktu").value, 
+      lokasi:$("#f_lokasi").value, 
+      deskripsi:$("#f_deskripsi").value, 
+      peserta:+$("#f_peserta").value||0,
+      img: imgVal || `https://picsum.photos/seed/agenda${uid()}/800/500.jpg` 
+    }; 
     if(a){ Object.assign(a, data); toast("Agenda berhasil diperbarui", "success"); } 
     else { STATE.agenda.unshift({ id: uid(), ...data }); toast("Agenda baru ditambahkan", "success"); } 
     await syncDataToSupabase('agenda', STATE.agenda);
     closeModal(); renderAgendaTable(); renderAgendaTimeline(); renderAgendaDetail(); $("#statAgenda").textContent = STATE.agenda.length; 
   });
 }
+
 function viewAgenda(id){ const a = STATE.agenda.find(x=>x.id===id); if(!a) return; showModal(`<div class="card max-w-xl w-full modal-enter overflow-hidden"><div class="hero-mesh p-6 text-white relative"><button onclick="closeModal()" class="absolute top-4 right-4 w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button><div class="flex items-center gap-2 mb-2"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/95 text-merah">${KATEGORI_LABEL[a.kategori]}</span></div><h3 class="font-display text-2xl">${a.judul}</h3></div><div class="p-6 space-y-3"><div class="grid grid-cols-2 gap-3 text-sm"><div><div class="text-xs text-ink-2 uppercase">Tanggal</div><div class="font-bold">${fmtTanggal(a.tanggal)}</div></div><div><div class="text-xs text-ink-2 uppercase">Waktu</div><div class="font-bold">${a.waktu} WIB</div></div><div><div class="text-xs text-ink-2 uppercase">Lokasi</div><div class="font-bold">${a.lokasi}</div></div><div><div class="text-xs text-ink-2 uppercase">Peserta</div><div class="font-bold">${a.peserta.toLocaleString("id-ID")}</div></div></div><div><div class="text-xs text-ink-2 uppercase mb-1">Deskripsi</div><p class="text-sm text-ink-2 leading-relaxed">${a.deskripsi}</p></div></div></div>`); }
 function deleteAgenda(id){ showModal(`<div class="card max-w-md w-full p-6 modal-enter text-center"><div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4"><i data-lucide="alert-triangle" class="w-8 h-8"></i></div><h3 class="font-display text-2xl">Hapus Agenda?</h3><p class="text-sm text-ink-2 mt-2 mb-6">Agenda yang dihapus tidak dapat dikembalikan.</p><div class="flex gap-2"><button onclick="closeModal()" class="btn btn-light flex-1 justify-center">Batal</button><button onclick="confirmDeleteAgenda(${id})" class="btn btn-primary flex-1 justify-center" style="background:#e11d48"><i data-lucide="trash-2" class="w-4 h-4"></i> Hapus</button></div></div>`); }
 async function confirmDeleteAgenda(id){ 
@@ -1538,7 +1628,7 @@ function renderGaleriAdmin(){
   lucide.createIcons();
 }
 function openGaleriModal(){
-  showModal(`<div class="card max-w-lg w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">UNGGAH FOTO</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="galeriForm" class="p-6 space-y-4"><div><label class="label">Judul Foto</label><input type="text" id="f_judul" class="input" placeholder="Mis. Upacara Bendera" required></div><div><label class="label">Kategori</label><select id="f_kategori" class="input">${Object.entries(KATEGORI_LABEL).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></div><div><label class="label">Pratinjau Gambar</label><div id="imgPreview" class="aspect-landscape bg-cream-2 rounded-xl border-2 border-dashed border-line flex items-center justify-center text-ink-2 text-sm"><div class="text-center"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2"></i><div>Pratinjau akan muncul di sini</div></div></div></div><div><label class="label">URL Gambar (atau unggah)</label><div class="flex gap-2"><input type="text" id="f_img" class="input flex-1" placeholder="https://..." oninput="updateImgPreview(this.value)"><label class="btn btn-light cursor-pointer"><i data-lucide="upload" class="w-4 h-4"></i> Pilih<input type="file" accept="image/*" class="hidden" onchange="handleImgUpload(event)"></label></div><div class="text-xs text-ink-2 mt-1">Kosongkan untuk menggunakan gambar acak. Gambar yang diunggah akan dikompres otomatis.</div></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Unggah</button></div></form></div>`);
+  showModal(`<div class="card max-w-lg w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">UNGGAH FOTO</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="galeriForm" class="p-6 space-y-4"><div><label class="label">Judul Foto</label><input type="text" id="f_judul" class="input" placeholder="Mis. Upacara Bendera" required></div><div><label class="label">Kategori</label><select id="f_kategori" class="input">${Object.entries(KATEGORI_LABEL).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></div><div><label class="label">Pratinjau Gambar</label><div id="imgPreview" class="aspect-landscape bg-cream-2 rounded-xl border-2 border-dashed border-line flex items-center justify-center text-ink-2 text-sm"><div class="text-center"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2"></i><div>Pratinjau akan muncul di sini</div></div></div></div><div><label class="label">URL Gambar (atau unggah)</label><div class="flex gap-2"><input type="text" id="f_img" class="input flex-1" placeholder="https://..." oninput="updateImgPreview(this.value)"><label class="btn btn-light cursor-pointer"><i data-lucide="upload" class="w-4 h-4"></i> Pilih<input type="file" accept="image/*" class="hidden" onchange="handleImgUploadGeneric(event, 'f_img', 'imgPreview')"></label></div><div class="text-xs text-ink-2 mt-1">Kosongkan untuk menggunakan gambar acak. Gambar yang diunggah akan dikompres otomatis.</div></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Unggah</button></div></form></div>`);
   $("#galeriForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
     const judul = $("#f_judul").value, kategori = $("#f_kategori").value; 
@@ -1554,7 +1644,9 @@ function updateImgPreview(url){
     p.innerHTML = `<div class="text-center"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2"></i><div>Pratinjau akan muncul di sini</div></div>`;
   }
 }
-async function handleImgUpload(e) {
+
+// Dibuat generic untuk dipakai di Galeri, Agenda, dan Pengumuman
+async function handleImgUploadGeneric(e, inputId, previewId) {
   const file = e.target.files[0];
   if (!file) return;
   toast("Memproses dan mengompres gambar...", "info");
@@ -1572,13 +1664,16 @@ async function handleImgUpload(e) {
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
       const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
-      $("#f_img").value = compressedBase64;
-      updateImgPreview(compressedBase64);
-      toast("Gambar siap disimpan. Klik 'Unggah'.", "success");
+      const input = document.getElementById(inputId);
+      const preview = document.getElementById(previewId);
+      if(input) input.value = compressedBase64;
+      if(preview) preview.innerHTML = `<img src="${compressedBase64}" class="w-full h-full object-cover rounded-xl">`;
+      toast("Gambar siap disimpan. Klik 'Simpan'.", "success");
     };
   };
   reader.readAsDataURL(file);
 }
+
 async function deleteGaleri(id){ 
   STATE.galeri = STATE.galeri.filter(g=>g.id!==id); 
   await syncDataToSupabase('galeri', STATE.galeri);
@@ -1590,12 +1685,49 @@ function renderPengumumanTable(){
   body.innerHTML = STATE.pengumuman.map(p=>`<tr class="row-hover transition"><td class="px-4 py-3"><div class="font-bold text-sm">${p.judul}</div><div class="text-xs text-ink-2 line-clamp-1">${p.isi}</div></td><td class="px-4 py-3"><span class="badge bg-gold/20 text-gold-deep">${p.kategori}</span></td><td class="px-4 py-3 text-sm">${fmtTanggal(p.tanggal)}</td><td class="px-4 py-3"><span class="badge ${STATUS_COLOR[p.status]}">${p.status}</span></td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openPengumumanModal(${p.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="deletePengumuman(${p.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`).join("");
   lucide.createIcons();
 }
+
+// === UBAH DI SINI: Penambahan Upload Foto Pengumuman ===
 function openPengumumanModal(id){
   const p = id ? STATE.pengumuman.find(x=>x.id===id) : null;
-  showModal(`<div class="card max-w-2xl w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">${p?'EDIT':'BUAT'} PENGUMUMAN</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="pengumumanForm" class="p-6 space-y-4"><div><label class="label">Judul Pengumuman</label><input type="text" id="f_judul" class="input" value="${p?.judul||''}" required></div><div class="grid grid-cols-2 gap-4"><div><label class="label">Kategori</label><input type="text" id="f_kategori" class="input" value="${p?.kategori||'Umum'}" required></div><div><label class="label">Status</label><select id="f_status" class="input">${["draft","aktif"].map(s=>`<option value="${s}" ${p?.status===s?'selected':''}>${s[0].toUpperCase()+s.slice(1)}</option>`).join("")}</select></div></div><div><label class="label">Tanggal</label><input type="date" id="f_tanggal" class="input" value="${p?.tanggal||new Date().toISOString().slice(0,10)}" required></div><div><label class="label">Isi Pengumuman</label><textarea id="f_isi" class="input" rows="5" required>${p?.isi||''}</textarea></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button></div></form></div>`);
+  showModal(`
+    <div class="card max-w-2xl w-full modal-enter">
+      <div class="px-6 py-4 border-b border-line flex items-center justify-between">
+        <h3 class="font-display text-2xl">${p?'EDIT':'BUAT'} PENGUMUMAN</h3>
+        <button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <form id="pengumumanForm" class="p-6 space-y-4">
+        <div>
+          <label class="label">Foto Pengumuman (Opsional)</label>
+          <div id="pengumumanImgPreview" class="aspect-video bg-cream-2 rounded-xl border-2 border-dashed border-line flex items-center justify-center text-ink-2 text-sm mb-2 overflow-hidden">
+            ${p?.img ? `<img src="${p.img}" class="w-full h-full object-cover rounded-xl">` : `<div class="text-center"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2"></i><div>Pratinjau akan muncul di sini</div></div>`}
+          </div>
+          <input type="text" id="f_img_pengumuman" class="input hidden" value="${p?.img||''}">
+          <label class="btn btn-light cursor-pointer w-full"><i data-lucide="upload" class="w-4 h-4"></i> Pilih Gambar<input type="file" accept="image/*" class="hidden" onchange="handleImgUploadGeneric(event, 'f_img_pengumuman', 'pengumumanImgPreview')"></label>
+        </div>
+        <div><label class="label">Judul Pengumuman</label><input type="text" id="f_judul" class="input" value="${p?.judul||''}" required></div>
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="label">Kategori</label><input type="text" id="f_kategori" class="input" value="${p?.kategori||'Umum'}" required></div>
+          <div><label class="label">Status</label><select id="f_status" class="input">${["draft","aktif"].map(s=>`<option value="${s}" ${p?.status===s?'selected':''}>${s[0].toUpperCase()+s.slice(1)}</option>`).join("")}</select></div>
+        </div>
+        <div><label class="label">Tanggal</label><input type="date" id="f_tanggal" class="input" value="${p?.tanggal||new Date().toISOString().slice(0,10)}" required></div>
+        <div><label class="label">Isi Pengumuman</label><textarea id="f_isi" class="input" rows="5" required>${p?.isi||''}</textarea></div>
+        <div class="flex items-center justify-end gap-2 pt-4 border-t border-line">
+          <button type="button" onclick="closeModal()" class="btn btn-light">Batal</button>
+          <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button>
+        </div>
+      </form>
+    </div>
+  `);
   $("#pengumumanForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
-    const data = { judul:$("#f_judul").value, kategori:$("#f_kategori").value, status:$("#f_status").value, tanggal:$("#f_tanggal").value, isi:$("#f_isi").value }; 
+    const data = { 
+      judul:$("#f_judul").value, 
+      kategori:$("#f_kategori").value, 
+      status:$("#f_status").value, 
+      tanggal:$("#f_tanggal").value, 
+      isi:$("#f_isi").value,
+      img: $("#f_img_pengumuman").value
+    }; 
     if(p){ Object.assign(p, data); toast("Pengumuman diperbarui", "success"); } 
     else { STATE.pengumuman.unshift({ id: uid(), ...data }); toast("Pengumuman dibuat", "success"); } 
     await syncDataToSupabase('pengumuman', STATE.pengumuman);
