@@ -969,12 +969,13 @@ async function testSupabase() {
   setTimeout(() => location.reload(), 1000);
 });
 
+// Perbaikan sinkronisasi agar data lokal langsung update
 async function syncDataToSupabase(table, data) {
-  if (!supabaseClient) return;
+  if (!supabaseClient) return true;
   try {
     const { error: deleteError } = await supabaseClient.from(table).delete().neq('id', -1);
     if (deleteError) throw deleteError;
-    if (!data || data.length === 0) return;
+    if (!data || data.length === 0) return true;
 
     const cleanData = data.map(item => {
       const cleanItem = { ...item };
@@ -992,9 +993,11 @@ async function syncDataToSupabase(table, data) {
 
     const { error: insertError } = await supabaseClient.from(table).insert(cleanData);
     if (insertError) throw insertError;
+    return true;
   } catch (e) {
     console.error(`Sync ${table} error:`, e);
     toast("Gagal sinkronisasi ke Supabase: " + e.message, "error");
+    return false;
   }
 }
 
@@ -1154,10 +1157,15 @@ function initAgendaFilter(){
   });
 }
 
-// Fungsi Galeri yang Diperbarui agar teks tidak menumpuk
+// Fungsi Galeri Halaman Depan
 function renderLandingGaleri(){
   const grid = $("#galleryGrid"); 
   if(!grid) return;
+  if(STATE.galeri.length === 0){
+    grid.innerHTML = `<div class="col-span-full text-center py-10 text-ink-2"><i data-lucide="image-off" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Belum ada dokumentasi</div></div>`;
+    lucide.createIcons();
+    return;
+  }
   grid.innerHTML = STATE.galeri.map(g=>`
     <div class="gallery-item cursor-pointer" onclick="openGaleriViewer('${g.id}')">
       <div class="img-wrap">
@@ -1255,8 +1263,8 @@ function renderPanitiaCards(){
       <div class="aspect-square bg-gradient-to-br from-merah to-merah-deep relative">
         ${getPanitiaFotoHtml(p.foto, 'text-7xl')}
         <div class="absolute top-3 right-3 flex gap-1">
-          <button onclick="openPanitiaModal(${p.id})" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center backdrop-blur"><i data-lucide="pencil" class="w-4 h-4"></i></button>
-          <button onclick="deletePanitia(${p.id})" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-rose-500 text-white flex items-center justify-center backdrop-blur"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          <button onclick="openPanitiaModal(${p.id})" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center backdrop-blur" title="Edit"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+          <button onclick="deletePanitia(${p.id})" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-rose-500 text-white flex items-center justify-center backdrop-blur" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
         </div>
       </div>
       <div class="p-4 text-center">
@@ -1264,6 +1272,10 @@ function renderPanitiaCards(){
         <div class="text-xs text-ink-2 mt-0.5">${p.jabatan}</div>
         <div class="mt-3 pt-3 border-t border-line">
           <span class="badge bg-merah-soft text-merah">Panitia HUT RI 81</span>
+        </div>
+        <div class="mt-3 flex gap-2">
+          <button onclick="openPanitiaModal(${p.id})" class="btn btn-primary flex-1 !py-2 text-xs"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</button>
+          <button onclick="deletePanitia(${p.id})" class="btn btn-light !py-2 !px-3 text-xs" style="color:#e11d48" title="Hapus"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
         </div>
       </div>
     </div>
@@ -1343,6 +1355,15 @@ function updatePanitiaPreview(val) {
   } else {
     p.innerHTML = `<div class="font-display text-4xl text-ink">${val.toUpperCase()}</div>`;
   }
+}
+
+function deletePanitia(id){
+  showModal(`<div class="card max-w-md w-full p-6 modal-enter text-center"><div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4"><i data-lucide="alert-triangle" class="w-8 h-8"></i></div><h3 class="font-display text-2xl">Hapus Panitia?</h3><p class="text-sm text-ink-2 mt-2 mb-6">Data panitia yang dihapus tidak dapat dikembalikan.</p><div class="flex gap-2"><button onclick="closeModal()" class="btn btn-light flex-1 justify-center">Batal</button><button onclick="confirmDeletePanitia(${id})" class="btn btn-primary flex-1 justify-center" style="background:#e11d48"><i data-lucide="trash-2" class="w-4 h-4"></i> Hapus</button></div></div>`);
+}
+async function confirmDeletePanitia(id){
+  STATE.panitia = STATE.panitia.filter(p=>p.id!==id);
+  await syncDataToSupabase('panitia', STATE.panitia);
+  closeModal(); renderPanitiaCards(); renderLandingPanitia(); $("#statPanitia").textContent = STATE.panitia.length; toast("Panitia telah dihapus", "info");
 }
 
 function renderLandingPengumuman(){
@@ -1505,8 +1526,14 @@ async function confirmDeleteAgenda(id){
   closeModal(); renderAgendaTable(); renderAgendaTimeline(); renderAgendaDetail(); $("#statAgenda").textContent = STATE.agenda.length; toast("Agenda telah dihapus", "info"); 
 }
 
+// Fungsi Galeri Admin
 function renderGaleriAdmin(){
   const wrap = $("#galeriGridAdmin"); if(!wrap) return;
+  if(STATE.galeri.length === 0){
+    wrap.innerHTML = `<div class="col-span-full text-center py-12 text-ink-2"><i data-lucide="image-off" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Belum ada foto di galeri</div></div>`;
+    lucide.createIcons();
+    return;
+  }
   wrap.innerHTML = STATE.galeri.map(g=>`<div class="card overflow-hidden group"><div class="aspect-landscape relative overflow-hidden"><img src="${g.img}" alt="${g.judul}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"><div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition"></div><div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition"><button onclick="deleteGaleri(${g.id})" class="w-8 h-8 rounded-lg bg-white/95 hover:bg-rose-500 hover:text-white text-ink flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></div><div class="p-3"><div class="text-[10px] uppercase tracking-widest text-merah font-bold">${KATEGORI_LABEL[g.kategori]||g.kategori}</div><div class="font-bold text-sm mt-0.5 truncate">${g.judul}</div></div></div>`).join("");
   lucide.createIcons();
 }
@@ -1621,8 +1648,8 @@ function renderLombaTable(){
       <td class="px-4 py-3"><div class="flex items-center justify-end gap-1">
         ${l.status==="pending" ? `<button onclick="verifyLomba(${l.id})" class="w-8 h-8 rounded-lg hover:bg-emerald-50 text-ink-2 hover:text-emerald-600 flex items-center justify-center transition" title="Verifikasi"><i data-lucide="check" class="w-4 h-4"></i></button>` : ""}
         ${l.status==="terverifikasi" ? `<button onclick="setMenang(${l.id})" class="w-8 h-8 rounded-lg hover:bg-amber-50 text-ink-2 hover:text-amber-600 flex items-center justify-center transition" title="Jadikan Pemenang"><i data-lucide="trophy" class="w-4 h-4"></i></button>` : ""}
-        <button onclick="openLombaModal(${l.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button>
-        <button onclick="deleteLomba(${l.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+        <button onclick="openLombaModal(${l.id})" class="btn btn-primary !py-1.5 !px-3 text-xs"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</button>
+        <button onclick="deleteLomba(${l.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
       </div></td>
     </tr>
   `).join("");
@@ -1696,7 +1723,7 @@ function renderKepanitiaanTable(){
   const items = STATE.kepanitiaanLomba.filter(k => { const panitia = STATE.panitia.find(p=>p.id===k.panitiaId); const panitiaName = panitia ? panitia.nama.toLowerCase() : ""; return (panitiaName.includes(q) || k.lomba.toLowerCase().includes(q) || k.jabatan.toLowerCase().includes(q)) && (fl==="all" || k.lomba===fl) && (fj==="all" || k.jabatan===fj); });
   const body = $("#kepanitiaanTableBody");
   if(items.length === 0){ body.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada penugasan ditemukan</div></td></tr>`; lucide.createIcons(); return; }
-  body.innerHTML = items.map(k=>{ const p = STATE.panitia.find(x=>x.id===k.panitiaId); const initials = p ? p.nama.split(" ").map(s=>s[0]).slice(0,2).join("") : "?"; const jabatanColor = k.jabatan.includes("Juri") ? "bg-indigo-50 text-indigo-700" : k.jabatan.includes("Penanggung Jawab") ? "bg-merah-soft text-merah" : "bg-amber-50 text-amber-700"; return `<tr class="row-hover transition"><td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-xs">${initials}</div><div><div class="font-bold text-sm">${p?.nama||"Panitia Dihapus"}</div><div class="text-xs text-ink-2">${p?.divisi||""}</div></div></div></td><td class="px-4 py-3 text-sm font-semibold">${k.lomba}</td><td class="px-4 py-3"><span class="badge ${jabatanColor}">${k.jabatan}</span></td><td class="px-4 py-3 text-sm text-ink-2">${k.tugas}</td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openKepanitiaanModal(${k.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="deleteKepanitiaan(${k.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`; }).join("");
+  body.innerHTML = items.map(k=>{ const p = STATE.panitia.find(x=>x.id===k.panitiaId); const initials = p ? p.nama.split(" ").map(s=>s[0]).slice(0,2).join("") : "?"; const jabatanColor = k.jabatan.includes("Juri") ? "bg-indigo-50 text-indigo-700" : k.jabatan.includes("Penanggung Jawab") ? "bg-merah-soft text-merah" : "bg-amber-50 text-amber-700"; return `<tr class="row-hover transition"><td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-xs">${initials}</div><div><div class="font-bold text-sm">${p?.nama||"Panitia Dihapus"}</div><div class="text-xs text-ink-2">${p?.divisi||""}</div></div></div></td><td class="px-4 py-3 text-sm font-semibold">${k.lomba}</td><td class="px-4 py-3"><span class="badge ${jabatanColor}">${k.jabatan}</span></td><td class="px-4 py-3 text-sm text-ink-2">${k.tugas}</td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openKepanitiaanModal(${k.id})" class="btn btn-primary !py-1.5 !px-3 text-xs"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</button><button onclick="deleteKepanitiaan(${k.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`; }).join("");
   lucide.createIcons();
 }
 function openKepanitiaanModal(id){
