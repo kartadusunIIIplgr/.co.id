@@ -2494,7 +2494,7 @@ function renderChatWidget() {
   const statusEl = $("#chatWidgetUserStatus");
 
   if (statusEl) {
-    statusEl.textContent = isValidMember ? `Anggota: ${currentMemberName}` : "Pilih Nama Anggota";
+    statusEl.textContent = isValidMember ? `Anggota: ${currentMemberName}` : "Tamu (Masukkan No HP)";
   }
 
   if (isValidMember) {
@@ -2506,20 +2506,19 @@ function renderChatWidget() {
       <div class="text-[10px] text-center text-ink-2 mt-1 flex items-center justify-center gap-1">
         <i data-lucide="user-check" class="w-3 h-3"></i> 
         <span>Anda: ${currentMemberName}</span> 
-        <button onclick="logoutMember()" class="text-merah font-bold underline ml-1">Ganti Nama</button>
+        <button onclick="logoutMember()" class="text-merah font-bold underline ml-1">Keluar</button>
       </div>
     `;
     $("#chatWidgetForm").addEventListener("submit", handleChatSubmit);
   } else {
     footerEl.innerHTML = `
-      <div class="space-y-2">
-        <select id="selectChatMemberWidget" class="input !py-2 !text-sm" onchange="selectChatMember(this.value)">
-          <option value="">-- Pilih Nama Anda --</option>
-          ${STATE.chatMembers.map(m => `<option value="${m.name}">${m.name}</option>`).join('')}
-        </select>
-        <p class="text-[10px] text-center text-ink-2">Pilih nama terdaftar untuk mulai chat.</p>
-      </div>
+      <form id="chatWidgetLoginForm" class="space-y-2">
+        <input type="tel" id="chatWidgetPhoneInput" class="input !py-2 !text-sm" placeholder="Masukkan No HP Anda..." required>
+        <button type="submit" class="btn btn-primary w-full !py-2 !text-sm">Masuk Chat</button>
+        <p class="text-[10px] text-center text-ink-2">Gunakan No HP yang terdaftar di Panitia.</p>
+      </form>
     `;
+    $("#chatWidgetLoginForm").addEventListener("submit", handlePhoneLogin);
   }
   
   lucide.createIcons();
@@ -2531,8 +2530,7 @@ function renderChatWidget() {
 function renderChatPublikFooter() {
   const footerEl = $("#chatPublikFooter");
   if(!footerEl) return;
-    const countEl = $("#chatMemberCount");
-  if(countEl) countEl.textContent = `${STATE.chatMembers.length} Anggota`;
+  
   const currentMemberName = localStorage.getItem('hutri81_chat_name');
   const isValidMember = STATE.chatMembers.some(m => m.name.toLowerCase() === currentMemberName?.toLowerCase());
   
@@ -2545,32 +2543,85 @@ function renderChatPublikFooter() {
       <div class="text-[10px] text-center text-ink-2 mt-1 flex items-center justify-center gap-1">
         <i data-lucide="user-check" class="w-3 h-3"></i> 
         <span>Anda: ${currentMemberName}</span> 
-        <button onclick="logoutMember()" class="text-merah font-bold underline ml-1">Ganti Nama</button>
+        <button onclick="logoutMember()" class="text-merah font-bold underline ml-1">Keluar</button>
       </div>
     `;
     $("#chatFormPublic").addEventListener("submit", handleChatSubmitInline);
   } else {
     footerEl.innerHTML = `
-      <div class="space-y-2">
-        <select id="selectChatMemberPublic" class="input !py-2 !text-sm" onchange="selectChatMember(this.value)">
-          <option value="">-- Pilih Nama Anda --</option>
-          ${STATE.chatMembers.map(m => `<option value="${m.name}">${m.name}</option>`).join('')}
-        </select>
-        <p class="text-[10px] text-center text-ink-2">Pilih nama terdaftar untuk mulai chat.</p>
-      </div>
+      <form id="chatPublicLoginForm" class="flex gap-2">
+        <input type="tel" id="chatInputPhonePublic" class="input flex-1 !py-2 !text-sm" placeholder="Masukkan No HP Anda..." required>
+        <button type="submit" class="btn btn-primary !p-2 !rounded-lg"><i data-lucide="log-in" class="w-4 h-4"></i> Masuk</button>
+      </form>
     `;
+    $("#chatPublicLoginForm").addEventListener("submit", handlePhoneLogin);
   }
   
-  lucide.createIcons();
+    if(wrapInline) {
+    wrapInline.innerHTML = htmlContent;
+    wrapInline.scrollTop = wrapInline.scrollHeight;
+  }
+  // lucide.createIcons();  <--- HAPUS ATAU KASIH // INI
 }
 
 function logoutMember() {
   localStorage.removeItem('hutri81_chat_name');
-  toast("Nama berhasil direset. Silakan pilih nama kembali.", "info");
+  localStorage.removeItem('hutri81_user_phone'); // Hapus juga No HP yang tersimpan
+  toast("Anda telah keluar. Silakan masuk kembali dengan No HP.", "info");
   renderChatWidget();
   renderChatPublikFooter();
 }
+function handlePhoneLogin(e) {
+  e.preventDefault();
+  const input = $("#chatWidgetPhoneInput") || $("#chatInputPhonePublic");
+  if(!input) return;
+  const phone = input.value.trim();
+  // Fungsi untuk mengecek apakah pengguna sebelumnya sudah pernah login di HP ini
+function checkAutoLogin() {
+  // Jika dia sudah punya sesi nama chat, biarkan saja
+  if (localStorage.getItem('hutri81_chat_name')) return;
 
+  // Cek apakah browser HPnya menyimpan No HP sebelumnya
+  const savedPhone = localStorage.getItem('hutri81_user_phone');
+  if (savedPhone) {
+    // Cocokkan No HP yang tersimpan dengan database anggota
+    const member = STATE.chatMembers.find(m => (m.phone || m.password) === savedPhone);
+    if (member) {
+      // Langsung login otomatis!
+      localStorage.setItem('hutri81_chat_name', member.name);
+      toast(`Selamat datang kembali, ${member.name}!`, "success");
+    } else {
+      // Jika No HP di browser tidak ada di database (misal sudah dihapus admin), bersihkan memori
+      localStorage.removeItem('hutri81_user_phone');
+    }
+  }
+}
+  // Cari anggota berdasarkan Nomor HP
+  const member = STATE.chatMembers.find(m => (m.phone || m.password) === phone);
+  
+  if (member) {
+    // Jika nomor HP ditemukan, otomatis login dengan nama anggota
+    localStorage.setItem('hutri81_chat_name', member.name);
+    // Simpan nomor HP di browser HP pengguna agar tidak perlu input lagi nanti
+    localStorage.setItem('hutri81_user_phone', phone);
+    
+    // Minta izin notifikasi browser
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          toast("Notifikasi diaktifkan! Anda akan diberi tahu jika ada pesan baru.", "success");
+        }
+      });
+    }
+    
+    toast(`Halo, ${member.name}! Anda berhasil masuk.`, "success");
+    renderChatWidget();
+    renderChatPublikFooter();
+  } else {
+    // Jika nomor HP tidak terdaftar
+    toast("Nomor HP tidak terdaftar. Hubungi Admin untuk mendaftar.", "error");
+  }
+}
 function selectChatMember(name) {
   if(!name) return;
   const isMember = STATE.chatMembers.some(m => m.name.toLowerCase() === name.toLowerCase());
@@ -2684,7 +2735,46 @@ function escapeHtml(text) {
   div.textContent = text;
   return div.innerHTML;
 }
+// Fungsi khusus untuk menambahkan 1 pesan baru tanpa me-render ulang semuanya
+function appendSingleMessage(c) {
+  const wrap = $("#chatWidgetMessages");
+  const wrapInline = $("#chatMessagesPublic");
+  if(!wrap && !wrapInline) return;
 
+  // Hapus tulisan "Belum ada pesan" jika ada
+  if (wrap && wrap.querySelector('.text-center')) wrap.innerHTML = '';
+  if (wrapInline && wrapInline.querySelector('.text-center')) wrapInline.innerHTML = '';
+
+  const currentName = localStorage.getItem('hutri81_chat_name') || '';
+  const members = STATE.chatMembers || [];
+  const isOfficialMember = (name) => members.some(m => m.name.toLowerCase() === name.toLowerCase());
+
+  const isSent = c.user === currentName;
+  const official = isOfficialMember(c.user);
+  const avatar = getAvatarHtml(c.photo, c.user, 'w-8 h-8 mt-auto');
+  const timeStr = new Date(c.created_at).toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
+  
+  const html = `
+    <div class="chat-message-row ${isSent ? 'sent' : 'received'}">
+      ${!isSent ? avatar : ''}
+      <div class="chat-message ${isSent ? 'sent' : 'received'}">
+        ${!isSent ? `<div class="sender-name flex items-center gap-1">${c.user} ${official ? '<span class="badge bg-merah text-white text-[8px] py-0 px-1 rounded-sm">Anggota</span>' : ''}</div>` : ''}
+        <div>${escapeHtml(c.text)}</div>
+        <span class="chat-time">${timeStr}</span>
+      </div>
+      ${isSent ? avatar : ''}
+    </div>
+  `;
+  
+  if(wrap) {
+    wrap.insertAdjacentHTML('beforeend', html);
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+  if(wrapInline) {
+    wrapInline.insertAdjacentHTML('beforeend', html);
+    wrapInline.scrollTop = wrapInline.scrollHeight;
+  }
+}
 // === Handle Submit Pesan ===
 async function handleChatSubmit(e) {
   e.preventDefault();
@@ -2783,7 +2873,9 @@ function setupSupabaseRealtime() {
       if (parseInt(newMsg.id) > STATE.lastChatId) {
         STATE.chat.push(newMsg);
         STATE.lastChatId = parseInt(newMsg.id);
-        renderChatMessages();
+        
+        // GUNAKAN FUNGSI APPEND AGAR TIDAK LAG
+        appendSingleMessage(newMsg);
         
         // Bunyikan notifikasi jika pesan bukan dari diri sendiri
         const currentName = localStorage.getItem('hutri81_chat_name');
@@ -2795,33 +2887,81 @@ function setupSupabaseRealtime() {
     .subscribe();
 }
 
-// === POLLING CADANGAN (Jika tidak pakai Supabase) ===
-let chatInterval;
-function startChatPolling() {
-  if (!chatInterval) {
-    chatInterval = setInterval(async () => {
-      const widget = document.getElementById('chatWidget');
-      const chatSection = document.getElementById('chatPublik');
-      const isVisible = (widget && !widget.classList.contains("hidden-x")) || (chatSection && !document.getElementById('landing').classList.contains("hidden-x"));
-      
-      if (isVisible) {
-        const prevCount = STATE.chat.length;
-        await renderChatMessages();
-        
-        if (STATE.chat.length > prevCount) {
-          const newMessages = STATE.chat.slice(prevCount);
-          const currentName = localStorage.getItem('hutri81_chat_name');
-          newMessages.forEach(msg => {
-            if (msg.user !== currentName) {
-              showBrowserNotification("💬 Pesan Baru di Grup Chat", `${msg.user}: ${msg.text}`);
-            }
-          });
-        }
-      }
-    }, 3000);
+// === Handle Submit Pesan (Widget Kanan Bawah) ===
+async function handleChatSubmit(e) {
+  e.preventDefault();
+  const input = $("#chatWidgetInputText");
+  const name = localStorage.getItem('hutri81_chat_name');
+  const text = input.value.trim();
+  
+  if (!name || !text) return;
+  
+  const memberData = STATE.chatMembers.find(m => m.name.toLowerCase() === name.toLowerCase());
+  if (!memberData) {
+    toast("Sesi anggota tidak valid. Silakan login kembali.", "error");
+    logoutMember();
+    return;
+  }
+  
+  const photo = memberData.photo || '';
+  const msg = { id: uid(), user: name, photo, text, created_at: new Date().toISOString() };
+  
+  input.value = "";
+  STATE.chat.push(msg);
+  
+  // GUNAKAN FUNGSI APPEND AGAR PESAN LANGSUNG MUNCUL TANPA LAG
+  appendSingleMessage(msg);
+  
+  if (supabaseClient) {
+    try {
+      await supabaseClient.from('chat').insert([{ id: msg.id, user: msg.user, photo: msg.photo, text: msg.text, created_at: msg.created_at }]);
+    } catch (e) {
+      toast("Gagal mengirim pesan", "error");
+      STATE.chat = STATE.chat.filter(m => m.id !== msg.id);
+      renderChatMessages(); // Jika gagal, render ulang untuk menghapus pesan
+    }
+  } else {
+    localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
   }
 }
 
+// === Handle Submit Pesan (Halaman Publik) ===
+async function handleChatSubmitInline(e) {
+  e.preventDefault();
+  const input = $("#chatInputTextPublic");
+  const name = localStorage.getItem('hutri81_chat_name');
+  const text = input.value.trim();
+  
+  if (!name || !text) return;
+  
+  const memberData = STATE.chatMembers.find(m => m.name.toLowerCase() === name.toLowerCase());
+  if (!memberData) {
+    toast("Sesi anggota tidak valid. Silakan login kembali.", "error");
+    logoutMember();
+    return;
+  }
+  
+  const photo = memberData.photo || '';
+  const msg = { id: uid(), user: name, photo, text, created_at: new Date().toISOString() };
+  
+  input.value = "";
+  STATE.chat.push(msg);
+  
+  // GUNAKAN FUNGSI APPEND AGAR PESAN LANGSUNG MUNCUL TANPA LAG
+  appendSingleMessage(msg);
+  
+  if (supabaseClient) {
+    try {
+      await supabaseClient.from('chat').insert([{ id: msg.id, user: msg.user, photo: msg.photo, text: msg.text, created_at: msg.created_at }]);
+    } catch (e) {
+      toast("Gagal mengirim pesan", "error");
+      STATE.chat = STATE.chat.filter(m => m.id !== msg.id);
+      renderChatMessages(); // Jika gagal, render ulang untuk menghapus pesan
+    }
+  } else {
+    localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
+  }
+}
 /* ============================================================
    ADMIN: KELOLA ANGGOTA KARANG TARUNA (Daftar Kontak)
 ============================================================ */
@@ -2845,7 +2985,7 @@ function renderAnggotaChatTable() {
           <div class="font-bold text-sm">${m.name}</div>
         </div>
       </td>
-      <td class="px-4 py-3 text-sm font-semibold">${m.password || '-'}</td>
+      <td class="px-4 py-3 text-sm font-semibold">${m.phone || m.password || '-'}</td>
       <td class="px-4 py-3 text-sm">${fmtTanggal(m.created_at)}</td>
       <td class="px-4 py-3">
         <div class="flex items-center justify-end gap-1">
@@ -2857,7 +2997,6 @@ function renderAnggotaChatTable() {
   `).join("");
   lucide.createIcons();
 }
-
 function openAnggotaChatModal(id) {
   tempAnggotaImg = null; 
   const m = id ? STATE.chatMembers.find(x=>x.id===id) : null;
@@ -2882,7 +3021,7 @@ function openAnggotaChatModal(id) {
           <div class="text-xs text-ink-2 mt-1 text-center">Kosongkan jika ingin menggunakan inisial nama.</div>
         </div>
         <div><label class="label">Nama Anggota</label><input type="text" id="f_anggota_nama" class="input" value="${m?.name||''}" required></div>
-        <div><label class="label">Jabatan / Role</label><input type="text" id="f_anggota_pass" class="input" value="${m?.password||''}" placeholder="Misal: Ketua, Sekretaris, Anggota"></div>
+        <div><label class="label">Nomor HP (Untuk Verifikasi Chat)</label><input type="tel" id="f_anggota_pass" class="input" value="${m?.phone||m?.password||''}" placeholder="08xxxxxxxxxx" required></div>
         <div class="flex items-center justify-end gap-2 pt-4 border-t border-line">
           <button type="button" onclick="closeModal()" class="btn btn-light">Batal</button>
           <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button>
@@ -2891,12 +3030,14 @@ function openAnggotaChatModal(id) {
     </div>
   `);
   
-   $("#anggotaChatForm").addEventListener("submit", async e => { 
+  $("#anggotaChatForm").addEventListener("submit", async e => { 
     e.preventDefault(); 
     const finalFoto = tempAnggotaImg || $("#f_foto_text").value.toUpperCase() || '';
+    const phoneVal = $("#f_anggota_pass").value;
     const data = { 
       name: $("#f_anggota_nama").value, 
-      password: $("#f_anggota_pass").value,
+      phone: phoneVal,
+      password: phoneVal, // Simpan juga di password untuk fallback
       photo: finalFoto,
       created_at: m?.created_at || new Date().toISOString()
     }; 
@@ -2914,12 +3055,9 @@ function openAnggotaChatModal(id) {
     if (supabaseClient) {
       saved = await syncDataToSupabase('chat_members', STATE.chatMembers);
     }
-    
-    // Fallback ke localStorage jika Supabase tidak terhubung atau gagal menyimpan
     if (!saved) {
       localStorage.setItem('hutri81_registered_users', JSON.stringify(STATE.chatMembers));
     }
-    
     closeModal(); renderAnggotaChatTable(); 
   });
 }
