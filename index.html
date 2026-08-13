@@ -469,7 +469,7 @@
         <div class="div-flag mx-auto mb-4 md:mb-5"></div>
         <div class="text-xs font-bold uppercase tracking-[0.25em] text-merah mb-3">Struktur Organisasi</div>
         <h2 class="font-display text-3xl md:text-4xl lg:text-5xl leading-tight">PANITIA PENYELENGGARA</h2>
-        <p class="text-ink-2 max-w-2xl mx-auto mt-3 md:mt-4 text-sm md:text-base">Tim yang berkomitmen menghadirkan peringatan HUT RI ke-81 yang khidmat, meriah, dan bermakna.</p>
+        <p class="text-ink-2 max-w-2xl mx-auto mt-3 md:mt-4 text-sm md:text-base">Tim yang berkomitmen menghadirkan peringatan HUT RI ke-81 yang khidmat, mererah, dan bermakna.</p>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5" id="panitiaGrid"></div>
     </div>
@@ -559,7 +559,7 @@
           <p class="text-sm text-cream/70">Indonesia Berdaulat, Adil dan Makmur. Peringatan 81 tahun kemerdekaan Republik Indonesia.</p>
         </div>
         <div><h4 class="font-bold mb-4 text-gold">Tautan</h4><ul class="space-y-2 text-sm text-cream/70"><li><a href="#tentang" class="hover:text-cream">Tentang</a></li><li><a href="#agenda" class="hover:text-cream">Agenda</a></li><li><a href="#galeri" class="hover:text-cream">Galeri</a></li><li><a href="#panitia" class="hover:text-cream">Panitia</a></li><li><a href="#pengumuman" class="hover:text-cream">Pengumuman</a></li></ul></div>
-        <div><h4 class="font-bold mb-4 text-gold">Kontak</h4><ul class="space-y-2 text-sm text-cream/70"><li>Jl. Kurungan Nyawa 1</li><li>Kec. Buay Madang</li><li>Kab, OKU Timur</li><li>+62 21 381 0000</li><li>panitia@hutri81.go.id</li></ul></div>
+        <div><h4 class="font-bold mb-4 text-gold">Kontak</h4><ul class="space-y-2 text-sm text-cream/70"><li>Jl. Kurungan Nyawa 1</li><li>Kec. Buay Madang</li><li>Kab. OKU Timur</li><li>+62 21 381 0000</li><li>panitia@hutri81.go.id</li></ul></div>
         <div>
           <h4 class="font-bold mb-4 text-gold">Newsletter</h4>
           <p class="text-sm text-cream/70 mb-3">Dapatkan info terbaru seputar kegiatan HUT RI ke-81.</p>
@@ -1192,7 +1192,7 @@ async function loadDataFromSupabase(table) {
 }
 
 const STATE = {
-  agenda: [], panitia: [], galeri: [], pengumuman: [], peserta: [], lomba: [], kepanitiaanLomba: [], undian: [], hadiah: [], chat: [], chatMembers: [],
+  agenda: [], panitia: [], galeri: [], pengumuman: [], peserta: [], lomba: [], kepanitiaanLomba: [], undian: [], hadiah: [], chat: [], chatMembers: [], lastChatId: 0,
   activities: [
     { icon:"user-plus", color:"merah", title:"Pendaftaran baru", desc:"Budi Santoso mendaftar lomba balap karung · 5 menit lalu" },
     { icon:"check-circle-2", color:"emerald", title:"Agenda disetujui", desc:"Upacara bendera 17 Agustus · 1 jam lalu" },
@@ -2558,6 +2558,16 @@ function selectChatMember(name) {
     return;
   }
   localStorage.setItem('hutri81_chat_name', name);
+  
+  // Minta izin notifikasi browser saat user memilih nama
+  if ("Notification" in window && Notification.permission === "default") {
+    Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        toast("Notifikasi diaktifkan! Anda akan diberi tahu jika ada pesan baru.", "success");
+      }
+    });
+  }
+  
   toast(`Halo, ${name}! Anda sekarang bisa chat.`, "success");
   renderChatWidget();
   renderChatPublikFooter();
@@ -2579,6 +2589,11 @@ async function renderChatMessages() {
     } catch (e) { console.error("Error loading chat:", e); }
   } else {
     if(STATE.chat.length === 0) STATE.chat = JSON.parse(localStorage.getItem('hutri81_local_chat') || '[]');
+  }
+
+  // Catat ID pesan terakhir untuk membedakan pesan lama dan baru
+  if (STATE.chat.length > 0) {
+    STATE.lastChatId = Math.max(...STATE.chat.map(c => parseInt(c.id) || 0));
   }
 
   const members = STATE.chatMembers || [];
@@ -2691,15 +2706,67 @@ async function handleChatSubmitInline(e) {
   }
 }
 
-// === Polling ===
+// === FUNGSI NOTIFIKASI BROWSER ===
+function showBrowserNotification(title, body) {
+  if (!("Notification" in window)) return;
+  if (Notification.permission === "granted") {
+    const notification = new Notification(title, { 
+      body: body, 
+      icon: 'https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg' 
+    });
+    notification.onclick = () => {
+      window.focus();
+      notification.close();
+    };
+  }
+}
+
+// === REALTIME SUPABASE UNTUK CHAT ===
+function setupSupabaseRealtime() {
+  if (!supabaseClient) return;
+  supabaseClient
+    .channel('public:chat')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat' }, payload => {
+      const newMsg = payload.new;
+      
+      // Pastikan ini benar-benar pesan baru
+      if (parseInt(newMsg.id) > STATE.lastChatId) {
+        STATE.chat.push(newMsg);
+        STATE.lastChatId = parseInt(newMsg.id);
+        renderChatMessages();
+        
+        // Bunyikan notifikasi jika pesan bukan dari diri sendiri
+        const currentName = localStorage.getItem('hutri81_chat_name');
+        if (newMsg.user !== currentName) {
+          showBrowserNotification("💬 Pesan Baru di Grup Chat", `${newMsg.user}: ${newMsg.text}`);
+        }
+      }
+    })
+    .subscribe();
+}
+
+// === POLLING CADANGAN (Jika tidak pakai Supabase) ===
 let chatInterval;
 function startChatPolling() {
   if (!chatInterval) {
     chatInterval = setInterval(async () => {
       const widget = document.getElementById('chatWidget');
       const chatSection = document.getElementById('chatPublik');
-      if ((widget && !widget.classList.contains("hidden-x")) || (chatSection && !document.getElementById('landing').classList.contains("hidden-x"))) {
+      const isVisible = (widget && !widget.classList.contains("hidden-x")) || (chatSection && !document.getElementById('landing').classList.contains("hidden-x"));
+      
+      if (isVisible) {
+        const prevCount = STATE.chat.length;
         await renderChatMessages();
+        
+        if (STATE.chat.length > prevCount) {
+          const newMessages = STATE.chat.slice(prevCount);
+          const currentName = localStorage.getItem('hutri81_chat_name');
+          newMessages.forEach(msg => {
+            if (msg.user !== currentName) {
+              showBrowserNotification("💬 Pesan Baru di Grup Chat", `${msg.user}: ${msg.text}`);
+            }
+          });
+        }
       }
     }, 3000);
   }
@@ -2756,7 +2823,7 @@ function openAnggotaChatModal(id) {
       <form id="anggotaChatForm" class="p-6 space-y-4">
         <div class="flex flex-col items-center mb-2">
           <div id="anggotaImgPreview" class="w-28 h-28 rounded-full bg-cream-2 border-2 border-dashed border-line flex items-center justify-center font-display text-4xl text-ink-2 overflow-hidden mb-3">
-            ${isImage ? `<img src="${currentFoto}" class=" ${currentFoto}" class="w-full h-full object-cover">` : (currentFoto ? `<div class="font-display text-4xl text-ink">${currentFoto}</div>` : 'Foto')}
+            ${isImage ? `<img src="${currentFoto}" class="w-full h-full object-cover">` : (currentFoto ? `<div class="font-display text-4xl text-ink">${currentFoto}</div>` : 'Foto')}
           </div>
           <div class="flex gap-2 w-full">
             <input type="text" id="f_foto_text" class="input flex-1" placeholder="URL foto atau Inisial" value="${isImage ? '' : currentFoto}" oninput="updateAnggotaPreview(this.value)">
@@ -2889,8 +2956,14 @@ async function init(){
   // Inisialisasi chat widget
   renderChatWidget();
   renderChatPublikFooter();
-  renderChatMessages();
-  startChatPolling();
+  await renderChatMessages(); // Tunggu pesan lama dimuat dulu
+  
+  // Jalankan Notifikasi Realtime atau Polling
+  if (isSupabaseConnected) {
+    setupSupabaseRealtime();
+  } else {
+    startChatPolling();
+  }
 }
 init();
 </script>
