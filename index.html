@@ -1694,16 +1694,26 @@ async function initDashboard(){
       for (const table of tables) {
         const data = await loadDataFromSupabase(table);
         if (data && data.length > 0) {
-          const key = table === 'kepanitiaan_lomba' ? 'kepanitiaanLomba' : (table === 'peserta_lomba' ? 'lomba' : table);
+          // Perbaikan penamaan variabel STATE di sini
+          let key = table;
+          if (table === 'kepanitiaan_lomba') key = 'kepanitiaanLomba';
+          else if (table === 'peserta_lomba') key = 'lomba';
+          else if (table === 'chat_members') key = 'chatMembers';
+          
           STATE[key] = data.map(item => {
             const mapped = { ...item };
             if (mapped.panitia_id) mapped.panitiaId = mapped.panitia_id;
             if (mapped.hadiah_id) mapped.hadiahId = mapped.hadiah_id;
             return mapped;
           });
+        } else if (table === 'chat_members') {
+          STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
         }
       }
-    } catch (e) { console.error("Error loading dashboard data:", e); }
+    } catch (e) { 
+      console.error("Error loading dashboard data:", e); 
+      STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
+    }
   } else {
     STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
   }
@@ -2841,7 +2851,7 @@ function openAnggotaChatModal(id) {
     </div>
   `);
   
-  $("#anggotaChatForm").addEventListener("submit", async e => { 
+   $("#anggotaChatForm").addEventListener("submit", async e => { 
     e.preventDefault(); 
     const finalFoto = tempAnggotaImg || $("#f_foto_text").value.toUpperCase() || '';
     const data = { 
@@ -2860,9 +2870,13 @@ function openAnggotaChatModal(id) {
       toast("Anggota Karang Taruna baru ditambahkan", "success"); 
     } 
     
+    let saved = false;
     if (supabaseClient) {
-      await syncDataToSupabase('chat_members', STATE.chatMembers);
-    } else {
+      saved = await syncDataToSupabase('chat_members', STATE.chatMembers);
+    }
+    
+    // Fallback ke localStorage jika Supabase tidak terhubung atau gagal menyimpan
+    if (!saved) {
       localStorage.setItem('hutri81_registered_users', JSON.stringify(STATE.chatMembers));
     }
     
@@ -2914,27 +2928,33 @@ async function init(){
   lucide.createIcons();
   const isSupabaseConnected = initSupabase();
   
-  // Muat semua data publik dari Supabase agar tampil di halaman depan
   if (isSupabaseConnected) {
     try {
       const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'chat', 'chat_members'];
       for (const table of tables) {
         const data = await loadDataFromSupabase(table);
         if (data && data.length > 0) {
-          const key = table === 'kepanitiaan_lomba' ? 'kepanitiaanLomba' : (table === 'peserta_lomba' ? 'lomba' : table);
+          // Perbaikan penamaan variabel STATE di sini
+          let key = table;
+          if (table === 'kepanitiaan_lomba') key = 'kepanitiaanLomba';
+          else if (table === 'peserta_lomba') key = 'lomba';
+          else if (table === 'chat_members') key = 'chatMembers';
+          
           STATE[key] = data.map(item => {
             const mapped = { ...item };
             if (mapped.panitia_id) mapped.panitiaId = mapped.panitia_id;
             if (mapped.hadiah_id) mapped.hadiahId = mapped.hadiah_id;
             return mapped;
           });
+        } else if (table === 'chat_members') {
+          STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
         }
       }
     } catch (e) { 
       console.error("Error loading public data:", e); 
+      STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
     }
   } else {
-    // Fallback ke local storage jika Supabase tidak terhubung
     STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
   }
 
@@ -2945,7 +2965,6 @@ async function init(){
   initCounters();
   initVisitorCounter();
   
-  // Render seluruh konten di halaman depan
   renderAgendaTimeline();
   renderAgendaDetail();
   initAgendaFilter();
@@ -2953,12 +2972,10 @@ async function init(){
   renderLandingPanitia();
   renderLandingPengumuman();
   
-  // Inisialisasi chat widget
   renderChatWidget();
   renderChatPublikFooter();
-  await renderChatMessages(); // Tunggu pesan lama dimuat dulu
+  await renderChatMessages();
   
-  // Jalankan Notifikasi Realtime atau Polling
   if (isSupabaseConnected) {
     setupSupabaseRealtime();
   } else {
