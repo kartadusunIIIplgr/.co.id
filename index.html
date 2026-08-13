@@ -280,6 +280,16 @@
     .print-ticket { border: 1px dashed #ccc; page-break-inside: avoid; }
     .ticket-grid { display: block; }
   }
+  /* Gaya Pesan Chat seperti WhatsApp */
+  .chat-time { font-size: 0.65rem; opacity: 0.8; text-align: right; margin-top: 0.15rem; display: block; }
+  .chat-message.sent .chat-time { color: rgba(255,255,255,0.9); }
+  .chat-message.received .chat-time { color: var(--ink-2); }
+  .chat-date-sep { display: flex; justify-content: center; margin: 1rem 0 0.5rem; }
+  .chat-date-sep span { background: rgba(0,0,0,0.1); color: var(--ink-2); padding: 0.2rem 0.8rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; }
+  
+  /* Menyembunyikan nama pengirim jika pesannya beruntun dari orang yang sama */
+  .chat-message-row + .chat-message-row .sender-name { display: none; }
+  .chat-message-row + .chat-message-row .chat-message { margin-top: -0.5rem; }
 </style>
 </head>
 <body class="batik-bg">
@@ -503,7 +513,7 @@
       
       <div class="card overflow-hidden flex flex-col reveal" style="height: 500px;">
         <div class="bg-merah text-white px-4 py-3 flex items-center justify-between">
-          <div class="flex items-center gap-2"><i data-lucide="messages-square" class="w-5 h-5"></i><span class="font-bold text-sm">Grup Chat Pengunjung</span></div>
+          <div class="flex items-center gap-2"><i data-lucide="messages-square" class="w-5 h-5"></i><div><div class="font-bold text-sm">Grup Chat Pengunjung</div><div class="text-[10px] text-white/80" id="chatMemberCount">0 Anggota</div></div></div>
           <span class="text-xs bg-white/20 px-2 py-1 rounded-full flex items-center gap-1"><span class="live-dot"></span> Live</span>
         </div>
         <div id="chatMessagesPublic" class="chat-messages-box"></div>
@@ -2521,7 +2531,8 @@ function renderChatWidget() {
 function renderChatPublikFooter() {
   const footerEl = $("#chatPublikFooter");
   if(!footerEl) return;
-  
+    const countEl = $("#chatMemberCount");
+  if(countEl) countEl.textContent = `${STATE.chatMembers.length} Anggota`;
   const currentMemberName = localStorage.getItem('hutri81_chat_name');
   const isValidMember = STATE.chatMembers.some(m => m.name.toLowerCase() === currentMemberName?.toLowerCase());
   
@@ -2601,7 +2612,6 @@ async function renderChatMessages() {
     if(STATE.chat.length === 0) STATE.chat = JSON.parse(localStorage.getItem('hutri81_local_chat') || '[]');
   }
 
-  // Catat ID pesan terakhir untuk membedakan pesan lama dan baru
   if (STATE.chat.length > 0) {
     STATE.lastChatId = Math.max(...STATE.chat.map(c => parseInt(c.id) || 0));
   }
@@ -2609,23 +2619,53 @@ async function renderChatMessages() {
   const members = STATE.chatMembers || [];
   const isOfficialMember = (name) => members.some(m => m.name.toLowerCase() === name.toLowerCase());
 
-  const htmlContent = STATE.chat.length === 0 
-    ? `<div class="text-center text-ink-2 text-sm py-10 flex flex-col items-center gap-2"><i data-lucide="message-square-dashed" class="w-10 h-10 opacity-40"></i><div>Belum ada pesan.<br>Mulai percakapan sekarang!</div></div>`
-    : STATE.chat.map(c => {
-        const isSent = c.user === currentName;
-        const official = isOfficialMember(c.user);
-        const avatar = getAvatarHtml(c.photo, c.user, 'w-8 h-8 mt-auto');
-        return `
-          <div class="chat-message-row ${isSent ? 'sent' : 'received'}">
-            ${!isSent ? avatar : ''}
-            <div class="chat-message ${isSent ? 'sent' : 'received'}">
-              ${!isSent ? `<div class="sender-name flex items-center gap-1">${c.user} ${official ? '<span class="badge bg-merah text-white text-[8px] py-0 px-1 rounded-sm">Anggota</span>' : ''}</div>` : ''}
-              <div>${escapeHtml(c.text)}</div>
-            </div>
-            ${isSent ? avatar : ''}
+  // Fungsi pembantu untuk format Tanggal (Hari Ini, Kemarin, dll)
+  const getDayLabel = (iso) => {
+    const d = new Date(iso);
+    const today = new Date();
+    const yest = new Date(); yest.setDate(today.getDate() - 1);
+    if (d.toDateString() === today.toDateString()) return "Hari Ini";
+    if (d.toDateString() === yest.toDateString()) return "Kemarin";
+    return d.toLocaleDateString("id-ID", { day: '2-digit', month: 'long', year: 'numeric' });
+  };
+
+  // Fungsi pembantu untuk format Jam (HH:MM)
+  const getTimeLabel = (iso) => {
+    return new Date(iso).toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
+  };
+
+  let lastDate = "";
+  let htmlContent = "";
+
+  if (STATE.chat.length === 0) {
+    htmlContent = `<div class="text-center text-ink-2 text-sm py-10 flex flex-col items-center gap-2"><i data-lucide="message-square-dashed" class="w-10 h-10 opacity-40"></i><div>Belum ada pesan.<br>Mulai percakapan sekarang!</div></div>`;
+  } else {
+    STATE.chat.forEach(c => {
+      // Cek tanggal untuk memisahkan hari
+      const msgDate = getDayLabel(c.created_at);
+      if (msgDate !== lastDate) {
+        htmlContent += `<div class="chat-date-sep"><span>${msgDate}</span></div>`;
+        lastDate = msgDate;
+      }
+      
+      const isSent = c.user === currentName;
+      const official = isOfficialMember(c.user);
+      const avatar = getAvatarHtml(c.photo, c.user, 'w-8 h-8 mt-auto');
+      const timeStr = getTimeLabel(c.created_at);
+      
+      htmlContent += `
+        <div class="chat-message-row ${isSent ? 'sent' : 'received'}">
+          ${!isSent ? avatar : ''}
+          <div class="chat-message ${isSent ? 'sent' : 'received'}">
+            ${!isSent ? `<div class="sender-name flex items-center gap-1">${c.user} ${official ? '<span class="badge bg-merah text-white text-[8px] py-0 px-1 rounded-sm">Anggota</span>' : ''}</div>` : ''}
+            <div>${escapeHtml(c.text)}</div>
+            <span class="chat-time">${timeStr}</span>
           </div>
-        `;
-      }).join("");
+          ${isSent ? avatar : ''}
+        </div>
+      `;
+    });
+  }
       
   if(wrap) {
     wrap.innerHTML = htmlContent;
