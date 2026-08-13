@@ -118,7 +118,6 @@
   .aspect-landscape{ aspect-ratio: 4/3; }
   .hidden-x{ display:none !important; }
   
-  /* CSS Galeri yang Diperbaiki */
   .gallery-item{ position:relative; overflow:hidden; border-radius:1rem; background: var(--bg-soft); border: 1px solid var(--line); transition: transform .4s, box-shadow .4s; }
   .gallery-item .img-wrap { position: relative; width: 100%; height: 180px; overflow: hidden; }
   .gallery-item img{ width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
@@ -165,6 +164,15 @@
   
   .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .table-wrap table { min-width: 600px; }
+
+  /* Chat Widget Styles */
+  #chatWidget { position: fixed; bottom: 20px; right: 20px; z-index: 50; }
+  .chat-window { position: absolute; bottom: 70px; right: 0; width: 340px; height: 450px; max-width: calc(100vw - 40px); background: var(--bg-soft); border: 1px solid var(--line); border-radius: 1rem; box-shadow: 0 10px 40px -10px rgba(0,0,0,.3); display: flex; flex-direction: column; overflow: hidden; }
+  .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; }
+  .chat-message { max-width: 80%; padding: 0.5rem 0.8rem; border-radius: 0.8rem; font-size: 0.85rem; line-height: 1.3; word-wrap: break-word; }
+  .chat-message.sent { align-self: flex-end; background: var(--merah); color: white; border-bottom-right-radius: 0.2rem; }
+  .chat-message.received { align-self: flex-start; background: var(--cream-2); color: var(--ink); border-bottom-left-radius: 0.2rem; }
+  .chat-message .sender-name { font-size: 0.7rem; font-weight: 700; margin-bottom: 0.2rem; opacity: 0.8; }
 
   @media print {
     body * { visibility: hidden; }
@@ -283,7 +291,7 @@
       <div class="card p-4 md:p-6 lg:p-8 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="calendar-check-2" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="24">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Agenda Kegiatan</div></div></div>
         <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="users" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="1248">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Peserta Terdaftar</div></div></div>
-        <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="image" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="326">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Dokumentasi</div></div></div>
+        <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="eye" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div id="visitorCount" class="font-display text-xl md:text-3xl counter-num">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Pengunjung Website</div></div></div>
         <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="trophy" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="56">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Penghargaan</div></div></div>
       </div>
     </div>
@@ -446,7 +454,27 @@
     </div>
   </footer>
 
-  <button onclick="openAdminLogin()" class="fixed bottom-4 right-4 lg:bottom-6 lg:right-6 z-40 w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-merah text-white flex items-center justify-center shadow-2xl shadow-merah/40 hover:scale-110 transition" title="Login Admin"><i data-lucide="shield-check" class="w-5 h-5 lg:w-6 lg:h-6"></i></button>
+  <!-- Tombol Admin dipindahkan ke kiri bawah agar tidak bertabrakan dengan Chat -->
+  <button onclick="openAdminLogin()" class="fixed bottom-4 left-4 lg:bottom-6 lg:left-6 z-40 w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-merah text-white flex items-center justify-center shadow-2xl shadow-merah/40 hover:scale-110 transition" title="Login Admin"><i data-lucide="shield-check" class="w-5 h-5 lg:w-6 lg:h-6"></i></button>
+
+  <!-- Chat Widget tetap di kanan bawah -->
+  <div id="chatWidget">
+    <div id="chatWindow" class="chat-window hidden-x flex">
+      <div class="bg-merah text-white px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2"><i data-lucide="messages-square" class="w-5 h-5"></i><span class="font-bold text-sm">Grup Chat Panitia</span></div>
+        <button onclick="toggleChat()" class="hover:bg-white/20 p-1 rounded"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div id="chatMessages" class="chat-messages"></div>
+      <form id="chatForm" class="p-3 border-t border-line flex gap-2">
+        <input type="text" id="chatInput" class="input flex-1 !py-2 !text-sm" placeholder="Ketik pesan..." required>
+        <button type="submit" class="btn btn-primary !p-2 !rounded-lg"><i data-lucide="send" class="w-4 h-4"></i></button>
+      </form>
+    </div>
+    <button onclick="toggleChat()" class="w-14 h-14 rounded-full bg-merah text-white flex items-center justify-center shadow-2xl shadow-merah/40 hover:scale-110 transition">
+      <i data-lucide="message-circle" class="w-6 h-6"></i>
+    </button>
+  </div>
+
 </div>
 
 <!-- ============================ ADMIN LOGIN MODAL ============================ -->
@@ -969,7 +997,6 @@ async function testSupabase() {
   setTimeout(() => location.reload(), 1000);
 });
 
-// Perbaikan sinkronisasi agar data lokal langsung update
 async function syncDataToSupabase(table, data) {
   if (!supabaseClient) return true;
   try {
@@ -1010,28 +1037,8 @@ async function loadDataFromSupabase(table) {
   } catch (e) { return null; }
 }
 
-async function loadInitialData() {
-  if (supabaseClient) {
-    try {
-      const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'peserta', 'peserta_lomba', 'kepanitiaan_lomba', 'undian', 'hadiah'];
-      for (const table of tables) {
-        const data = await loadDataFromSupabase(table);
-        if (data && data.length > 0) {
-          const key = table === 'kepanitiaan_lomba' ? 'kepanitiaanLomba' : (table === 'peserta_lomba' ? 'lomba' : table);
-          STATE[key] = data.map(item => {
-            const mapped = { ...item };
-            if (mapped.panitia_id) mapped.panitiaId = mapped.panitia_id;
-            if (mapped.hadiah_id) mapped.hadiahId = mapped.hadiah_id;
-            return mapped;
-          });
-        }
-      }
-    } catch (e) { console.error("Error loading initial data:", e); }
-  }
-}
-
 const STATE = {
-  agenda: [], panitia: [], galeri: [], pengumuman: [], peserta: [], lomba: [], kepanitiaanLomba: [], undian: [], hadiah: [],
+  agenda: [], panitia: [], galeri: [], pengumuman: [], peserta: [], lomba: [], kepanitiaanLomba: [], undian: [], hadiah: [], chat: [],
   activities: [
     { icon:"user-plus", color:"merah", title:"Pendaftaran baru", desc:"Budi Santoso mendaftar lomba balap karung · 5 menit lalu" },
     { icon:"check-circle-2", color:"emerald", title:"Agenda disetujui", desc:"Upacara bendera 17 Agustus · 1 jam lalu" },
@@ -1142,6 +1149,22 @@ function initCounters(){
   $$("[data-counter]").forEach(el=>io.observe(el));
 }
 
+function initVisitorCounter() {
+  let visits = localStorage.getItem('hutri81_visits') || 0;
+  visits = parseInt(visits) + 1;
+  localStorage.setItem('hutri81_visits', visits);
+  const el = $("#visitorCount");
+  if (el) {
+    let cur = 0;
+    const step = Math.max(1, Math.floor(visits / 40));
+    const t = setInterval(() => {
+      cur += step;
+      if (cur >= visits) { cur = visits; clearInterval(t); }
+      el.textContent = cur.toLocaleString("id-ID");
+    }, 30);
+  }
+}
+
 let agendaActiveId = 1;
 function renderAgendaTimeline(filter="all"){
   const wrap = $("#agendaTimeline"); if(!wrap) return;
@@ -1178,7 +1201,6 @@ function initAgendaFilter(){
   });
 }
 
-// Fungsi Galeri Halaman Depan
 function renderLandingGaleri(){
   const grid = $("#galleryGrid"); 
   if(!grid) return;
@@ -1501,7 +1523,23 @@ function exportCSV(type){
 function exportReport(){ toast("Laporan PDF sedang diproses, mohon tunggu...", "info"); setTimeout(()=>toast("Laporan berhasil diunduh: Laporan-HUT-RI-81.pdf", "success"), 2000); }
 
 async function initDashboard(){
-  await loadInitialData(); // Muat ulang data terbaru saat masuk dashboard
+  if (supabaseClient) {
+    try {
+      const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'peserta', 'peserta_lomba', 'kepanitiaan_lomba', 'undian', 'hadiah', 'chat'];
+      for (const table of tables) {
+        const data = await loadDataFromSupabase(table);
+        if (data && data.length > 0) {
+          const key = table === 'kepanitiaan_lomba' ? 'kepanitiaanLomba' : (table === 'peserta_lomba' ? 'lomba' : table);
+          STATE[key] = data.map(item => {
+            const mapped = { ...item };
+            if (mapped.panitia_id) mapped.panitiaId = mapped.panitia_id;
+            if (mapped.hadiah_id) mapped.hadiahId = mapped.hadiah_id;
+            return mapped;
+          });
+        }
+      }
+    } catch (e) { console.error("Error loading dashboard data:", e); }
+  }
   $("#statAgenda").textContent = STATE.agenda.length;
   $("#statPanitia").textContent = STATE.panitia.length;
   $("#statPesertaLomba").textContent = STATE.lomba.length;
@@ -1619,7 +1657,6 @@ async function confirmDeleteAgenda(id){
   closeModal(); renderAgendaTable(); renderAgendaTimeline(); renderAgendaDetail(); $("#statAgenda").textContent = STATE.agenda.length; toast("Agenda telah dihapus", "info"); 
 }
 
-// Fungsi Galeri Admin
 function renderGaleriAdmin(){
   const wrap = $("#galeriGridAdmin"); if(!wrap) return;
   if(STATE.galeri.length === 0){
@@ -2234,21 +2271,135 @@ function openDaftarLombaModal() {
   });
 }
 
-async function init(){
+/* ============================================================
+   CHAT WIDGET LOGIC
+============================================================ */
+function toggleChat() {
+  const isLoggedIn = localStorage.getItem('hutri81_chat_user');
+  if (!isLoggedIn) {
+    openChatLoginModal();
+  } else {
+    const win = $("#chatWindow");
+    win.classList.toggle("hidden-x");
+    if (!win.classList.contains("hidden-x")) {
+      renderChatMessages();
+      $("#chatInput").focus();
+    }
+  }
+}
+
+function openChatLoginModal() {
+  showModal(`
+    <div class="card max-w-md w-full p-6 modal-enter relative">
+      <button onclick="closeModal()" class="absolute top-3 right-3 w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center text-ink-2"><i data-lucide="x" class="w-5 h-5"></i></button>
+      <div class="text-center mb-4">
+        <div class="w-14 h-14 mx-auto rounded-full bg-merah-soft text-merah flex items-center justify-center mb-3"><i data-lucide="message-square" class="w-7 h-7"></i></div>
+        <h3 class="font-display text-2xl">MASUK CHAT</h3>
+        <p class="text-sm text-ink-2 mt-1">Masukkan nama Anda untuk mulai chatting dengan anggota lain.</p>
+      </div>
+      <form id="chatLoginForm" class="space-y-4">
+        <div><label class="label">Nama Anda</label><input type="text" id="chatUserName" class="input" placeholder="Mis. Budi Santoso" required></div>
+        <button type="submit" class="btn btn-primary w-full justify-center"><i data-lucide="log-in" class="w-4 h-4"></i> Mulai Chat</button>
+      </form>
+    </div>
+  `);
+  
+  $("#chatLoginForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const name = $("#chatUserName").value.trim();
+    if(name.length < 2) { toast("Nama minimal 2 huruf", "warn"); return; }
+    localStorage.setItem('hutri81_chat_user', name);
+    closeModal();
+    $("#chatWindow").classList.remove("hidden-x");
+    renderChatMessages();
+    toast(`Selamat datang, ${name}!`, "success");
+  });
+}
+
+async function renderChatMessages() {
+  const wrap = $("#chatMessages");
+  const currentUser = localStorage.getItem('hutri81_chat_user');
+  
+  if (supabaseClient) {
+    try {
+      const { data, error } = await supabaseClient.from('chat').select('*').order('id', { ascending: true }).limit(100);
+      if (error) throw error;
+      STATE.chat = data || [];
+    } catch (e) { console.error("Error loading chat:", e); }
+  } else {
+    if(STATE.chat.length === 0) STATE.chat = JSON.parse(localStorage.getItem('hutri81_local_chat') || '[]');
+  }
+
+  if (STATE.chat.length === 0) {
+    wrap.innerHTML = `<div class="text-center text-ink-2 text-sm py-10">Belum ada pesan. <br>Mulai percakapan sekarang!</div>`;
+    return;
+  }
+
+  wrap.innerHTML = STATE.chat.map(c => `
+    <div class="chat-message ${c.user === currentUser ? 'sent' : 'received'}">
+      ${c.user !== currentUser ? `<div class="sender-name">${c.user}</div>` : ''}
+      <div>${c.text}</div>
+    </div>
+  `).join("");
+  
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+ $("#chatForm")?.addEventListener("submit", async e => {
+  e.preventDefault();
+  const input = $("#chatInput");
+  const text = input.value.trim();
+  if (!text) return;
+  
+  const user = localStorage.getItem('hutri81_chat_user');
+  const msg = { id: uid(), user, text, created_at: new Date().toISOString() };
+  
+  input.value = "";
+  
+  STATE.chat.push(msg);
+  renderChatMessages();
+  
+  if (supabaseClient) {
+    try {
+      await supabaseClient.from('chat').insert([msg]);
+    } catch (e) {
+      toast("Gagal mengirim pesan", "error");
+      STATE.chat = STATE.chat.filter(m => m.id !== msg.id);
+      renderChatMessages();
+    }
+  } else {
+    localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
+  }
+});
+
+let chatInterval;
+function startChatPolling() {
+  if (supabaseClient && !chatInterval) {
+    chatInterval = setInterval(async () => {
+      const isWinVisible = !$("#chatWindow").classList.contains("hidden-x");
+      if (isWinVisible) {
+        await renderChatMessages();
+      }
+    }, 3000);
+  }
+}
+
+function init(){
   lucide.createIcons();
   initSupabase();
-  await loadInitialData(); // Pastikan data dari Supabase sudah dimuat sebelum render halaman depan
   initHeroParticles();
   updateCountdown();
   setInterval(updateCountdown, 1000);
   initReveal();
   initCounters();
+  initVisitorCounter();
   renderAgendaTimeline();
   renderAgendaDetail();
   initAgendaFilter();
   renderLandingGaleri();
   renderLandingPanitia();
   renderLandingPengumuman();
+  startChatPolling();
 }
 init();
 </script>
