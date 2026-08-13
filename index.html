@@ -2537,13 +2537,15 @@ function renderChatWidget() {
   
   lucide.createIcons();
   setTimeout(() => { const inp = $("#chatWidgetInputText"); if(inp) inp.focus(); }, 100);
-  
   renderChatMessages();
 }
 
 function renderChatPublikFooter() {
   const footerEl = $("#chatPublikFooter");
   if(!footerEl) return;
+  
+  const countEl = $("#chatMemberCount");
+  if(countEl) countEl.textContent = `${STATE.chatMembers.length} Anggota`;
   
   const currentMemberName = localStorage.getItem('hutri81_chat_name');
   const isValidMember = STATE.chatMembers.some(m => m.name.toLowerCase() === currentMemberName?.toLowerCase());
@@ -2570,61 +2572,33 @@ function renderChatPublikFooter() {
     `;
     $("#chatPublicLoginForm").addEventListener("submit", handlePhoneLogin);
   }
-  
-    if(wrapInline) {
-    wrapInline.innerHTML = htmlContent;
-    wrapInline.scrollTop = wrapInline.scrollHeight;
-  }
-  // lucide.createIcons();  <--- HAPUS ATAU KASIH // INI
+  lucide.createIcons();
 }
 
 function logoutMember() {
   localStorage.removeItem('hutri81_chat_name');
-  localStorage.removeItem('hutri81_user_phone'); // Hapus juga No HP yang tersimpan
+  localStorage.removeItem('hutri81_user_phone');
+  localStorage.removeItem('hutri81_is_admin');
   toast("Anda telah keluar. Silakan masuk kembali dengan No HP.", "info");
   renderChatWidget();
   renderChatPublikFooter();
 }
+
 function handlePhoneLogin(e) {
   e.preventDefault();
   const input = $("#chatWidgetPhoneInput") || $("#chatInputPhonePublic");
   if(!input) return;
   const phone = input.value.trim();
-  // Fungsi untuk mengecek apakah pengguna sebelumnya sudah pernah login di HP ini
-function checkAutoLogin() {
-  // Jika dia sudah punya sesi nama chat, biarkan saja
-  if (localStorage.getItem('hutri81_chat_name')) return;
-
-  // Cek apakah browser HPnya menyimpan No HP sebelumnya
-  const savedPhone = localStorage.getItem('hutri81_user_phone');
-  if (savedPhone) {
-    // Cocokkan No HP yang tersimpan dengan database anggota
-    const member = STATE.chatMembers.find(m => (m.phone || m.password) === savedPhone);
-    if (member) {
-      // Langsung login otomatis!
-      localStorage.setItem('hutri81_chat_name', member.name);
-      toast(`Selamat datang kembali, ${member.name}!`, "success");
-    } else {
-      // Jika No HP di browser tidak ada di database (misal sudah dihapus admin), bersihkan memori
-      localStorage.removeItem('hutri81_user_phone');
-    }
-  }
-}
-  // Cari anggota berdasarkan Nomor HP
+  
   const member = STATE.chatMembers.find(m => (m.phone || m.password) === phone);
   
   if (member) {
-    // Jika nomor HP ditemukan, otomatis login dengan nama anggota
     localStorage.setItem('hutri81_chat_name', member.name);
-    // Simpan nomor HP di browser HP pengguna agar tidak perlu input lagi nanti
     localStorage.setItem('hutri81_user_phone', phone);
     
-    // Minta izin notifikasi browser
     if ("Notification" in window && Notification.permission === "default") {
       Notification.requestPermission().then(permission => {
-        if (permission === "granted") {
-          toast("Notifikasi diaktifkan! Anda akan diberi tahu jika ada pesan baru.", "success");
-        }
+        if (permission === "granted") toast("Notifikasi diaktifkan!", "success");
       });
     }
     
@@ -2632,33 +2606,24 @@ function checkAutoLogin() {
     renderChatWidget();
     renderChatPublikFooter();
   } else {
-    // Jika nomor HP tidak terdaftar
     toast("Nomor HP tidak terdaftar. Hubungi Admin untuk mendaftar.", "error");
   }
 }
-function selectChatMember(name) {
-  if(!name) return;
-  const isMember = STATE.chatMembers.some(m => m.name.toLowerCase() === name.toLowerCase());
-  if (!isMember) {
-    toast("Nama tidak terdaftar sebagai anggota!", "error");
-    return;
+
+function checkAutoLogin() {
+  if (localStorage.getItem('hutri81_chat_name')) return;
+  const savedPhone = localStorage.getItem('hutri81_user_phone');
+  if (savedPhone) {
+    const member = STATE.chatMembers.find(m => (m.phone || m.password) === savedPhone);
+    if (member) {
+      localStorage.setItem('hutri81_chat_name', member.name);
+      toast(`Selamat datang kembali, ${member.name}!`, "success");
+    } else {
+      localStorage.removeItem('hutri81_user_phone');
+    }
   }
-  localStorage.setItem('hutri81_chat_name', name);
-  
-  // Minta izin notifikasi browser saat user memilih nama
-  if ("Notification" in window && Notification.permission === "default") {
-    Notification.requestPermission().then(permission => {
-      if (permission === "granted") {
-        toast("Notifikasi diaktifkan! Anda akan diberi tahu jika ada pesan baru.", "success");
-      }
-    });
-  }
-  
-  toast(`Halo, ${name}! Anda sekarang bisa chat.`, "success");
-  renderChatWidget();
-  renderChatPublikFooter();
 }
-// === Render Pesan Chat ===
+
 async function renderChatMessages() {
   const wrap = $("#chatWidgetMessages");
   const wrapInline = $("#chatMessagesPublic");
@@ -2693,9 +2658,7 @@ async function renderChatMessages() {
     return d.toLocaleDateString("id-ID", { day: '2-digit', month: 'long', year: 'numeric' });
   };
 
-  const getTimeLabel = (iso) => {
-    return new Date(iso).toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
-  };
+  const getTimeLabel = (iso) => new Date(iso).toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
 
   let lastDate = "";
   let htmlContent = "";
@@ -2714,7 +2677,7 @@ async function renderChatMessages() {
       const official = isOfficialMember(c.user);
       const avatar = getAvatarHtml(c.photo, c.user, 'w-8 h-8 mt-auto');
       const timeStr = getTimeLabel(c.created_at);
-      const canDelete = isSent || isAdmin; // Bisa hapus jika pesan milik sendiri atau dia Admin
+      const canDelete = isSent || isAdmin; 
       
       htmlContent += `
         <div class="chat-message-row ${isSent ? 'sent' : 'received'}" data-msg-id="${c.id}">
@@ -2739,10 +2702,14 @@ async function renderChatMessages() {
     wrapInline.innerHTML = htmlContent;
     wrapInline.scrollTop = wrapInline.scrollHeight;
   }
-  lucide.createIcons();
 }
 
-// Fungsi khusus untuk menambahkan 1 pesan baru tanpa me-render ulang semuanya
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 function appendSingleMessage(c) {
   const wrap = $("#chatWidgetMessages");
   const wrapInline = $("#chatMessagesPublic");
@@ -2784,118 +2751,11 @@ function appendSingleMessage(c) {
     wrapInline.scrollTop = wrapInline.scrollHeight;
   }
 }
-// === Handle Submit Pesan ===
-async function handleChatSubmit(e) {
-  e.preventDefault();
-  const input = $("#chatWidgetInputText");
-  const name = localStorage.getItem('hutri81_chat_name');
-  const text = input.value.trim();
-  
-  if (!name || !text) return;
-  
-  const memberData = STATE.chatMembers.find(m => m.name.toLowerCase() === name.toLowerCase());
-  if (!memberData) {
-    toast("Sesi anggota tidak valid. Silakan login kembali.", "error");
-    logoutMember();
-    return;
-  }
-  
-  const photo = memberData.photo || '';
-  const msg = { id: uid(), user: name, photo, text, created_at: new Date().toISOString() };
-  
-  input.value = "";
-  STATE.chat.push(msg);
-  renderChatMessages();
-  
-  if (supabaseClient) {
-    try {
-      await supabaseClient.from('chat').insert([{ id: msg.id, user: msg.user, photo: msg.photo, text: msg.text, created_at: msg.created_at }]);
-    } catch (e) {
-      toast("Gagal mengirim pesan", "error");
-      STATE.chat = STATE.chat.filter(m => m.id !== msg.id);
-      renderChatMessages();
-    }
-  } else {
-    localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
-  }
-}
 
-async function handleChatSubmitInline(e) {
-  e.preventDefault();
-  const input = $("#chatInputTextPublic");
-  const name = localStorage.getItem('hutri81_chat_name');
-  const text = input.value.trim();
-  
-  if (!name || !text) return;
-  
-  const memberData = STATE.chatMembers.find(m => m.name.toLowerCase() === name.toLowerCase());
-  if (!memberData) {
-    toast("Sesi anggota tidak valid. Silakan login kembali.", "error");
-    logoutMember();
-    return;
-  }
-  
-  const photo = memberData.photo || '';
-  const msg = { id: uid(), user: name, photo, text, created_at: new Date().toISOString() };
-  
-  input.value = "";
-  STATE.chat.push(msg);
-  renderChatMessages();
-  
-  if (supabaseClient) {
-    try {
-      await supabaseClient.from('chat').insert([{ id: msg.id, user: msg.user, photo: msg.photo, text: msg.text, created_at: msg.created_at }]);
-    } catch (e) {
-      toast("Gagal mengirim pesan", "error");
-      STATE.chat = STATE.chat.filter(m => m.id !== msg.id);
-      renderChatMessages();
-    }
-  } else {
-    localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
-  }
-}
-
-// === FUNGSI NOTIFIKASI BROWSER ===
-function showBrowserNotification(title, body) {
-  if (!("Notification" in window)) return;
-  if (Notification.permission === "granted") {
-    const notification = new Notification(title, { 
-      body: body, 
-      icon: 'https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg' 
-    });
-    notification.onclick = () => {
-      window.focus();
-      notification.close();
-    };
-  }
-}
-
-// === REALTIME SUPABASE UNTUK CHAT ===
-function setupSupabaseRealtime() {
-  if (!supabaseClient) return;
-  supabaseClient
-    .channel('public:chat')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat' }, payload => {
-      const newMsg = payload.new;
-      
-      // Pastikan ini benar-benar pesan baru
-      if (parseInt(newMsg.id) > STATE.lastChatId) {
-        STATE.chat.push(newMsg);
-        STATE.lastChatId = parseInt(newMsg.id);
-        
-        // GUNAKAN FUNGSI APPEND AGAR TIDAK LAG
-        appendSingleMessage(newMsg);
-        // Fungsi untuk menghapus 1 pesan chat
 async function deleteChatMessage(id) {
   if (!confirm("Hapus pesan ini?")) return;
-  
-  // 1. Hapus elemen dari layar
   document.querySelectorAll(`[data-msg-id="${id}"]`).forEach(el => el.remove());
-  
-  // 2. Hapus dari state lokal
   STATE.chat = STATE.chat.filter(m => String(m.id) !== String(id));
-  
-  // 3. Hapus dari Database Supabase
   if (supabaseClient) {
     try {
       const { error } = await supabaseClient.from('chat').delete().eq('id', id);
@@ -2903,21 +2763,12 @@ async function deleteChatMessage(id) {
       toast("Pesan dihapus", "info");
     } catch (e) {
       toast("Gagal menghapus pesan", "error");
-      renderChatMessages(); // Muat ulang jika gagal
+      renderChatMessages(); 
     }
   } else {
     localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
     toast("Pesan dihapus", "info");
   }
-}
-        // Bunyikan notifikasi jika pesan bukan dari diri sendiri
-        const currentName = localStorage.getItem('hutri81_chat_name');
-        if (newMsg.user !== currentName) {
-          showBrowserNotification("💬 Pesan Baru di Grup Chat", `${newMsg.user}: ${newMsg.text}`);
-        }
-      }
-    })
-    .subscribe();
 }
 
 // === Handle Submit Pesan (Widget Kanan Bawah) ===
@@ -2942,7 +2793,10 @@ async function handleChatSubmit(e) {
   input.value = "";
   STATE.chat.push(msg);
   
-  // GUNAKAN FUNGSI APPEND AGAR PESAN LANGSUNG MUNCUL TANPA LAG
+  // PENTING: Update lastChatId agar Realtime tidak mendeteksinya sebagai pesan baru dari orang lain
+  STATE.lastChatId = parseInt(msg.id);
+  
+  // Tampilkan pesan langsung ke layar
   appendSingleMessage(msg);
   
   if (supabaseClient) {
@@ -2951,7 +2805,7 @@ async function handleChatSubmit(e) {
     } catch (e) {
       toast("Gagal mengirim pesan", "error");
       STATE.chat = STATE.chat.filter(m => m.id !== msg.id);
-      renderChatMessages(); // Jika gagal, render ulang untuk menghapus pesan
+      renderChatMessages(); // Jika gagal kirim, render ulang untuk menghapus pesan
     }
   } else {
     localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
@@ -2980,7 +2834,10 @@ async function handleChatSubmitInline(e) {
   input.value = "";
   STATE.chat.push(msg);
   
-  // GUNAKAN FUNGSI APPEND AGAR PESAN LANGSUNG MUNCUL TANPA LAG
+  // PENTING: Update lastChatId agar Realtime tidak mendeteksinya sebagai pesan baru dari orang lain
+  STATE.lastChatId = parseInt(msg.id);
+  
+  // Tampilkan pesan langsung ke layar
   appendSingleMessage(msg);
   
   if (supabaseClient) {
@@ -2989,10 +2846,53 @@ async function handleChatSubmitInline(e) {
     } catch (e) {
       toast("Gagal mengirim pesan", "error");
       STATE.chat = STATE.chat.filter(m => m.id !== msg.id);
-      renderChatMessages(); // Jika gagal, render ulang untuk menghapus pesan
+      renderChatMessages(); // Jika gagal kirim, render ulang untuk menghapus pesan
     }
   } else {
     localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
+  }
+}
+
+function showBrowserNotification(title, body) {
+  if (!("Notification" in window)) return;
+  if (Notification.permission === "granted") {
+    const notification = new Notification(title, { body, icon: 'https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg' });
+    notification.onclick = () => { window.focus(); notification.close(); };
+  }
+}
+
+function setupSupabaseRealtime() {
+  if (!supabaseClient) return;
+  supabaseClient.channel('public:chat')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat' }, payload => {
+      const newMsg = payload.new;
+      if (parseInt(newMsg.id) > STATE.lastChatId) {
+        STATE.chat.push(newMsg);
+        STATE.lastChatId = parseInt(newMsg.id);
+        appendSingleMessage(newMsg);
+        const currentName = localStorage.getItem('hutri81_chat_name');
+        if (newMsg.user !== currentName) {
+          showBrowserNotification("💬 Pesan Baru di Grup Chat", `${newMsg.user}: ${newMsg.text}`);
+        }
+      }
+    })
+    .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'chat' }, payload => {
+      const deletedId = payload.old.id;
+      document.querySelectorAll(`[data-msg-id="${deletedId}"]`).forEach(el => el.remove());
+      STATE.chat = STATE.chat.filter(m => String(m.id) !== String(deletedId));
+    })
+    .subscribe();
+}
+
+let chatInterval;
+function startChatPolling() {
+  if (!chatInterval) {
+    chatInterval = setInterval(async () => {
+      const widget = document.getElementById('chatWidget');
+      const chatSection = document.getElementById('chatPublik');
+      const isVisible = (widget && !widget.classList.contains("hidden-x")) || (chatSection && !document.getElementById('landing').classList.contains("hidden-x"));
+      if (isVisible) { await renderChatMessages(); }
+    }, 3000);
   }
 }
 /* ============================================================
@@ -3183,8 +3083,11 @@ async function init(){
   renderLandingPanitia();
   renderLandingPengumuman();
   
-  renderChatWidget();
+    renderChatWidget();
   renderChatPublikFooter();
+  
+  checkAutoLogin(); // Pastikan baris ini ada
+  
   await renderChatMessages();
   
   if (isSupabaseConnected) {
