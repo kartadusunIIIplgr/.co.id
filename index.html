@@ -50,9 +50,9 @@
   .bg-bg-soft{ background:var(--bg-soft); }
   .bg-merah-soft{ background:var(--merah-soft); }
 
-  .batik-bg{
+    .batik-bg{
     background-color:var(--cream);
-    background-image=
+    background-image:
       radial-gradient(circle at 25% 25%, rgba(255,31,61,.05) 0, transparent 40%),
       radial-gradient(circle at 75% 75%, rgba(255,179,0,.05) 0, transparent 45%),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23FF1F3D' stroke-opacity='0.05' stroke-width='1.2'%3E%3Cpath d='M40 5 L75 40 L40 75 L5 40 Z'/%3E%3Ccircle cx='40' cy='40' r='14'/%3E%3Cpath d='M40 26 L54 40 L40 54 L26 40 Z'/%3E%3C/g%3E%3C/svg%3E");
@@ -165,14 +165,113 @@
   .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .table-wrap table { min-width: 600px; }
 
-  /* Chat Widget Styles */
-  #chatWidget { position: fixed; bottom: 20px; right: 20px; z-index: 50; }
-  .chat-window { position: absolute; bottom: 70px; right: 0; width: 340px; height: 450px; max-width: calc(100vw - 40px); background: var(--bg-soft); border: 1px solid var(--line); border-radius: 1rem; box-shadow: 0 10px 40px -10px rgba(0,0,0,.3); display: flex; flex-direction: column; overflow: hidden; }
-  .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; }
-  .chat-message { max-width: 80%; padding: 0.5rem 0.8rem; border-radius: 0.8rem; font-size: 0.85rem; line-height: 1.3; word-wrap: break-word; }
-  .chat-message.sent { align-self: flex-end; background: var(--merah); color: white; border-bottom-right-radius: 0.2rem; }
-  .chat-message.received { align-self: flex-start; background: var(--cream-2); color: var(--ink); border-bottom-left-radius: 0.2rem; }
+  /* Chat Public Section Styles */
+  .chat-messages-box { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; }
+  
+  .chat-message-row { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; align-items: flex-end; }
+  .chat-message-row.sent { justify-content: flex-end; }
+  .chat-message-row.received { justify-content: flex-start; }
+  
+  .chat-message { max-width: 75%; padding: 0.5rem 0.8rem; border-radius: 0.8rem; font-size: 0.85rem; line-height: 1.3; word-wrap: break-word; }
+  .chat-message.sent { background: var(--merah); color: white; border-bottom-right-radius: 0.2rem; }
+  .chat-message.received { background: var(--cream-2); color: var(--ink); border-bottom-left-radius: 0.2rem; }
   .chat-message .sender-name { font-size: 0.7rem; font-weight: 700; margin-bottom: 0.2rem; opacity: 0.8; }
+
+  /* Floating Chat Button & Widget */
+  #floatChatBtn {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 50;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 9999px;
+    background: var(--merah);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px -5px rgba(255,31,61,.5);
+    cursor: pointer;
+    border: none;
+    transition: transform .3s ease, box-shadow .3s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  @media (min-width: 1024px) {
+    #floatChatBtn { bottom: 1.5rem; right: 1.5rem; width: 4rem; height: 4rem; }
+  }
+  #floatChatBtn:hover { transform: scale(1.1); box-shadow: 0 12px 30px -5px rgba(255,31,61,.7); }
+  #floatChatBtn .chat-pulse {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: var(--merah);
+    animation: pulseRing 2s ease-out infinite;
+    z-index: -1;
+  }
+  #floatChatBtn .chat-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 1.25rem;
+    height: 1.25rem;
+    background: var(--gold);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 800;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--cream);
+  }
+
+  #chatWidget {
+    position: fixed;
+    bottom: 5.5rem;
+    right: 1rem;
+    z-index: 50;
+    width: calc(100vw - 2rem);
+    max-width: 24rem;
+    animation: fadeUp .35s cubic-bezier(.2,.7,.2,1);
+  }
+  @media (min-width: 1024px) {
+    #chatWidget { bottom: 6.5rem; right: 1.5rem; }
+  }
+  #chatWidget .chat-widget-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 60px -15px rgba(0,0,0,.3);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 30rem;
+  }
+  .chat-widget-header {
+    background: var(--merah);
+    color: white;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .chat-widget-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: var(--cream-2);
+  }
+  .chat-widget-footer {
+    padding: 0.75rem;
+    border-top: 1px solid var(--line);
+    background: var(--bg-soft);
+  }
+  .chat-auth-btns { display: flex; gap: 0.5rem; }
+  .chat-auth-btns button { flex: 1; }
 
   @media print {
     body * { visibility: hidden; }
@@ -224,6 +323,7 @@
         <a href="#galeri" class="nav-link">Galeri</a>
         <a href="#panitia" class="nav-link">Panitia</a>
         <a href="#pengumuman" class="nav-link">Pengumuman</a>
+        <a href="#chatPublik" class="nav-link">Chat</a>
         <a href="#kontak" class="nav-link">Kontak</a>
       </div>
       <div class="flex items-center gap-1.5 lg:gap-2">
@@ -242,6 +342,7 @@
         <a href="#galeri" class="nav-link">Galeri</a>
         <a href="#panitia" class="nav-link">Panitia</a>
         <a href="#pengumuman" class="nav-link">Pengumuman</a>
+        <a href="#chatPublik" class="nav-link">Chat</a>
         <a href="#kontak" class="nav-link">Kontak</a>
         <button onclick="openAdminLogin()" class="btn btn-light mt-2 justify-start"><i data-lucide="shield-check" class="w-4 h-4"></i> Admin Login</button>
       </div>
@@ -390,6 +491,27 @@
     </div>
   </section>
 
+  <!-- RUANG CHAT PUBLIK DI HALAMAN DEPAN -->
+  <section id="chatPublik" class="py-16 md:py-24 bg-cream-2/40 px-4 lg:px-8">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-8 md:mb-12 reveal">
+        <div class="div-flag mx-auto mb-4 md:mb-5"></div>
+        <div class="text-xs font-bold uppercase tracking-[0.25em] text-merah mb-3">Grup Diskusi</div>
+        <h2 class="font-display text-3xl md:text-4xl lg:text-5xl leading-tight">RUANG CHAT PENGUNJUNG</h2>
+        <p class="text-ink-2 max-w-2xl mx-auto mt-3 md:mt-4 text-sm md:text-base">Sapa panitia dan pengunjung lainnya secara langsung di sini. Pilih nama Anda dari daftar anggota terdaftar untuk mulai mengobrol tanpa perlu login.</p>
+      </div>
+      
+      <div class="card overflow-hidden flex flex-col reveal" style="height: 500px;">
+        <div class="bg-merah text-white px-4 py-3 flex items-center justify-between">
+          <div class="flex items-center gap-2"><i data-lucide="messages-square" class="w-5 h-5"></i><span class="font-bold text-sm">Grup Chat Pengunjung</span></div>
+          <span class="text-xs bg-white/20 px-2 py-1 rounded-full flex items-center gap-1"><span class="live-dot"></span> Live</span>
+        </div>
+        <div id="chatMessagesPublic" class="chat-messages-box"></div>
+        <div id="chatPublikFooter" class="p-3 border-t border-line"></div>
+      </div>
+    </div>
+  </section>
+
   <section id="kontak" class="py-16 md:py-24 px-4 lg:px-8">
     <div class="max-w-7xl mx-auto">
       <div class="grid lg:grid-cols-2 gap-8 md:gap-10">
@@ -449,30 +571,39 @@
       </div>
       <div class="pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-cream/60">
         <div>© 2026 Panitia HUT RI ke-81. Hak Cipta Dilindungi.</div>
-        <div class="flex items-center gap-2"><span>Dibuat dengan</span><i data-lucide="heart" class="w-3.5 h-3.5 text-merah"></i><span>untuk Karang Taruna Pematang Langgar</span></div>
+        <div class="flex items-center gap-2"><span>Dibuat Oleh</span><i data-lucide="heart" class="w-3.5 h-3.5 text-merah"></i><span>BAYU PRATAMA</span></div>
       </div>
     </div>
   </footer>
 
-  <!-- Tombol Admin dipindahkan ke kiri bawah agar tidak bertabrakan dengan Chat -->
+  <!-- Tombol Admin dipindahkan ke kiri bawah -->
   <button onclick="openAdminLogin()" class="fixed bottom-4 left-4 lg:bottom-6 lg:left-6 z-40 w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-merah text-white flex items-center justify-center shadow-2xl shadow-merah/40 hover:scale-110 transition" title="Login Admin"><i data-lucide="shield-check" class="w-5 h-5 lg:w-6 lg:h-6"></i></button>
 
-  <!-- Chat Widget tetap di kanan bawah -->
-  <div id="chatWidget">
-    <div id="chatWindow" class="chat-window hidden-x flex">
-      <div class="bg-merah text-white px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-2"><i data-lucide="messages-square" class="w-5 h-5"></i><span class="font-bold text-sm">Grup Chat Panitia</span></div>
-        <button onclick="toggleChat()" class="hover:bg-white/20 p-1 rounded"><i data-lucide="x" class="w-5 h-5"></i></button>
+  <!-- Tombol Chat Mengambang -->
+  <button id="floatChatBtn" onclick="toggleChatWidget()" title="Buka Chat">
+    <span class="chat-pulse"></span>
+    <i data-lucide="message-circle" class="w-6 h-6 lg:w-7 lg:h-7"></i>
+    <span class="chat-badge hidden-x" id="chatFloatBadge">!</span>
+  </button>
+
+  <!-- Widget Chat Popup -->
+  <div id="chatWidget" class="hidden-x">
+    <div class="chat-widget-card">
+      <div class="chat-widget-header">
+        <div class="flex items-center gap-2">
+          <i data-lucide="messages-square" class="w-5 h-5"></i>
+          <div>
+            <div class="font-bold text-sm">Grup Chat Pengunjung</div>
+            <div id="chatWidgetUserStatus" class="text-[10px] text-white/80">Tamu (Pilih Nama Anggota)</div>
+          </div>
+        </div>
+        <button onclick="toggleChatWidget()" class="w-8 h-8 rounded-lg hover:bg-white/20 flex items-center justify-center transition">
+          <i data-lucide="minus" class="w-5 h-5"></i>
+        </button>
       </div>
-      <div id="chatMessages" class="chat-messages"></div>
-      <form id="chatForm" class="p-3 border-t border-line flex gap-2">
-        <input type="text" id="chatInput" class="input flex-1 !py-2 !text-sm" placeholder="Ketik pesan..." required>
-        <button type="submit" class="btn btn-primary !p-2 !rounded-lg"><i data-lucide="send" class="w-4 h-4"></i></button>
-      </form>
+      <div id="chatWidgetMessages" class="chat-widget-body"></div>
+      <div id="chatWidgetFooter" class="chat-widget-footer"></div>
     </div>
-    <button onclick="toggleChat()" class="w-14 h-14 rounded-full bg-merah text-white flex items-center justify-center shadow-2xl shadow-merah/40 hover:scale-110 transition">
-      <i data-lucide="message-circle" class="w-6 h-6"></i>
-    </button>
   </div>
 
 </div>
@@ -542,6 +673,7 @@
         <div class="sidebar-item" data-page="undian"><i data-lucide="gift" class="w-5 h-5"></i> Undian Penonton</div>
 
         <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-ink-2 px-3 py-2 mt-4">Lainnya</div>
+        <div class="sidebar-item" data-page="anggotachat"><i data-lucide="users" class="w-5 h-5"></i> Anggota Karang Taruna</div>
         <div class="sidebar-item" data-page="laporan"><i data-lucide="bar-chart-3" class="w-5 h-5"></i> Laporan</div>
         <div class="sidebar-item" data-page="pengaturan"><i data-lucide="settings" class="w-5 h-5"></i> Pengaturan</div>
 
@@ -831,6 +963,28 @@
         </div>
       </section>
 
+      <section id="page-anggotachat" class="dash-page hidden-x">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div><h1 class="font-display text-2xl lg:text-4xl">KELOLA ANGGOTA KARANG TARUNA</h1><p class="text-ink-2 mt-1 text-sm">Daftarkan anggota Karang Taruna. Anggota yang didaftarkan akan tampil sebagai daftar kontak di ruang chat publik.</p></div>
+          <button onclick="openAnggotaChatModal()" class="btn btn-primary"><i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Anggota</button>
+        </div>
+        <div class="card overflow-hidden">
+          <div class="table-wrap">
+            <table class="w-full text-sm">
+              <thead class="bg-cream-2 text-xs uppercase tracking-wider text-ink-2">
+                <tr>
+                  <th class="text-left px-4 py-3 font-bold">Nama Anggota</th>
+                  <th class="text-left px-4 py-3 font-bold">Jabatan / Role</th>
+                  <th class="text-left px-4 py-3 font-bold">Tanggal Dibuat</th>
+                  <th class="text-right px-4 py-3 font-bold">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="anggotaChatTableBody" class="divide-y divide-line"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       <section id="page-laporan" class="dash-page hidden-x">
         <div class="mb-6">
           <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
@@ -1038,7 +1192,7 @@ async function loadDataFromSupabase(table) {
 }
 
 const STATE = {
-  agenda: [], panitia: [], galeri: [], pengumuman: [], peserta: [], lomba: [], kepanitiaanLomba: [], undian: [], hadiah: [], chat: [],
+  agenda: [], panitia: [], galeri: [], pengumuman: [], peserta: [], lomba: [], kepanitiaanLomba: [], undian: [], hadiah: [], chat: [], chatMembers: [],
   activities: [
     { icon:"user-plus", color:"merah", title:"Pendaftaran baru", desc:"Budi Santoso mendaftar lomba balap karung · 5 menit lalu" },
     { icon:"check-circle-2", color:"emerald", title:"Agenda disetujui", desc:"Upacara bendera 17 Agustus · 1 jam lalu" },
@@ -1078,6 +1232,16 @@ function toast(msg, type="success"){
   $("#toastContainer").appendChild(t);
   lucide.createIcons();
   setTimeout(()=>{ t.style.transition="all .35s"; t.style.opacity="0"; t.style.transform="translateX(20px)"; setTimeout(()=>t.remove(), 350); }, 3000);
+}
+
+function getAvatarHtml(photo, name, sizeClass = 'w-9 h-9') {
+  const isImage = photo && (photo.startsWith('http') || photo.startsWith('data:image'));
+  const initials = name ? name.split(" ").map(s=>s[0]).slice(0,2).join("") : "?";
+  if (isImage) {
+    return `<img src="${photo}" class="${sizeClass} rounded-full object-cover flex-shrink-0" alt="${name}">`;
+  } else {
+    return `<div class="${sizeClass} rounded-full bg-merah text-white flex items-center justify-center font-bold text-xs flex-shrink-0">${initials}</div>`;
+  }
 }
 
 function toggleTheme() {
@@ -1499,6 +1663,7 @@ function goPage(page){
   if(page === "undian") initUndianPage();
   if(page === "laporan") initLaporanCharts();
   if(page === "peserta") initPesertaPage();
+  if(page === "anggotachat") renderAnggotaChatTable();
   closeSidebar(); window.scrollTo(0,0);
 }
  $$(".sidebar-item").forEach(s=>s.addEventListener("click", ()=>goPage(s.dataset.page)));
@@ -1525,7 +1690,7 @@ function exportReport(){ toast("Laporan PDF sedang diproses, mohon tunggu...", "
 async function initDashboard(){
   if (supabaseClient) {
     try {
-      const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'peserta', 'peserta_lomba', 'kepanitiaan_lomba', 'undian', 'hadiah', 'chat'];
+      const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'peserta', 'peserta_lomba', 'kepanitiaan_lomba', 'undian', 'hadiah', 'chat', 'chat_members'];
       for (const table of tables) {
         const data = await loadDataFromSupabase(table);
         if (data && data.length > 0) {
@@ -1539,6 +1704,8 @@ async function initDashboard(){
         }
       }
     } catch (e) { console.error("Error loading dashboard data:", e); }
+  } else {
+    STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
   }
   $("#statAgenda").textContent = STATE.agenda.length;
   $("#statPanitia").textContent = STATE.panitia.length;
@@ -2130,6 +2297,7 @@ function renderUndianTable(){
 function openUndianModal(id){
   const u = id ? STATE.undian.find(x=>x.id===id) : null;
   showModal(`<div class="card max-w-lg w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">${u?'EDIT':'TAMBAH'} PESERTA UNDIAN</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="undianForm" class="p-6 space-y-4"><div><label class="label">Nomor Tiket</label><input type="text" id="f_unomor" class="input font-mono" value="${u?.nomor||'TKT-'+String(STATE.undian.length+1).padStart(3,'0')}" required></div><div><label class="label">Nama Lengkap</label><input type="text" id="f_unama" class="input" value="${u?.nama||''}" required></div><div class="grid grid-cols-2 gap-4"><div><label class="label">Telepon</label><input type="tel" id="f_utelepon" class="input" value="${u?.telepon||''}" required></div><div><label class="label">Asal Daerah</label><input type="text" id="f_uasal" class="input" value="${u?.asal||''}" required></div></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button></div></form></div>`);
+  
   $("#undianForm").addEventListener("submit", async e => { 
     e.preventDefault(); 
     const data = { nomor:$("#f_unomor").value, nama:$("#f_unama").value, telepon:$("#f_utelepon").value, asal:$("#f_uasal").value, status:"eligible" }; 
@@ -2139,6 +2307,7 @@ function openUndianModal(id){
     closeModal(); initUndianPage(); $("#statUndian").textContent = STATE.undian.length; 
   });
 }
+
 async function deleteUndian(id){ STATE.undian = STATE.undian.filter(u=>u.id!==id); await syncDataToSupabase('undian', STATE.undian); initUndianPage(); $("#statUndian").textContent = STATE.undian.length; toast("Peserta undian dihapus", "info"); }
 
 function spinWheel(isScreen = false) {
@@ -2215,15 +2384,25 @@ function launchConfetti(isScreen = false){
   const colors = ["#FF1F3D","#FFB300","#FFF","#FFE5E9","#E69500","#FF6B6B","#FFD54F"];
   for(let i=0;i<80;i++){ const c = document.createElement("div"); c.className = "confetti"; c.style.left = Math.random()*100 + "vw"; c.style.top = "-20px"; c.style.background = colors[Math.floor(Math.random()*colors.length)]; c.style.animationDelay = Math.random()*1 + "s"; c.style.animationDuration = (2 + Math.random()*2) + "s"; c.style.transform = `rotate(${Math.random()*360}deg)`; if(Math.random() > .5) c.style.borderRadius = "50%"; document.body.appendChild(c); setTimeout(()=>c.remove(), 5000); }
 }
-async function resetUndian(){ showModal(`<div class="card max-w-md w-full p-6 modal-enter text-center"><div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4"><i data-lucide="rotate-ccw" class="w-8 h-8"></i></div><h3 class="font-display text-2xl">RESET UNDIAN?</h3><p class="text-sm text-ink-2 mt-2 mb-6">Semua pemenang akan dikembalikan ke status "Belum Menang" dan hadiah direset.</p><div class="flex gap-2"><button onclick="closeModal()" class="btn btn-light flex-1 justify-center">Batal</button><button onclick="confirmResetUndian()" class="btn btn-primary flex-1 justify-center" style="background:#e11d48"><i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset</button></div></div>`); }
+
+async function resetUndian(){ 
+  showModal(`<div class="card max-w-md w-full p-6 modal-enter text-center"><div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4"><i data-lucide="rotate-ccw" class="w-8 h-8"></i></div><h3 class="font-display text-2xl">RESET UNDIAN?</h3><p class="text-sm text-ink-2 mt-2 mb-6">Semua pemenang akan dikembalikan ke status "Belum Menang" dan hadiah direset.</p><div class="flex gap-2"><button onclick="closeModal()" class="btn btn-light flex-1 justify-center">Batal</button><button onclick="confirmResetUndian()" class="btn btn-primary flex-1 justify-center" style="background:#e11d48"><i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset</button></div></div>`); 
+}
+
 async function confirmResetUndian(){
-  STATE.undian.forEach(u=>{ u.status = "eligible"; delete u.hadiahId; delete u.hadiah_id; }); STATE.hadiah.forEach(h=> h.terpakai = 0);
-  await syncDataToSupabase('undian', STATE.undian); await syncDataToSupabase('hadiah', STATE.hadiah);
+  STATE.undian.forEach(u=>{ u.status = "eligible"; delete u.hadiahId; delete u.hadiah_id; }); 
+  STATE.hadiah.forEach(h=> h.terpakai = 0);
+  await syncDataToSupabase('undian', STATE.undian); 
+  await syncDataToSupabase('hadiah', STATE.hadiah);
   closeModal(); initUndianPage(); $("#spinResultDash").innerHTML = "";
   wheelCurrentRotationDash = 0; wheelCurrentRotationScreen = 0;
   const wheel1 = $("#raffleWheel"), wheel2 = $("#raffleWheelScreen");
-  wheel1.style.transition = "none"; wheel1.style.transform = "rotate(0deg)"; wheel2.style.transition = "none"; wheel2.style.transform = "rotate(0deg)";
-  setTimeout(()=>{ wheel1.style.transition = ""; wheel2.style.transition = ""; }, 50);
+  if(wheel1) { wheel1.style.transition = "none"; wheel1.style.transform = "rotate(0deg)"; }
+  if(wheel2) { wheel2.style.transition = "none"; wheel2.style.transform = "rotate(0deg)"; }
+  setTimeout(()=>{ 
+    if(wheel1) wheel1.style.transition = ""; 
+    if(wheel2) wheel2.style.transition = ""; 
+  }, 50);
   toast("Undian telah direset", "info");
 }
 
@@ -2272,53 +2451,125 @@ function openDaftarLombaModal() {
 }
 
 /* ============================================================
-   CHAT WIDGET LOGIC
+   CHAT WIDGET LOGIC — Tanpa Login, Pilih Nama Langsung Chat
 ============================================================ */
-function toggleChat() {
-  const isLoggedIn = localStorage.getItem('hutri81_chat_user');
-  if (!isLoggedIn) {
-    openChatLoginModal();
+
+function toggleChatWidget() {
+  const widget = $("#chatWidget");
+  const isHidden = widget.classList.contains("hidden-x");
+  
+  if (isHidden) {
+    widget.classList.remove("hidden-x");
+    $("#chatFloatBadge").classList.add("hidden-x");
+    renderChatWidget();
   } else {
-    const win = $("#chatWindow");
-    win.classList.toggle("hidden-x");
-    if (!win.classList.contains("hidden-x")) {
-      renderChatMessages();
-      $("#chatInput").focus();
-    }
+    widget.classList.add("hidden-x");
   }
 }
 
-function openChatLoginModal() {
-  showModal(`
-    <div class="card max-w-md w-full p-6 modal-enter relative">
-      <button onclick="closeModal()" class="absolute top-3 right-3 w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center text-ink-2"><i data-lucide="x" class="w-5 h-5"></i></button>
-      <div class="text-center mb-4">
-        <div class="w-14 h-14 mx-auto rounded-full bg-merah-soft text-merah flex items-center justify-center mb-3"><i data-lucide="message-square" class="w-7 h-7"></i></div>
-        <h3 class="font-display text-2xl">MASUK CHAT</h3>
-        <p class="text-sm text-ink-2 mt-1">Masukkan nama Anda untuk mulai chatting dengan anggota lain.</p>
-      </div>
-      <form id="chatLoginForm" class="space-y-4">
-        <div><label class="label">Nama Anda</label><input type="text" id="chatUserName" class="input" placeholder="Mis. Budi Santoso" required></div>
-        <button type="submit" class="btn btn-primary w-full justify-center"><i data-lucide="log-in" class="w-4 h-4"></i> Mulai Chat</button>
+function renderChatWidget() {
+  const footerEl = $("#chatWidgetFooter");
+  const currentMemberName = localStorage.getItem('hutri81_chat_name');
+  const isValidMember = STATE.chatMembers.some(m => m.name.toLowerCase() === currentMemberName?.toLowerCase());
+  const statusEl = $("#chatWidgetUserStatus");
+
+  if (statusEl) {
+    statusEl.textContent = isValidMember ? `Anggota: ${currentMemberName}` : "Pilih Nama Anggota";
+  }
+
+  if (isValidMember) {
+    footerEl.innerHTML = `
+      <form id="chatWidgetForm" class="flex gap-2">
+        <input type="text" id="chatWidgetInputText" class="input flex-1 !py-2 !text-sm" placeholder="Ketik pesan..." required maxlength="500">
+        <button type="submit" class="btn btn-primary !p-2 !rounded-lg"><i data-lucide="send" class="w-4 h-4"></i></button>
       </form>
-    </div>
-  `);
+      <div class="text-[10px] text-center text-ink-2 mt-1 flex items-center justify-center gap-1">
+        <i data-lucide="user-check" class="w-3 h-3"></i> 
+        <span>Anda: ${currentMemberName}</span> 
+        <button onclick="logoutMember()" class="text-merah font-bold underline ml-1">Ganti Nama</button>
+      </div>
+    `;
+    $("#chatWidgetForm").addEventListener("submit", handleChatSubmit);
+  } else {
+    footerEl.innerHTML = `
+      <div class="space-y-2">
+        <select id="selectChatMemberWidget" class="input !py-2 !text-sm" onchange="selectChatMember(this.value)">
+          <option value="">-- Pilih Nama Anda --</option>
+          ${STATE.chatMembers.map(m => `<option value="${m.name}">${m.name}</option>`).join('')}
+        </select>
+        <p class="text-[10px] text-center text-ink-2">Pilih nama terdaftar untuk mulai chat.</p>
+      </div>
+    `;
+  }
   
-  $("#chatLoginForm").addEventListener("submit", e => {
-    e.preventDefault();
-    const name = $("#chatUserName").value.trim();
-    if(name.length < 2) { toast("Nama minimal 2 huruf", "warn"); return; }
-    localStorage.setItem('hutri81_chat_user', name);
-    closeModal();
-    $("#chatWindow").classList.remove("hidden-x");
-    renderChatMessages();
-    toast(`Selamat datang, ${name}!`, "success");
-  });
+  lucide.createIcons();
+  setTimeout(() => { const inp = $("#chatWidgetInputText"); if(inp) inp.focus(); }, 100);
+  
+  renderChatMessages();
 }
 
+function renderChatPublikFooter() {
+  const footerEl = $("#chatPublikFooter");
+  if(!footerEl) return;
+  
+  const currentMemberName = localStorage.getItem('hutri81_chat_name');
+  const isValidMember = STATE.chatMembers.some(m => m.name.toLowerCase() === currentMemberName?.toLowerCase());
+  
+  if (isValidMember) {
+    footerEl.innerHTML = `
+      <form id="chatFormPublic" class="flex gap-2">
+        <input type="text" id="chatInputTextPublic" class="input flex-1 !py-2 !text-sm" placeholder="Ketik pesan..." required maxlength="500">
+        <button type="submit" class="btn btn-primary !p-2 !rounded-lg"><i data-lucide="send" class="w-4 h-4"></i></button>
+      </form>
+      <div class="text-[10px] text-center text-ink-2 mt-1 flex items-center justify-center gap-1">
+        <i data-lucide="user-check" class="w-3 h-3"></i> 
+        <span>Anda: ${currentMemberName}</span> 
+        <button onclick="logoutMember()" class="text-merah font-bold underline ml-1">Ganti Nama</button>
+      </div>
+    `;
+    $("#chatFormPublic").addEventListener("submit", handleChatSubmitInline);
+  } else {
+    footerEl.innerHTML = `
+      <div class="space-y-2">
+        <select id="selectChatMemberPublic" class="input !py-2 !text-sm" onchange="selectChatMember(this.value)">
+          <option value="">-- Pilih Nama Anda --</option>
+          ${STATE.chatMembers.map(m => `<option value="${m.name}">${m.name}</option>`).join('')}
+        </select>
+        <p class="text-[10px] text-center text-ink-2">Pilih nama terdaftar untuk mulai chat.</p>
+      </div>
+    `;
+  }
+  
+  lucide.createIcons();
+}
+
+function logoutMember() {
+  localStorage.removeItem('hutri81_chat_name');
+  toast("Nama berhasil direset. Silakan pilih nama kembali.", "info");
+  renderChatWidget();
+  renderChatPublikFooter();
+}
+
+function selectChatMember(name) {
+  if(!name) return;
+  const isMember = STATE.chatMembers.some(m => m.name.toLowerCase() === name.toLowerCase());
+  if (!isMember) {
+    toast("Nama tidak terdaftar sebagai anggota!", "error");
+    return;
+  }
+  localStorage.setItem('hutri81_chat_name', name);
+  toast(`Halo, ${name}! Anda sekarang bisa chat.`, "success");
+  renderChatWidget();
+  renderChatPublikFooter();
+}
+
+// === Render Pesan Chat ===
 async function renderChatMessages() {
-  const wrap = $("#chatMessages");
-  const currentUser = localStorage.getItem('hutri81_chat_user');
+  const wrap = $("#chatWidgetMessages");
+  const wrapInline = $("#chatMessagesPublic");
+  if(!wrap && !wrapInline) return;
+  
+  const currentName = localStorage.getItem('hutri81_chat_name') || '';
   
   if (supabaseClient) {
     try {
@@ -2330,38 +2581,71 @@ async function renderChatMessages() {
     if(STATE.chat.length === 0) STATE.chat = JSON.parse(localStorage.getItem('hutri81_local_chat') || '[]');
   }
 
-  if (STATE.chat.length === 0) {
-    wrap.innerHTML = `<div class="text-center text-ink-2 text-sm py-10">Belum ada pesan. <br>Mulai percakapan sekarang!</div>`;
-    return;
-  }
+  const members = STATE.chatMembers || [];
+  const isOfficialMember = (name) => members.some(m => m.name.toLowerCase() === name.toLowerCase());
 
-  wrap.innerHTML = STATE.chat.map(c => `
-    <div class="chat-message ${c.user === currentUser ? 'sent' : 'received'}">
-      ${c.user !== currentUser ? `<div class="sender-name">${c.user}</div>` : ''}
-      <div>${c.text}</div>
-    </div>
-  `).join("");
-  
-  wrap.scrollTop = wrap.scrollHeight;
+  const htmlContent = STATE.chat.length === 0 
+    ? `<div class="text-center text-ink-2 text-sm py-10 flex flex-col items-center gap-2"><i data-lucide="message-square-dashed" class="w-10 h-10 opacity-40"></i><div>Belum ada pesan.<br>Mulai percakapan sekarang!</div></div>`
+    : STATE.chat.map(c => {
+        const isSent = c.user === currentName;
+        const official = isOfficialMember(c.user);
+        const avatar = getAvatarHtml(c.photo, c.user, 'w-8 h-8 mt-auto');
+        return `
+          <div class="chat-message-row ${isSent ? 'sent' : 'received'}">
+            ${!isSent ? avatar : ''}
+            <div class="chat-message ${isSent ? 'sent' : 'received'}">
+              ${!isSent ? `<div class="sender-name flex items-center gap-1">${c.user} ${official ? '<span class="badge bg-merah text-white text-[8px] py-0 px-1 rounded-sm">Anggota</span>' : ''}</div>` : ''}
+              <div>${escapeHtml(c.text)}</div>
+            </div>
+            ${isSent ? avatar : ''}
+          </div>
+        `;
+      }).join("");
+      
+  if(wrap) {
+    wrap.innerHTML = htmlContent;
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+  if(wrapInline) {
+    wrapInline.innerHTML = htmlContent;
+    wrapInline.scrollTop = wrapInline.scrollHeight;
+  }
+  lucide.createIcons();
 }
 
- $("#chatForm")?.addEventListener("submit", async e => {
+// Helper: Escape HTML
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// === Handle Submit Pesan ===
+async function handleChatSubmit(e) {
   e.preventDefault();
-  const input = $("#chatInput");
+  const input = $("#chatWidgetInputText");
+  const name = localStorage.getItem('hutri81_chat_name');
   const text = input.value.trim();
-  if (!text) return;
   
-  const user = localStorage.getItem('hutri81_chat_user');
-  const msg = { id: uid(), user, text, created_at: new Date().toISOString() };
+  if (!name || !text) return;
+  
+  const memberData = STATE.chatMembers.find(m => m.name.toLowerCase() === name.toLowerCase());
+  if (!memberData) {
+    toast("Sesi anggota tidak valid. Silakan login kembali.", "error");
+    logoutMember();
+    return;
+  }
+  
+  const photo = memberData.photo || '';
+  const msg = { id: uid(), user: name, photo, text, created_at: new Date().toISOString() };
   
   input.value = "";
-  
   STATE.chat.push(msg);
   renderChatMessages();
   
   if (supabaseClient) {
     try {
-      await supabaseClient.from('chat').insert([msg]);
+      await supabaseClient.from('chat').insert([{ id: msg.id, user: msg.user, photo: msg.photo, text: msg.text, created_at: msg.created_at }]);
     } catch (e) {
       toast("Gagal mengirim pesan", "error");
       STATE.chat = STATE.chat.filter(m => m.id !== msg.id);
@@ -2370,35 +2654,242 @@ async function renderChatMessages() {
   } else {
     localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
   }
-});
+}
 
+async function handleChatSubmitInline(e) {
+  e.preventDefault();
+  const input = $("#chatInputTextPublic");
+  const name = localStorage.getItem('hutri81_chat_name');
+  const text = input.value.trim();
+  
+  if (!name || !text) return;
+  
+  const memberData = STATE.chatMembers.find(m => m.name.toLowerCase() === name.toLowerCase());
+  if (!memberData) {
+    toast("Sesi anggota tidak valid. Silakan login kembali.", "error");
+    logoutMember();
+    return;
+  }
+  
+  const photo = memberData.photo || '';
+  const msg = { id: uid(), user: name, photo, text, created_at: new Date().toISOString() };
+  
+  input.value = "";
+  STATE.chat.push(msg);
+  renderChatMessages();
+  
+  if (supabaseClient) {
+    try {
+      await supabaseClient.from('chat').insert([{ id: msg.id, user: msg.user, photo: msg.photo, text: msg.text, created_at: msg.created_at }]);
+    } catch (e) {
+      toast("Gagal mengirim pesan", "error");
+      STATE.chat = STATE.chat.filter(m => m.id !== msg.id);
+      renderChatMessages();
+    }
+  } else {
+    localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
+  }
+}
+
+// === Polling ===
 let chatInterval;
 function startChatPolling() {
-  if (supabaseClient && !chatInterval) {
+  if (!chatInterval) {
     chatInterval = setInterval(async () => {
-      const isWinVisible = !$("#chatWindow").classList.contains("hidden-x");
-      if (isWinVisible) {
+      const widget = document.getElementById('chatWidget');
+      const chatSection = document.getElementById('chatPublik');
+      if ((widget && !widget.classList.contains("hidden-x")) || (chatSection && !document.getElementById('landing').classList.contains("hidden-x"))) {
         await renderChatMessages();
       }
     }, 3000);
   }
 }
 
-function init(){
+/* ============================================================
+   ADMIN: KELOLA ANGGOTA KARANG TARUNA (Daftar Kontak)
+============================================================ */
+
+let tempAnggotaImg = null;
+
+function renderAnggotaChatTable() {
+  const body = $("#anggotaChatTableBody"); if(!body) return;
+  
+  if (STATE.chatMembers.length === 0) {
+    body.innerHTML = `<tr><td colspan="4" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Belum ada anggota Karang Taruna ditambahkan</div></td></tr>`;
+    lucide.createIcons();
+    return;
+  }
+
+  body.innerHTML = STATE.chatMembers.map(m => `
+    <tr class="row-hover transition">
+      <td class="px-4 py-3">
+        <div class="flex items-center gap-3">
+          ${getAvatarHtml(m.photo, m.name)}
+          <div class="font-bold text-sm">${m.name}</div>
+        </div>
+      </td>
+      <td class="px-4 py-3 text-sm font-semibold">${m.password || '-'}</td>
+      <td class="px-4 py-3 text-sm">${fmtTanggal(m.created_at)}</td>
+      <td class="px-4 py-3">
+        <div class="flex items-center justify-end gap-1">
+          <button onclick="openAnggotaChatModal(${m.id})" class="btn btn-primary !py-1.5 !px-3 text-xs"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</button>
+          <button onclick="deleteAnggotaChat(${m.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+        </div>
+      </td>
+    </tr>
+  `).join("");
   lucide.createIcons();
-  initSupabase();
+}
+
+function openAnggotaChatModal(id) {
+  tempAnggotaImg = null; 
+  const m = id ? STATE.chatMembers.find(x=>x.id===id) : null;
+  const currentFoto = m?.photo || '';
+  const isImage = currentFoto.startsWith('http') || currentFoto.startsWith('data:image');
+  
+  showModal(`
+    <div class="card max-w-lg w-full modal-enter">
+      <div class="px-6 py-4 border-b border-line flex items-center justify-between">
+        <h3 class="font-display text-2xl">${m?'EDIT':'TAMBAH'} ANGGOTA KARANG TARUNA</h3>
+        <button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <form id="anggotaChatForm" class="p-6 space-y-4">
+        <div class="flex flex-col items-center mb-2">
+          <div id="anggotaImgPreview" class="w-28 h-28 rounded-full bg-cream-2 border-2 border-dashed border-line flex items-center justify-center font-display text-4xl text-ink-2 overflow-hidden mb-3">
+            ${isImage ? `<img src="${currentFoto}" class=" ${currentFoto}" class="w-full h-full object-cover">` : (currentFoto ? `<div class="font-display text-4xl text-ink">${currentFoto}</div>` : 'Foto')}
+          </div>
+          <div class="flex gap-2 w-full">
+            <input type="text" id="f_foto_text" class="input flex-1" placeholder="URL foto atau Inisial" value="${isImage ? '' : currentFoto}" oninput="updateAnggotaPreview(this.value)">
+            <label class="btn btn-light cursor-pointer flex-shrink-0"><i data-lucide="upload" class="w-4 h-4"></i> Pilih<input type="file" accept="image/*" class="hidden" onchange="handleAnggotaImgUpload(event)"></label>
+          </div>
+          <div class="text-xs text-ink-2 mt-1 text-center">Kosongkan jika ingin menggunakan inisial nama.</div>
+        </div>
+        <div><label class="label">Nama Anggota</label><input type="text" id="f_anggota_nama" class="input" value="${m?.name||''}" required></div>
+        <div><label class="label">Jabatan / Role</label><input type="text" id="f_anggota_pass" class="input" value="${m?.password||''}" placeholder="Misal: Ketua, Sekretaris, Anggota"></div>
+        <div class="flex items-center justify-end gap-2 pt-4 border-t border-line">
+          <button type="button" onclick="closeModal()" class="btn btn-light">Batal</button>
+          <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button>
+        </div>
+      </form>
+    </div>
+  `);
+  
+  $("#anggotaChatForm").addEventListener("submit", async e => { 
+    e.preventDefault(); 
+    const finalFoto = tempAnggotaImg || $("#f_foto_text").value.toUpperCase() || '';
+    const data = { 
+      name: $("#f_anggota_nama").value, 
+      password: $("#f_anggota_pass").value,
+      photo: finalFoto,
+      created_at: m?.created_at || new Date().toISOString()
+    }; 
+    
+    if(m){ 
+      Object.assign(m, data); 
+      toast("Data anggota diperbarui", "success"); 
+    } else { 
+      const newMember = { id: uid(), ...data }; 
+      STATE.chatMembers.unshift(newMember); 
+      toast("Anggota Karang Taruna baru ditambahkan", "success"); 
+    } 
+    
+    if (supabaseClient) {
+      await syncDataToSupabase('chat_members', STATE.chatMembers);
+    } else {
+      localStorage.setItem('hutri81_registered_users', JSON.stringify(STATE.chatMembers));
+    }
+    
+    closeModal(); renderAnggotaChatTable(); 
+  });
+}
+
+async function handleAnggotaImgUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { toast("Ukuran file terlalu besar (Maks 2MB)", "warn"); return; }
+  toast("Memproses gambar...", "info");
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    tempAnggotaImg = event.target.result; 
+    $("#f_foto_text").value = ""; 
+    $("#anggotaImgPreview").innerHTML = `<img src="${tempAnggotaImg}" class="w-full h-full object-cover">`;
+    toast("Foto siap disimpan.", "success");
+  };
+  reader.readAsDataURL(file);
+}
+function updateAnggotaPreview(val) {
+  tempAnggotaImg = null; 
+  const p = $("#anggotaImgPreview");
+  if (!val) { p.innerHTML = 'Foto'; return; }
+  if (val.startsWith('http') || val.startsWith('data:image')) {
+    p.innerHTML = `<img src="${val}" class="w-full h-full object-cover">`;
+  } else {
+    p.innerHTML = `<div class="font-display text-4xl text-ink">${val.toUpperCase()}</div>`;
+  }
+}
+
+async function deleteAnggotaChat(id) {
+  showModal(`<div class="card max-w-md w-full p-6 modal-enter text-center"><div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4"><i data-lucide="alert-triangle" class="w-8 h-8"></i></div><h3 class="font-display text-2xl">Hapus Anggota?</h3><p class="text-sm text-ink-2 mt-2 mb-6">Data anggota ini akan dihapus permanen dari daftar kontak.</p><div class="flex gap-2"><button onclick="closeModal()" class="btn btn-light flex-1 justify-center">Batal</button><button onclick="confirmDeleteAnggotaChat(${id})" class="btn btn-primary flex-1 justify-center" style="background:#e11d48"><i data-lucide="trash-2" class="w-4 h-4"></i> Hapus</button></div></div>`);
+}
+
+async function confirmDeleteAnggotaChat(id) {
+  STATE.chatMembers = STATE.chatMembers.filter(m=>m.id!==id);
+  if (supabaseClient) {
+    await syncDataToSupabase('chat_members', STATE.chatMembers);
+  } else {
+    localStorage.setItem('hutri81_registered_users', JSON.stringify(STATE.chatMembers));
+  }
+  closeModal(); renderAnggotaChatTable(); toast("Anggota telah dihapus", "info");
+}
+
+// === FUNGSI INIT UTAMA ===
+async function init(){
+  lucide.createIcons();
+  const isSupabaseConnected = initSupabase();
+  
+  // Muat semua data publik dari Supabase agar tampil di halaman depan
+  if (isSupabaseConnected) {
+    try {
+      const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'chat', 'chat_members'];
+      for (const table of tables) {
+        const data = await loadDataFromSupabase(table);
+        if (data && data.length > 0) {
+          const key = table === 'kepanitiaan_lomba' ? 'kepanitiaanLomba' : (table === 'peserta_lomba' ? 'lomba' : table);
+          STATE[key] = data.map(item => {
+            const mapped = { ...item };
+            if (mapped.panitia_id) mapped.panitiaId = mapped.panitia_id;
+            if (mapped.hadiah_id) mapped.hadiahId = mapped.hadiah_id;
+            return mapped;
+          });
+        }
+      }
+    } catch (e) { 
+      console.error("Error loading public data:", e); 
+    }
+  } else {
+    // Fallback ke local storage jika Supabase tidak terhubung
+    STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
+  }
+
   initHeroParticles();
   updateCountdown();
   setInterval(updateCountdown, 1000);
   initReveal();
   initCounters();
   initVisitorCounter();
+  
+  // Render seluruh konten di halaman depan
   renderAgendaTimeline();
   renderAgendaDetail();
   initAgendaFilter();
   renderLandingGaleri();
   renderLandingPanitia();
   renderLandingPengumuman();
+  
+  // Inisialisasi chat widget
+  renderChatWidget();
+  renderChatPublikFooter();
+  renderChatMessages();
   startChatPolling();
 }
 init();
