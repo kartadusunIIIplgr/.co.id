@@ -37,7 +37,9 @@
     --line:rgba(255,255,255,.15);
     --bg-soft:#18181B;
   }
-
+  /* Tombol Hapus Pesan Individual */
+  .chat-del-btn { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; background: #e11d48; color: white; border-radius: 9999px; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-size: 12px; line-height: 1; font-weight: bold; border: 1px solid white; }
+  .chat-message:hover .chat-del-btn { display: flex; }
   *{ -webkit-font-smoothing:antialiased; }
   html, body { background:var(--cream); color:var(--ink); font-family:'Plus Jakarta Sans', sans-serif; transition: background-color .3s ease, color .3s ease; overflow-x: hidden; }
   .font-display{ font-family:'Anton', sans-serif; letter-spacing:.01em; }
@@ -1652,9 +1654,21 @@ function togglePass(id, btn){
   lucide.createIcons();
 }
  $("#loginForm").addEventListener("submit", e=>{ e.preventDefault(); const u = $("#loginUser").value.trim(); const p = $("#loginPass").value.trim(); if(u === "karangtarunaplgr" && p === "kartadusun3plgr"){ closeAdminLogin(); enterDashboard(); toast("Selamat datang, Admin!", "success"); } else { toast("Username atau password salah", "error"); } });
-function enterDashboard(){ $("#landing").classList.add("hidden-x"); $("#dashboard").classList.remove("hidden-x"); window.scrollTo(0,0); initDashboard(); }
-function logoutAdmin(){ $("#dashboard").classList.add("hidden-x"); $("#landing").classList.remove("hidden-x"); window.scrollTo(0,0); toast("Anda telah keluar dari dashboard", "info"); }
+function enterDashboard(){ 
+  $("#landing").classList.add("hidden-x"); 
+  $("#dashboard").classList.remove("hidden-x"); 
+  window.scrollTo(0,0); 
+  localStorage.setItem('hutri81_is_admin', 'true'); // Tandai sebagai Admin
+  initDashboard(); 
+}
 
+function logoutAdmin(){ 
+  $("#dashboard").classList.add("hidden-x"); 
+  $("#landing").classList.remove("hidden-x"); 
+  window.scrollTo(0,0); 
+  localStorage.removeItem('hutri81_is_admin'); // Hapus status Admin
+  toast("Anda telah keluar dari dashboard", "info"); 
+}
 function openNotifPanel(){
   const panel = $("#notifPanel");
   if(!panel.classList.contains("hidden-x")){ panel.classList.add("hidden-x"); return; }
@@ -2644,7 +2658,6 @@ function selectChatMember(name) {
   renderChatWidget();
   renderChatPublikFooter();
 }
-
 // === Render Pesan Chat ===
 async function renderChatMessages() {
   const wrap = $("#chatWidgetMessages");
@@ -2652,6 +2665,7 @@ async function renderChatMessages() {
   if(!wrap && !wrapInline) return;
   
   const currentName = localStorage.getItem('hutri81_chat_name') || '';
+  const isAdmin = localStorage.getItem('hutri81_is_admin') === 'true';
   
   if (supabaseClient) {
     try {
@@ -2670,7 +2684,6 @@ async function renderChatMessages() {
   const members = STATE.chatMembers || [];
   const isOfficialMember = (name) => members.some(m => m.name.toLowerCase() === name.toLowerCase());
 
-  // Fungsi pembantu untuk format Tanggal (Hari Ini, Kemarin, dll)
   const getDayLabel = (iso) => {
     const d = new Date(iso);
     const today = new Date();
@@ -2680,7 +2693,6 @@ async function renderChatMessages() {
     return d.toLocaleDateString("id-ID", { day: '2-digit', month: 'long', year: 'numeric' });
   };
 
-  // Fungsi pembantu untuk format Jam (HH:MM)
   const getTimeLabel = (iso) => {
     return new Date(iso).toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
   };
@@ -2692,7 +2704,6 @@ async function renderChatMessages() {
     htmlContent = `<div class="text-center text-ink-2 text-sm py-10 flex flex-col items-center gap-2"><i data-lucide="message-square-dashed" class="w-10 h-10 opacity-40"></i><div>Belum ada pesan.<br>Mulai percakapan sekarang!</div></div>`;
   } else {
     STATE.chat.forEach(c => {
-      // Cek tanggal untuk memisahkan hari
       const msgDate = getDayLabel(c.created_at);
       if (msgDate !== lastDate) {
         htmlContent += `<div class="chat-date-sep"><span>${msgDate}</span></div>`;
@@ -2703,11 +2714,13 @@ async function renderChatMessages() {
       const official = isOfficialMember(c.user);
       const avatar = getAvatarHtml(c.photo, c.user, 'w-8 h-8 mt-auto');
       const timeStr = getTimeLabel(c.created_at);
+      const canDelete = isSent || isAdmin; // Bisa hapus jika pesan milik sendiri atau dia Admin
       
       htmlContent += `
-        <div class="chat-message-row ${isSent ? 'sent' : 'received'}">
+        <div class="chat-message-row ${isSent ? 'sent' : 'received'}" data-msg-id="${c.id}">
           ${!isSent ? avatar : ''}
           <div class="chat-message ${isSent ? 'sent' : 'received'}">
+            ${canDelete ? `<div class="chat-del-btn" onclick="deleteChatMessage('${c.id}')">×</div>` : ''}
             ${!isSent ? `<div class="sender-name flex items-center gap-1">${c.user} ${official ? '<span class="badge bg-merah text-white text-[8px] py-0 px-1 rounded-sm">Anggota</span>' : ''}</div>` : ''}
             <div>${escapeHtml(c.text)}</div>
             <span class="chat-time">${timeStr}</span>
@@ -2729,23 +2742,17 @@ async function renderChatMessages() {
   lucide.createIcons();
 }
 
-// Helper: Escape HTML
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
 // Fungsi khusus untuk menambahkan 1 pesan baru tanpa me-render ulang semuanya
 function appendSingleMessage(c) {
   const wrap = $("#chatWidgetMessages");
   const wrapInline = $("#chatMessagesPublic");
   if(!wrap && !wrapInline) return;
 
-  // Hapus tulisan "Belum ada pesan" jika ada
   if (wrap && wrap.querySelector('.text-center')) wrap.innerHTML = '';
   if (wrapInline && wrapInline.querySelector('.text-center')) wrapInline.innerHTML = '';
 
   const currentName = localStorage.getItem('hutri81_chat_name') || '';
+  const isAdmin = localStorage.getItem('hutri81_is_admin') === 'true';
   const members = STATE.chatMembers || [];
   const isOfficialMember = (name) => members.some(m => m.name.toLowerCase() === name.toLowerCase());
 
@@ -2753,11 +2760,13 @@ function appendSingleMessage(c) {
   const official = isOfficialMember(c.user);
   const avatar = getAvatarHtml(c.photo, c.user, 'w-8 h-8 mt-auto');
   const timeStr = new Date(c.created_at).toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
+  const canDelete = isSent || isAdmin;
   
   const html = `
-    <div class="chat-message-row ${isSent ? 'sent' : 'received'}">
+    <div class="chat-message-row ${isSent ? 'sent' : 'received'}" data-msg-id="${c.id}">
       ${!isSent ? avatar : ''}
       <div class="chat-message ${isSent ? 'sent' : 'received'}">
+        ${canDelete ? `<div class="chat-del-btn" onclick="deleteChatMessage('${c.id}')">×</div>` : ''}
         ${!isSent ? `<div class="sender-name flex items-center gap-1">${c.user} ${official ? '<span class="badge bg-merah text-white text-[8px] py-0 px-1 rounded-sm">Anggota</span>' : ''}</div>` : ''}
         <div>${escapeHtml(c.text)}</div>
         <span class="chat-time">${timeStr}</span>
@@ -2876,7 +2885,31 @@ function setupSupabaseRealtime() {
         
         // GUNAKAN FUNGSI APPEND AGAR TIDAK LAG
         appendSingleMessage(newMsg);
-        
+        // Fungsi untuk menghapus 1 pesan chat
+async function deleteChatMessage(id) {
+  if (!confirm("Hapus pesan ini?")) return;
+  
+  // 1. Hapus elemen dari layar
+  document.querySelectorAll(`[data-msg-id="${id}"]`).forEach(el => el.remove());
+  
+  // 2. Hapus dari state lokal
+  STATE.chat = STATE.chat.filter(m => String(m.id) !== String(id));
+  
+  // 3. Hapus dari Database Supabase
+  if (supabaseClient) {
+    try {
+      const { error } = await supabaseClient.from('chat').delete().eq('id', id);
+      if (error) throw error;
+      toast("Pesan dihapus", "info");
+    } catch (e) {
+      toast("Gagal menghapus pesan", "error");
+      renderChatMessages(); // Muat ulang jika gagal
+    }
+  } else {
+    localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
+    toast("Pesan dihapus", "info");
+  }
+}
         // Bunyikan notifikasi jika pesan bukan dari diri sendiri
         const currentName = localStorage.getItem('hutri81_chat_name');
         if (newMsg.user !== currentName) {
