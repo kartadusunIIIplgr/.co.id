@@ -1152,20 +1152,18 @@ async function testSupabase() {
 });
 
 async function syncDataToSupabase(table, data) {
-  if (!supabaseClient) return true;
+  if (!supabaseClient) return false;
   try {
     const { error: deleteError } = await supabaseClient.from(table).delete().neq('id', -1);
-    if (deleteError) throw deleteError;
+    if (deleteError) {
+      console.error(`Delete ${table} error:`, deleteError);
+      throw deleteError;
+    }
     if (!data || data.length === 0) return true;
 
     const cleanData = data.map(item => {
       const cleanItem = { ...item };
-      const integerFields = ['id', 'peserta', 'panitiaId', 'panitia_id', 'hadiahId', 'hadiah_id', 'peringkat', 'jumlah', 'terpakai'];
-      integerFields.forEach(field => {
-        if (cleanItem.hasOwnProperty(field)) {
-          cleanItem[field] = cleanItem[field] === "" || cleanItem[field] === undefined ? null : parseInt(cleanItem[field]);
-        }
-      });
+      // Hapus field yang tidak diperlukan agar tidak bentrok di database
       Object.keys(cleanItem).forEach(key => {
         if (cleanItem[key] === undefined) delete cleanItem[key];
       });
@@ -1173,11 +1171,14 @@ async function syncDataToSupabase(table, data) {
     });
 
     const { error: insertError } = await supabaseClient.from(table).insert(cleanData);
-    if (insertError) throw insertError;
+    if (insertError) {
+      console.error(`Insert ${table} error:`, insertError);
+      throw insertError;
+    }
     return true;
   } catch (e) {
     console.error(`Sync ${table} error:`, e);
-    toast("Gagal sinkronisasi ke Supabase: " + e.message, "error");
+    toast(`Gagal sinkronisasi tabel ${table}`, "error");
     return false;
   }
 }
@@ -1729,7 +1730,6 @@ async function initDashboard(){
   initDashboardCharts(); renderAgendaTable(); renderPanitiaCards(); renderGaleriAdmin(); renderPengumumanTable(); renderPesertaTable();
   renderLandingGaleri(); renderLandingPanitia(); renderLandingPengumuman(); renderAgendaTimeline(); renderAgendaDetail();
 }
-
 let chartKehadiran, chartKategori, chartPendaftaran, chartPartisipasi;
 function getChartTextColor() { return document.documentElement.classList.contains('dark') ? '#D4D4D8' : '#475569'; }
 function getChartGridColor() { return document.documentElement.classList.contains('dark') ? 'rgba(255,255,255,0.1)' : 'rgba(15, 23, 42, 0.1)'; }
