@@ -289,9 +289,9 @@
   .chat-date-sep { display: flex; justify-content: center; margin: 1rem 0 0.5rem; }
   .chat-date-sep span { background: rgba(0,0,0,0.1); color: var(--ink-2); padding: 0.2rem 0.8rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; }
   
-  /* Menyembunyikan nama pengirim jika pesannya beruntun dari orang yang sama */
-  .chat-message-row + .chat-message-row .sender-name { display: none; }
-  .chat-message-row + .chat-message-row .chat-message { margin-top: -0.5rem; }
+  /* Menyembunyikan nama pengirim HANYA jika pesannya beruntun dari orang yang sama */
+  .chat-message-row.same-sender .sender-name { display: none; }
+  .chat-message-row.same-sender .chat-message { margin-top: -0.5rem; }
 </style>
 </head>
 <body class="batik-bg">
@@ -2661,6 +2661,7 @@ async function renderChatMessages() {
   const getTimeLabel = (iso) => new Date(iso).toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
 
   let lastDate = "";
+  let lastUser = "";
   let htmlContent = "";
 
   if (STATE.chat.length === 0) {
@@ -2671,6 +2672,7 @@ async function renderChatMessages() {
       if (msgDate !== lastDate) {
         htmlContent += `<div class="chat-date-sep"><span>${msgDate}</span></div>`;
         lastDate = msgDate;
+        lastUser = ""; // Reset last user on new day
       }
       
       const isSent = c.user === currentName;
@@ -2678,9 +2680,10 @@ async function renderChatMessages() {
       const avatar = getAvatarHtml(c.photo, c.user, 'w-8 h-8 mt-auto');
       const timeStr = getTimeLabel(c.created_at);
       const canDelete = isSent || isAdmin; 
+      const isSameSender = c.user === lastUser;
       
       htmlContent += `
-        <div class="chat-message-row ${isSent ? 'sent' : 'received'}" data-msg-id="${c.id}">
+        <div class="chat-message-row ${isSent ? 'sent' : 'received'} ${isSameSender ? 'same-sender' : ''}" data-msg-id="${c.id}">
           ${!isSent ? avatar : ''}
           <div class="chat-message ${isSent ? 'sent' : 'received'}">
             ${canDelete ? `<div class="chat-del-btn" onclick="deleteChatMessage('${c.id}')">×</div>` : ''}
@@ -2691,6 +2694,7 @@ async function renderChatMessages() {
           ${isSent ? avatar : ''}
         </div>
       `;
+      lastUser = c.user;
     });
   }
       
@@ -2702,6 +2706,7 @@ async function renderChatMessages() {
     wrapInline.innerHTML = htmlContent;
     wrapInline.scrollTop = wrapInline.scrollHeight;
   }
+  lucide.createIcons();
 }
 
 function escapeHtml(text) {
@@ -2728,9 +2733,14 @@ function appendSingleMessage(c) {
   const avatar = getAvatarHtml(c.photo, c.user, 'w-8 h-8 mt-auto');
   const timeStr = new Date(c.created_at).toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
   const canDelete = isSent || isAdmin;
-  
+
+  // Cek apakah pesan terakhir dikirim oleh user yang sama
+  const allRows = document.querySelectorAll('.chat-message-row');
+  const lastRow = allRows[allRows.length - 1];
+  const isSameSender = lastRow && lastRow.dataset.lastUser === c.user;
+
   const html = `
-    <div class="chat-message-row ${isSent ? 'sent' : 'received'}" data-msg-id="${c.id}">
+    <div class="chat-message-row ${isSent ? 'sent' : 'received'} ${isSameSender ? 'same-sender' : ''}" data-msg-id="${c.id}" data-last-user="${c.user}">
       ${!isSent ? avatar : ''}
       <div class="chat-message ${isSent ? 'sent' : 'received'}">
         ${canDelete ? `<div class="chat-del-btn" onclick="deleteChatMessage('${c.id}')">×</div>` : ''}
@@ -3083,7 +3093,7 @@ async function init(){
   renderLandingPanitia();
   renderLandingPengumuman();
   
-    renderChatWidget();
+  renderChatWidget();
   renderChatPublikFooter();
   
   checkAutoLogin(); // Pastikan baris ini ada
