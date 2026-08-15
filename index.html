@@ -1206,19 +1206,40 @@ async function syncDataToSupabase(table, data) {
       if (deleteError) throw deleteError;
       return true;
     }
+    
+    // Copy data dan hapus properti yang tidak ada di Supabase
     const cleanData = data.map(item => {
       const cleanItem = { ...item };
       Object.keys(cleanItem).forEach(key => {
+        // Hapus undefined
         if (cleanItem[key] === undefined) delete cleanItem[key];
+        
+        // Hapus properti tambahan dari frontend agar match dengan kolom DB
+        if (key === 'panitiaId' && table !== 'kepanitiaan_lomba') delete cleanItem[key];
+        if (key === 'hadiahId' && table !== 'undian') delete cleanItem[key];
+        
+        // Jika tabel galeri, pastikan hanya properti valid yang dikirim
+        if (table === 'galeri') {
+           const allowedKeys = ['id', 'judul', 'kategori', 'img', 'type', 'created_at'];
+           if (!allowedKeys.includes(key)) delete cleanItem[key];
+        }
       });
       return cleanItem;
     });
+
     const { error: upsertError } = await supabaseClient.from(table).upsert(cleanData);
     if (upsertError) throw upsertError;
+    
     return true;
   } catch (e) {
     console.error(`Sync ${table} error:`, e);
-    toast(`Gagal sinkronisasi tabel ${table}`, "error");
+    
+    // Notifikasi detail penyebab error
+    let errMsg = e.message || "Unknown error";
+    if (e.details) errMsg += ` | Details: ${e.details}`;
+    if (e.hint) errMsg += ` | Hint: ${e.hint}`;
+    
+    toast(`Gagal sinkronisasi tabel ${table}: ${errMsg}`, "error");
     return false;
   }
 }
