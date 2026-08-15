@@ -112,7 +112,6 @@
   .sidebar-item:hover{ background:var(--merah-soft); color:var(--merah); }
   .sidebar-item.active{ background:var(--merah); color:#fff; box-shadow: 0 10px 24px -10px rgba(255,31,61,.65); }
   .sidebar-item.active svg{ color:#fff; }
-  /* Optimasi: Hapus backdrop-filter agar tidak berat */
   .modal-backdrop{ background: rgba(0,0,0,.75); }
   .modal-enter{ animation: fadeUp .35s cubic-bezier(.2,.7,.2,1); }
   @keyframes toastIn { from{ opacity:0; transform: translateY(20px) translateX(20px);} to{opacity:1; transform:none;} }
@@ -124,15 +123,15 @@
   
   .gallery-item{ position:relative; overflow:hidden; border-radius:1rem; background: var(--bg-soft); border: 1px solid var(--line); transition: transform .4s, box-shadow .4s; }
   .gallery-item .img-wrap { position: relative; width: 100%; height: 180px; overflow: hidden; }
-  .gallery-item img{ width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+  .gallery-item img, .gallery-item video{ width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
   .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 15px 40px -15px rgba(255,31,61,.4); border-color: rgba(255,31,61,.3); }
-  .gallery-item:hover img{ transform: scale(1.1); }
+  .gallery-item:hover img, .gallery-item:hover video{ transform: scale(1.1); }
   .gallery-caption { padding: 12px 15px; text-align: left; }
   .gallery-caption .cat { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--merah); font-weight: 800; }
   .gallery-caption .title { font-size: 14px; font-weight: 700; color: var(--ink); margin-top: 4px; line-height: 1.3; }
   
   .hero-logo-img{ filter: drop-shadow(0 20px 40px rgba(0,0,0,.4)); }
-  .live-dot{ width:8px; height:8px; border-radius:50%; background:#22c55e; position:relative; }
+  .live-dot{ width:8px; height:8px; border-radius:50%; background:#22c55e; position:relative; flex-shrink: 0; }
   .live-dot::before{ content:""; position:absolute; inset:0; border-radius:50%; background:#22c55e; animation: pulseRing 1.6s ease-out infinite; }
   .div-flag{ width:60px; height:4px; border-radius:2px; background: linear-gradient(90deg, var(--merah) 0 50%, #fff 50% 100% ); }
   .row-hover:hover{ background: var(--merah-soft); }
@@ -182,100 +181,45 @@
   .jabatan-mini-badge { font-size: 8px !important; padding: 1px 5px !important; border-radius: 4px !important; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
 
   #floatChatBtn {
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    z-index: 50;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 9999px;
-    background: var(--merah);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: fixed; bottom: 1rem; right: 1rem; z-index: 50;
+    width: 3.5rem; height: 3.5rem; border-radius: 9999px;
+    background: var(--merah); color: white;
+    display: flex; align-items: center; justify-content: center;
     box-shadow: 0 8px 25px -5px rgba(255,31,61,.5);
-    cursor: pointer;
-    border: none;
+    cursor: pointer; border: none;
     transition: transform .3s ease, box-shadow .3s ease;
     -webkit-tap-highlight-color: transparent;
   }
-  @media (min-width: 1024px) {
-    #floatChatBtn { bottom: 1.5rem; right: 1.5rem; width: 4rem; height: 4rem; }
-  }
+  @media (min-width: 1024px) { #floatChatBtn { bottom: 1.5rem; right: 1.5rem; width: 4rem; height: 4rem; } }
   #floatChatBtn:hover { transform: scale(1.1); box-shadow: 0 12px 30px -5px rgba(255,31,61,.7); }
   #floatChatBtn .chat-pulse {
-    position: absolute;
-    inset: 0;
-    border-radius: 9999px;
-    background: var(--merah);
-    animation: pulseRing 2s ease-out infinite;
-    z-index: -1;
+    position: absolute; inset: 0; border-radius: 9999px;
+    background: var(--merah); animation: pulseRing 2s ease-out infinite; z-index: -1;
   }
   #floatChatBtn.has-notification { animation: shake 0.5s ease-in-out infinite; background: var(--gold); }
   #floatChatBtn .chat-badge {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    min-width: 1.25rem;
-    height: 1.25rem;
-    padding: 0 4px;
-    background: var(--gold);
-    color: #000;
-    font-size: 0.65rem;
-    font-weight: 800;
-    border-radius: 9999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute; top: -4px; right: -4px;
+    min-width: 1.25rem; height: 1.25rem; padding: 0 4px;
+    background: var(--gold); color: #000; font-size: 0.65rem; font-weight: 800;
+    border-radius: 9999px; display: flex; align-items: center; justify-content: center;
     border: 2px solid var(--cream);
   }
   #floatChatBtn.has-notification .chat-badge { background: var(--merah); color: white; animation: bounce-soft 0.6s ease-in-out infinite; }
 
   #chatWidget {
-    position: fixed;
-    bottom: 5.5rem;
-    right: 1rem;
-    z-index: 50;
-    width: calc(100vw - 2rem);
-    max-width: 24rem;
+    position: fixed; bottom: 5.5rem; right: 1rem; z-index: 50;
+    width: calc(100vw - 2rem); max-width: 24rem;
     animation: fadeUp .35s cubic-bezier(.2,.7,.2,1);
   }
-  @media (min-width: 1024px) {
-    #chatWidget { bottom: 6.5rem; right: 1.5rem; }
-  }
+  @media (min-width: 1024px) { #chatWidget { bottom: 6.5rem; right: 1.5rem; } }
   #chatWidget .chat-widget-card {
-    background: var(--bg-soft);
-    border: 1px solid var(--line);
-    border-radius: 1.25rem;
-    box-shadow: 0 20px 60px -15px rgba(0,0,0,.3);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    height: 30rem;
+    background: var(--bg-soft); border: 1px solid var(--line);
+    border-radius: 1.25rem; box-shadow: 0 20px 60px -15px rgba(0,0,0,.3);
+    overflow: hidden; display: flex; flex-direction: column; height: 30rem;
   }
-  .chat-widget-header {
-    background: var(--merah);
-    color: white;
-    padding: 0.75rem 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .chat-widget-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    background: var(--cream-2);
-  }
-  .chat-widget-footer {
-    padding: 0.75rem;
-    border-top: 1px solid var(--line);
-    background: var(--bg-soft);
-  }
+  .chat-widget-header { background: var(--merah); color: white; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+  .chat-widget-body { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; background: var(--cream-2); }
+  .chat-widget-footer { padding: 0.75rem; border-top: 1px solid var(--line); background: var(--bg-soft); }
 
   @media print {
     body * { visibility: hidden; }
@@ -293,80 +237,43 @@
   .chat-message-row.same-sender .sender-name { display: none; }
   .chat-message-row.same-sender .chat-message { margin-top: -0.5rem; }
 
-  /* Notifikasi Toast Khusus Chat */
   #chatNotifToast {
-    position: fixed;
-    top: 5rem;
-    right: 1rem;
-    z-index: 60;
-    max-width: 20rem;
-    width: calc(100vw - 2rem);
+    position: fixed; top: 5rem; right: 1rem; z-index: 60;
+    max-width: 20rem; width: calc(100vw - 2rem);
   }
   .chat-notif-card {
-    background: var(--bg-soft);
-    border: 1px solid var(--line);
-    border-left: 4px solid var(--merah);
-    border-radius: 0.75rem;
-    padding: 0.75rem 1rem;
-    box-shadow: 0 10px 40px -10px rgba(0,0,0,.25);
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-    cursor: pointer;
-    animation: fadeUp .35s ease;
-    transition: transform .2s;
+    background: var(--bg-soft); border: 1px solid var(--line); border-left: 4px solid var(--merah);
+    border-radius: 0.75rem; padding: 0.75rem 1rem; box-shadow: 0 10px 40px -10px rgba(0,0,0,.25);
+    display: flex; gap: 0.75rem; align-items: flex-start; cursor: pointer;
+    animation: fadeUp .35s ease; transition: transform .2s;
   }
   .chat-notif-card:hover { transform: translateX(-4px); }
 
-  /* CSS Notifikasi Dashboard */
   #notifDropdown {
-    position: fixed;
-    top: 4rem;
-    right: 1rem;
-    z-index: 90;
-    width: 22rem;
-    max-width: calc(100vw - 2rem);
+    position: fixed; top: 4rem; right: 1rem; z-index: 90;
+    width: 22rem; max-width: calc(100vw - 2rem);
   }
   .notif-item {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--line);
-    cursor: pointer;
-    transition: background-color .2s;
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
+    padding: 0.75rem 1rem; border-bottom: 1px solid var(--line);
+    cursor: pointer; transition: background-color .2s;
+    display: flex; gap: 0.75rem; align-items: flex-start;
   }
   .notif-item:hover { background: var(--merah-soft); }
   .notif-item.unread { background: rgba(255, 31, 61, 0.05); border-left: 3px solid var(--merah); }
   .notif-item.unread:hover { background: rgba(255, 31, 61, 0.1); }
-  .notif-icon {
-    width: 2.25rem; height: 2.25rem; border-radius: 0.6rem;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
+  .notif-icon { width: 2.25rem; height: 2.25rem; border-radius: 0.6rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .notif-content { flex: 1; min-width: 0; }
   .notif-title { font-size: 0.8rem; font-weight: 700; color: var(--ink); }
   .notif-desc { font-size: 0.7rem; color: var(--ink-2); margin-top: 0.15rem; line-height: 1.3; }
   .notif-time { font-size: 0.6rem; color: var(--ink-2); margin-top: 0.25rem; }
-  .notif-badge-pulse {
-    animation: notifPulse 1.5s ease-in-out infinite;
-  }
-  @keyframes notifPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-  }
+  .notif-badge-pulse { animation: notifPulse 1.5s ease-in-out infinite; }
+  @keyframes notifPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
   .live-visitor-dot {
-    display: inline-block;
-    width: 6px; height: 6px;
-    background: #22c55e;
-    border-radius: 50%;
-    margin-right: 4px;
+    display: inline-block; width: 6px; height: 6px;
+    background: #22c55e; border-radius: 50%; margin-right: 4px;
     animation: livePulse 1.5s ease-in-out infinite;
   }
-  @keyframes livePulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
+  @keyframes livePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 </style>
 </head>
 <body class="batik-bg">
@@ -376,7 +283,42 @@
 
 <!-- ============================ LANDING PAGE ============================ -->
 <div id="landing">
-  <div class="bg-ink text-cream py-2 overflow-hidden text-xs font-semibold tracking-wider">
+  
+  <!-- TOP BAR: Social Media + Live Online Counter -->
+  <div class="bg-ink text-cream py-1.5 text-xs border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2 text-cream/90">
+        <span class="live-dot"></span>
+        <span class="hidden sm:inline">Sedang online:</span>
+        <span id="onlineCount" class="font-bold text-gold counter-num">0</span>
+        <span class="hidden sm:inline">orang</span>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <span class="text-cream/60 text-[10px] uppercase tracking-wider hidden md:block">Ikuti Kami:</span>
+        <a href="https://www.instagram.com/kartar_dsn3_p.langgar?utm_source=qr&igsh=MTEyMGh3bTNzaDlsNg%3D%3D" target="_blank" rel="noopener" class="hover:scale-110 transition" title="Instagram">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a href="https://facebook.com/hutri81" target="_blank" rel="noopener" class="hover:scale-110 transition" title="Facebook">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+        </a>
+        <a href="https://tiktok.com/@hutri81" target="_blank" rel="noopener" class="hover:scale-110 transition" title="TikTok">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+        </a>
+        <a href="https://youtube.com/@hutri81" target="_blank" rel="noopener" class="hover:scale-110 transition" title="YouTube">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+        </a>
+        <a href="https://wa.me/6281281002026" target="_blank" rel="noopener" class="hover:scale-110 transition" title="WhatsApp">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+        </a>
+        <span class="hidden md:block w-px h-3 bg-white/20"></span>
+        <a href="mailto:panitia@hutri81.go.id" class="hidden md:block hover:scale-110 transition" title="Email">
+          <i data-lucide="mail" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-ink text-cream py-2 overflow-hidden text-xs font-semibold tracking-wider border-t border-white/5">
     <div class="flex marquee-track whitespace-nowrap">
       <div class="flex items-center gap-12 px-6">
         <span class="flex items-center gap-2"><i data-lucide="flag" class="w-3.5 h-3.5 text-merah"></i> HUT RI KE-81 — 17 AGUSTUS 2026</span>
@@ -483,7 +425,7 @@
       <div class="card p-4 md:p-6 lg:p-8 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="calendar-check-2" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="24">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Agenda Kegiatan</div></div></div>
         <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="users" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="1248">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Peserta Terdaftar</div></div></div>
-        <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="eye" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div id="visitorCount" class="font-display text-xl md:text-3xl counter-num flex items-center"><span class="live-visitor-dot"></span>0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Pengunjung Website</div></div></div>
+        <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="eye" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div id="visitorCount" class="font-display text-xl md:text-3xl counter-num flex items-center"><span class="live-visitor-dot"></span>0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Total Pengunjung</div></div></div>
         <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="trophy" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="56">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Penghargaan</div></div></div>
       </div>
     </div>
@@ -615,10 +557,21 @@
             <div class="flex items-start gap-3 md:gap-4"><div class="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="phone" class="w-5 h-5 md:w-6 md:h-6"></i></div><div><div class="text-[10px] md:text-xs uppercase tracking-widest text-ink-2 mb-1">Telepon / WA</div><div class="font-semibold text-sm md:text-base">+62 21 381 0000 · +62 812 8100 2026</div></div></div>
             <div class="flex items-start gap-3 md:gap-4"><div class="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="mail" class="w-5 h-5 md:w-6 md:h-6"></i></div><div><div class="text-[10px] md:text-xs uppercase tracking-widest text-ink-2 mb-1">Email</div><div class="font-semibold text-sm md:text-base">panitia@hutri81.go.id</div></div></div>
             <div class="flex gap-2 md:gap-3 pt-3 md:pt-4">
-              <button onclick="toast('Membuka Instagram Panitia HUT RI 81','info')" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition"><i data-lucide="instagram" class="w-5 h-5"></i></button>
-              <button onclick="toast('Membuka Facebook Panitia HUT RI 81','info')" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition"><i data-lucide="facebook" class="w-5 h-5"></i></button>
-              <button onclick="toast('Membuka Twitter/X Panitia HUT RI 81','info')" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition"><i data-lucide="twitter" class="w-5 h-5"></i></button>
-              <button onclick="toast('Membuka YouTube Panitia HUT RI 81','info')" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition"><i data-lucide="youtube" class="w-5 h-5"></i></button>
+              <a href="https://www.instagram.com/kartar_dsn3_p.langgar?utm_source=qr&igsh=MTEyMGh3bTNzaDlsNg%3D%3D" target="_blank" rel="noopener" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition" title="Instagram">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              </a>
+              <a href="https://facebook.com/hutri81" target="_blank" rel="noopener" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition" title="Facebook">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+              </a>
+              <a href="https://tiktok.com/@hutri81" target="_blank" rel="noopener" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition" title="TikTok">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+              </a>
+              <a href="https://youtube.com/@hutri81" target="_blank" rel="noopener" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition" title="YouTube">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+              </a>
+              <a href="https://wa.me/6281281002026" target="_blank" rel="noopener" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition" title="WhatsApp">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+              </a>
             </div>
           </div>
         </div>
@@ -861,8 +814,8 @@
 
       <section id="page-galeri" class="dash-page hidden-x">
         <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
-          <div><h1 class="font-display text-2xl lg:text-4xl">KELOLA GALERI</h1><p class="text-ink-2 mt-1 text-sm">Unggah dan kelola dokumentasi kegiatan.</p></div>
-          <button onclick="openGaleriModal()" class="btn btn-primary"><i data-lucide="upload" class="w-4 h-4"></i> Unggah Foto</button>
+          <div><h1 class="font-display text-2xl lg:text-4xl">KELOLA GALERI</h1><p class="text-ink-2 mt-1 text-sm">Unggah dan kelola dokumentasi kegiatan (Foto & Video).</p></div>
+          <button onclick="openGaleriModal()" class="btn btn-primary"><i data-lucide="upload" class="w-4 h-4"></i> Unggah Media</button>
         </div>
         <div id="galeriGridAdmin" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"></div>
       </section>
@@ -1169,7 +1122,7 @@
   <div class="flex-1 w-full flex items-center justify-center relative min-h-0">
     <div id="screenSpinResult" class="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4 opacity-0 transition-opacity duration-500"></div>
 
-    <div class="relative w-[75vw] h-[75vw] max-w-[400px] max-h-[400px] md:w-[55vh] md:h-[55vh] lg:w-[60vh] lg:h-[60vh] lg:max-w-[600px] lg:max-h-[600px]">
+    <div class="relative w-[75vw] h-[75vw] max-w-[400px] max-h-[400px] md:w-[55vh] md:h-[55vh] lg:w-[60vh] lg:h-[60vh] lg:max-w-[600px] lg:max-h-[600px">
       <div id="wheelPointerScreen" class="wheel-pointer absolute top-[-15px] left-1/2 -translate-x-1/2 z-30 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-t-[35px] border-t-[#FF1F3D] drop-shadow-lg"></div>
       <div class="absolute inset-0 rounded-full overflow-hidden" style="box-shadow: 0 0 80px rgba(255,31,61,.6), 0 0 40px rgba(255,179,0,.4), inset 0 0 40px rgba(0,0,0,.4);">
         <svg id="raffleWheelScreen" class="raffle-wheel w-full h-full" viewBox="0 0 200 200"></svg>
@@ -1245,7 +1198,6 @@ async function testSupabase() {
   setTimeout(() => location.reload(), 1000);
 });
 
-// [OPTIMASI] Menggunakan upsert alih-alih delete semua lalu insert, mencegah lag berat saat simpan data besar
 async function syncDataToSupabase(table, data) {
   if (!supabaseClient) return false;
   try {
@@ -1331,6 +1283,19 @@ function toast(msg, type="success"){
   setTimeout(()=>{ t.style.transition="all .35s"; t.style.opacity="0"; t.style.transform="translateX(20px)"; setTimeout(()=>t.remove(), 350); }, 3000);
 }
 
+function setBtnLoading(btn, isLoading, defaultText) {
+  if (!btn) return;
+  if (isLoading) {
+    btn.dataset.originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Memproses...`;
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = btn.dataset.originalText || defaultText;
+  }
+  lucide.createIcons();
+}
+
 function getAvatarHtml(photo, name, sizeClass = 'w-9 h-9') {
   const isImage = photo && (photo.startsWith('http') || photo.startsWith('data:image'));
   const initials = name ? name.split(" ").map(s=>s[0]).slice(0,2).join("") : "?";
@@ -1410,7 +1375,6 @@ function initCounters(){
   $$("[data-counter]").forEach(el=>io.observe(el));
 }
 
-// [OPTIMASI] Tidak melakukan insert ke database setiap visit untuk menghemat resource database dan mencegah lag
 async function trackVisitor() {
   await fetchVisitorCount();
 }
@@ -1451,7 +1415,6 @@ async function fetchVisitorCount() {
 
 function setupVisitorRealtime() {
   if (!supabaseClient) return;
-  // [OPTIMASI] Hanya update angka secara lokal tanpa fetch ulang untuk mencegah lag
   supabaseClient
     .channel('public:visitors')
     .on('postgres_changes', 
@@ -1505,6 +1468,12 @@ function initAgendaFilter(){
   });
 }
 
+function getMediaType(g) {
+  if (g.type) return g.type;
+  if (g.img && (g.img.startsWith('data:video') || g.img.match(/\.(mp4|webm|ogg)$/i))) return 'video';
+  return 'image';
+}
+
 function renderLandingGaleri(){
   const grid = $("#galleryGrid"); 
   if(!grid) return;
@@ -1513,29 +1482,42 @@ function renderLandingGaleri(){
     lucide.createIcons();
     return;
   }
-  grid.innerHTML = STATE.galeri.map(g=>`
-    <div class="gallery-item cursor-pointer" onclick="openGaleriViewer('${g.id}')">
-      <div class="img-wrap">
-        <img src="${g.img}" alt="${g.judul}" class="w-full h-full object-cover">
+  grid.innerHTML = STATE.galeri.map(g=>{
+    const mediaType = getMediaType(g);
+    const mediaHtml = mediaType === 'video' 
+      ? `<video src="${g.img}" class="w-full h-full object-cover" muted></video>`
+      : `<img src="${g.img}" alt="${g.judul}" class="w-full h-full object-cover">`;
+      
+    return `
+      <div class="gallery-item cursor-pointer" onclick="openGaleriViewer('${g.id}')">
+        <div class="img-wrap">
+          ${mediaHtml}
+          ${mediaType === 'video' ? '<div class="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1.5"><i data-lucide="play-circle" class="w-4 h-4"></i></div>' : ''}
+        </div>
+        <div class="gallery-caption">
+          <div class="cat">${KATEGORI_LABEL[g.kategori] || g.kategori}</div>
+          <div class="title">${g.judul}</div>
+        </div>
       </div>
-      <div class="gallery-caption">
-        <div class="cat">${KATEGORI_LABEL[g.kategori] || g.kategori}</div>
-        <div class="title">${g.judul}</div>
-      </div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
 function openGaleriViewer(id) {
   const g = STATE.galeri.find(x => x.id == id);
   if (!g) return;
+  const mediaType = getMediaType(g);
+  const mediaHtml = mediaType === 'video' 
+    ? `<video src="${g.img}" controls autoplay class="w-full max-h-[80vh] object-contain bg-black/10"></video>`
+    : `<img src="${g.img}" alt="${g.judul}" class="w-full max-h-[80vh] object-contain bg-black/10">`;
+    
   showModal(`
     <div class="card max-w-4xl w-full modal-enter overflow-hidden">
       <div class="relative">
         <button onclick="closeModal()" class="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-md transition">
           <i data-lucide="x" class="w-6 h-6"></i>
         </button>
-        <img src="${g.img}" alt="${g.judul}" class="w-full max-h-[80vh] object-contain bg-black/10">
+        ${mediaHtml}
       </div>
       <div class="p-5 flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -1543,7 +1525,7 @@ function openGaleriViewer(id) {
           <h3 class="font-display text-2xl leading-tight mt-1">${g.judul}</h3>
         </div>
         <button onclick="downloadImage('${g.img}', '${g.judul.replace(/'/g, "")}')" class="btn btn-primary">
-          <i data-lucide="download" class="w-5 h-5"></i> Download Gambar
+          <i data-lucide="download" class="w-5 h-5"></i> Download
         </button>
       </div>
     </div>
@@ -1551,27 +1533,27 @@ function openGaleriViewer(id) {
 }
 
 function downloadImage(imgUrl, fileName) {
-  toast("Mengunduh gambar...", "info");
-  if (imgUrl.startsWith('data:image')) {
+  toast("Mengunduh file...", "info");
+  if (imgUrl.startsWith('data:')) {
     const a = document.createElement('a');
-    a.href = imgUrl; a.download = fileName + '.jpg';
+    a.href = imgUrl; a.download = fileName;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    toast("Gambar berhasil diunduh!", "success");
+    toast("File berhasil diunduh!", "success");
   } else {
     fetch(imgUrl)
       .then(response => response.blob())
       .then(blob => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url; a.download = fileName + '.jpg';
+        a.href = url; a.download = fileName;
         document.body.appendChild(a); a.click();
         window.URL.revokeObjectURL(url); document.body.removeChild(a);
-        toast("Gambar berhasil diunduh!", "success");
+        toast("File berhasil diunduh!", "success");
       })
       .catch(err => {
-        console.error("Error downloading image:", err);
+        console.error("Error downloading:", err);
         window.open(imgUrl, '_blank');
-        toast("Membuka gambar di tab baru...", "info");
+        toast("Membuka file di tab baru...", "info");
       });
   }
 }
@@ -1668,12 +1650,17 @@ function openPanitiaModal(id){
   `);
   
   $("#panitiaForm").addEventListener("submit", async e=>{ 
-    e.preventDefault(); 
+    e.preventDefault();
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    setBtnLoading(submitBtn, true);
+    
     const finalFoto = tempPanitiaImg || $("#f_foto_text").value.toUpperCase() || 'XX';
     const data = { nama:$("#f_nama").value, foto: finalFoto, jabatan:$("#f_jabatan").value }; 
     if(p){ Object.assign(p, data); toast("Data panitia diperbarui", "success"); } 
     else { STATE.panitia.unshift({ id: uid(), ...data }); toast("Panitia baru ditambahkan", "success"); } 
+    
     await syncDataToSupabase('panitia', STATE.panitia);
+    setBtnLoading(submitBtn, false);
     closeModal(); renderPanitiaCards(); renderLandingPanitia(); $("#statPanitia").textContent = STATE.panitia.length; 
   });
 }
@@ -1797,7 +1784,6 @@ function logoutAdmin(){
   toast("Anda telah keluar dari dashboard", "info"); 
 }
 
-// === SYSTEM NOTIFIKASI BROWSER (HP & PC) ===
 function playNotificationSound() {
   try {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -1916,7 +1902,6 @@ function showInPageNotification(user, text, photo) {
   }, 6000);
 }
 
-// === SISTEM NOTIFIKASI DASHBOARD ===
 function addNotification(type, title, desc, icon, color) {
   const notif = {
     id: uid(),
@@ -2113,7 +2098,6 @@ function exportCSV(type){
 }
 function exportReport(){ toast("Laporan PDF sedang diproses, mohon tunggu...", "info"); setTimeout(()=>toast("Laporan berhasil diunduh: Laporan-HUT-RI-81.pdf", "success"), 2000); }
 
-// [OPTIMASI] Menghapus fetch ulang database di dashboard karena data sudah di-load di awal melalui STATE global
 async function initDashboard(){
   $("#statAgenda").textContent = STATE.agenda.length;
   $("#statPanitia").textContent = STATE.panitia.length;
@@ -2204,6 +2188,9 @@ function openAgendaModal(id){
   `);
   $("#agendaForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    setBtnLoading(submitBtn, true);
+    
     const imgVal = $("#f_img_agenda").value;
     const data = { 
       judul:$("#f_judul").value, 
@@ -2219,6 +2206,8 @@ function openAgendaModal(id){
     if(a){ Object.assign(a, data); toast("Agenda berhasil diperbarui", "success"); } 
     else { STATE.agenda.unshift({ id: uid(), ...data }); toast("Agenda baru ditambahkan", "success"); } 
     await syncDataToSupabase('agenda', STATE.agenda);
+    
+    setBtnLoading(submitBtn, false);
     closeModal(); renderAgendaTable(); renderAgendaTimeline(); renderAgendaDetail(); $("#statAgenda").textContent = STATE.agenda.length; 
   });
 }
@@ -2234,34 +2223,148 @@ async function confirmDeleteAgenda(id){
 function renderGaleriAdmin(){
   const wrap = $("#galeriGridAdmin"); if(!wrap) return;
   if(STATE.galeri.length === 0){
-    wrap.innerHTML = `<div class="col-span-full text-center py-12 text-ink-2"><i data-lucide="image-off" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Belum ada foto di galeri</div></div>`;
+    wrap.innerHTML = `<div class="col-span-full text-center py-12 text-ink-2"><i data-lucide="image-off" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Belum ada media di galeri</div></div>`;
     lucide.createIcons();
     return;
   }
-  wrap.innerHTML = STATE.galeri.map(g=>`<div class="card overflow-hidden group"><div class="aspect-landscape relative overflow-hidden"><img src="${g.img}" alt="${g.judul}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"><div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition"></div><div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition"><button onclick="deleteGaleri(${g.id})" class="w-8 h-8 rounded-lg bg-white/95 hover:bg-rose-500 hover:text-white text-ink flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></div><div class="p-3"><div class="text-[10px] uppercase tracking-widest text-merah font-bold">${KATEGORI_LABEL[g.kategori]||g.kategori}</div><div class="font-bold text-sm mt-0.5 truncate">${g.judul}</div></div></div>`).join("");
+  wrap.innerHTML = STATE.galeri.map(g=>{
+    const mediaType = getMediaType(g);
+    const mediaHtml = mediaType === 'video' 
+      ? `<video src="${g.img}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" muted></video>`
+      : `<img src="${g.img}" alt="${g.judul}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">`;
+    
+    return `<div class="card overflow-hidden group"><div class="aspect-landscape relative overflow-hidden">${mediaHtml}<div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition"></div><div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition"><button onclick="deleteGaleri(${g.id})" class="w-8 h-8 rounded-lg bg-white/95 hover:bg-rose-500 hover:text-white text-ink flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>${mediaType === 'video' ? '<div class="absolute bottom-2 left-2 bg-black/60 text-white rounded-full p-1.5"><i data-lucide="video" class="w-4 h-4"></i></div>' : ''}</div><div class="p-3"><div class="text-[10px] uppercase tracking-widest text-merah font-bold">${KATEGORI_LABEL[g.kategori]||g.kategori}</div><div class="font-bold text-sm mt-0.5 truncate">${g.judul}</div></div></div>`;
+  }).join("");
   lucide.createIcons();
 }
+
 function openGaleriModal(){
-  showModal(`<div class="card max-w-lg w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">UNGGAH FOTO</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="galeriForm" class="p-6 space-y-4"><div><label class="label">Judul Foto</label><input type="text" id="f_judul" class="input" placeholder="Mis. Upacara Bendera" required></div><div><label class="label">Kategori</label><select id="f_kategori" class="input">${Object.entries(KATEGORI_LABEL).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></div><div><label class="label">Pratinjau Gambar</label><div id="imgPreview" class="aspect-landscape bg-cream-2 rounded-xl border-2 border-dashed border-line flex items-center justify-center text-ink-2 text-sm"><div class="text-center"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2"></i><div>Pratinjau akan muncul di sini</div></div></div></div><div><label class="label">URL Gambar (atau unggah)</label><div class="flex gap-2"><input type="text" id="f_img" class="input flex-1" placeholder="https://..." oninput="updateImgPreview(this.value)"><label class="btn btn-light cursor-pointer"><i data-lucide="upload" class="w-4 h-4"></i> Pilih<input type="file" accept="image/*" class="hidden" onchange="handleImgUploadGeneric(event, 'f_img', 'imgPreview')"></label></div><div class="text-xs text-ink-2 mt-1">Kosongkan untuk menggunakan gambar acak. Gambar yang diunggah akan dikompres otomatis.</div></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Unggah</button></div></form></div>`);
+  showModal(`<div class="card max-w-lg w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">UNGGAH MEDIA</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="galeriForm" class="p-6 space-y-4"><div><label class="label">Judul Media</label><input type="text" id="f_judul" class="input" placeholder="Mis. Upacara Bendera" required></div><div><label class="label">Kategori</label><select id="f_kategori" class="input">${Object.entries(KATEGORI_LABEL).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></div><div><label class="label">Pratinjau Media</label><div id="imgPreview" class="aspect-landscape bg-cream-2 rounded-xl border-2 border-dashed border-line flex items-center justify-center text-ink-2 text-sm"><div class="text-center"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2"></i><div>Pratinjau akan muncul di sini</div></div></div></div><div><label class="label">URL Media (atau unggah)</label><div class="flex gap-2"><input type="text" id="f_img" class="input flex-1" placeholder="https://..." oninput="updateMediaPreview(this.value)"><label class="btn btn-light cursor-pointer"><i data-lucide="upload" class="w-4 h-4"></i> Pilih<input type="file" accept="image/*,video/*" class="hidden" onchange="handleMediaUpload(event, 'f_img', 'imgPreview')"></label></div><div class="text-xs text-ink-2 mt-1">Kosongkan jika ingin menggunakan gambar acak. Unggah gambar (Maks 2MB) atau video (Maks 15MB).</div></div><div id="uploadProgressContainer" class="hidden-x"><div class="flex justify-between text-xs font-semibold text-ink-2 mb-1"><span id="uploadProgressText">Mengunggah 0%</span></div><div class="w-full bg-cream-2 rounded-full h-2.5 overflow-hidden"><div id="uploadProgressBar" class="bg-merah h-full rounded-full transition-all duration-300" style="width: 0%"></div></div></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Unggah</button></div></form></div>`);
   $("#galeriForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    setBtnLoading(submitBtn, true);
+    
     const judul = $("#f_judul").value, kategori = $("#f_kategori").value; 
-    const img = $("#f_img").value || `https://picsum.photos/seed/${judul.replace(/\s/g,'-')}/800/800.jpg`; 
-    STATE.galeri.unshift({ id: uid(), judul, kategori, img }); 
+    const imgInput = $("#f_img");
+    const mediaUrl = imgInput.value || `https://picsum.photos/seed/${judul.replace(/\s/g,'-')}/800/800.jpg`; 
+    const mediaType = imgInput.dataset.type || (mediaUrl.match(/\.(mp4|webm|ogg)$/i) ? 'video' : 'image');
+    
+    STATE.galeri.unshift({ id: uid(), judul, kategori, img: mediaUrl, type: mediaType }); 
     await syncDataToSupabase('galeri', STATE.galeri);
-    closeModal(); renderGaleriAdmin(); renderLandingGaleri(); toast("Foto berhasil diunggah", "success"); 
+    
+    setBtnLoading(submitBtn, false);
+    closeModal(); renderGaleriAdmin(); renderLandingGaleri(); toast("Media berhasil diunggah", "success"); 
   });
 }
-function updateImgPreview(url){ 
+function updateMediaPreview(url){ 
   const p = $("#imgPreview"); 
-  if(url){ p.innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded-xl">`; } else {
+  const input = $("#f_img");
+  if(url){
+    if (url.match(/\.(mp4|webm|ogg)$/i) || url.startsWith('data:video')) {
+       p.innerHTML = `<video src="${url}" class="w-full h-full object-cover rounded-xl" muted></video>`;
+       if(input) input.dataset.type = 'video';
+    } else {
+       p.innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded-xl">`;
+       if(input) input.dataset.type = 'image';
+    }
+  } else {
     p.innerHTML = `<div class="text-center"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2"></i><div>Pratinjau akan muncul di sini</div></div>`;
+    if(input) delete input.dataset.type;
   }
+}
+
+async function handleMediaUpload(e, inputId, previewId) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const isVideo = file.type.startsWith('video/');
+  const isImage = file.type.startsWith('image/');
+
+  const progressContainer = $("#uploadProgressContainer");
+  const progressBar = $("#uploadProgressBar");
+  const progressText = $("#uploadProgressText");
+  progressContainer.classList.remove("hidden-x");
+  progressBar.style.width = "0%";
+  progressText.textContent = "Memproses 0%";
+
+  if (isVideo) {
+    if (file.size > 15 * 1024 * 1024) { toast("Ukuran video terlalu besar (Maks 15MB)", "warn"); progressContainer.classList.add("hidden-x"); return; }
+    const reader = new FileReader();
+    reader.onprogress = function(event) {
+      if (event.lengthComputable) {
+        let percent = Math.round((event.loaded / event.total) * 100);
+        progressBar.style.width = percent + "%";
+        progressText.textContent = `Mengunggah ${percent}%`;
+      }
+    };
+    reader.onload = function(event) {
+      progressBar.style.width = "100%";
+      progressText.textContent = "Mengunggah 100%";
+      setTimeout(() => progressContainer.classList.add("hidden-x"), 500);
+      const videoUrl = event.target.result;
+      const input = document.getElementById(inputId);
+      const preview = document.getElementById(previewId);
+      if(input) {
+        input.value = videoUrl;
+        input.dataset.type = 'video';
+      }
+      if(preview) preview.innerHTML = `<video src="${videoUrl}" class="w-full h-full object-cover rounded-xl" muted></video>`;
+      toast("Video siap disimpan. Klik 'Unggah'.", "success");
+    };
+    reader.readAsDataURL(file);
+  } else if (isImage) {
+    if (file.size > 2 * 1024 * 1024) { toast("Ukuran gambar terlalu besar (Maks 2MB)", "warn"); progressContainer.classList.add("hidden-x"); return; }
+    const reader = new FileReader();
+    reader.onprogress = function(event) {
+      if (event.lengthComputable) {
+        let percent = Math.round((event.loaded / event.total) * 100);
+        progressBar.style.width = percent + "%";
+        progressText.textContent = `Mengunggah ${percent}%`;
+      }
+    };
+    reader.onload = function(event) {
+      progressBar.style.width = "100%";
+      progressText.textContent = "Mengompres 100%";
+      setTimeout(() => progressContainer.classList.add("hidden-x"), 500);
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let width = img.width; let height = img.height;
+        const MAX_WIDTH = 800; const MAX_HEIGHT = 800;
+        if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
+        else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        if(input) {
+          input.value = compressedBase64;
+          input.dataset.type = 'image';
+        }
+        if(preview) preview.innerHTML = `<img src="${compressedBase64}" class="w-full h-full object-cover rounded-xl">`;
+        toast("Gambar siap disimpan. Klik 'Unggah'.", "success");
+      };
+    };
+    reader.readAsDataURL(file);
+  } else {
+    toast("Format file tidak didukung", "error");
+    progressContainer.classList.add("hidden-x");
+  }
+}
+
+async function deleteGaleri(id){ 
+  STATE.galeri = STATE.galeri.filter(g=>g.id!==id); 
+  await syncDataToSupabase('galeri', STATE.galeri);
+  renderGaleriAdmin(); renderLandingGaleri(); toast("Media dihapus", "info"); 
 }
 
 async function handleImgUploadGeneric(e, inputId, previewId) {
   const file = e.target.files[0];
   if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { toast("Ukuran file terlalu besar (Maks 2MB)", "warn"); return; }
   toast("Memproses dan mengompres gambar...", "info");
   const reader = new FileReader();
   reader.onload = function(event) {
@@ -2285,12 +2388,6 @@ async function handleImgUploadGeneric(e, inputId, previewId) {
     };
   };
   reader.readAsDataURL(file);
-}
-
-async function deleteGaleri(id){ 
-  STATE.galeri = STATE.galeri.filter(g=>g.id!==id); 
-  await syncDataToSupabase('galeri', STATE.galeri);
-  renderGaleriAdmin(); renderLandingGaleri(); toast("Foto dihapus", "info"); 
 }
 
 function renderPengumumanTable(){
@@ -2332,6 +2429,9 @@ function openPengumumanModal(id){
   `);
   $("#pengumumanForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    setBtnLoading(submitBtn, true);
+    
     const data = { 
       judul:$("#f_judul").value, 
       kategori:$("#f_kategori").value, 
@@ -2343,6 +2443,8 @@ function openPengumumanModal(id){
     if(p){ Object.assign(p, data); toast("Pengumuman diperbarui", "success"); } 
     else { STATE.pengumuman.unshift({ id: uid(), ...data }); toast("Pengumuman dibuat", "success"); } 
     await syncDataToSupabase('pengumuman', STATE.pengumuman);
+    
+    setBtnLoading(submitBtn, false);
     closeModal(); renderPengumumanTable(); renderLandingPengumuman(); 
   });
 }
@@ -2431,6 +2533,9 @@ function openLombaModal(id){
   
   $("#lombaForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    setBtnLoading(submitBtn, true);
+    
     const data = { 
       nomor:$("#f_nomor").value, 
       status:$("#f_status").value, 
@@ -2441,6 +2546,8 @@ function openLombaModal(id){
     if(l){ Object.assign(l, data); toast("Data peserta diperbarui", "success"); } 
     else { STATE.lomba.unshift({ id: uid(), ...data }); toast("Peserta lomba ditambahkan", "success"); } 
     await syncDataToSupabase('peserta_lomba', STATE.lomba);
+    
+    setBtnLoading(submitBtn, false);
     closeModal(); initLombaPage(); $("#statPesertaLomba").textContent = STATE.lomba.length; 
   });
 }
@@ -2476,10 +2583,15 @@ function openKepanitiaanModal(id){
   showModal(`<div class="card max-w-lg w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">${k?'EDIT':'TAMBAH'} PENUGASAN</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="kepanitiaanForm" class="p-6 space-y-4"><div><label class="label">Pilih Panitia</label><select id="f_panitia" class="input" required>${STATE.panitia.map(p=>`<option value="${p.id}" ${k?.panitiaId===p.id?'selected':''}>${p.nama} (${p.jabatan})</option>`).join("")}</select></div><div><label class="label">Lomba</label><select id="f_lomba" class="input" required>${jenisLomba.map(j=>`<option value="${j}" ${k?.lomba===j?'selected':''}>${j}</option>`).join("")}</select></div><div><label class="label">Jabatan di Lomba</label><select id="f_jabatan" class="input" required>${JABATAN_LIST.map(j=>`<option value="${j}" ${k?.jabatan===j?'selected':''}>${j}</option>`).join("")}</select></div><div><label class="label">Tugas / Deskripsi</label><textarea id="f_tugas" class="input" rows="3" required>${k?.tugas||''}</textarea></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button></div></form></div>`);
   $("#kepanitiaanForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    setBtnLoading(submitBtn, true);
+    
     const data = { panitiaId: +$("#f_panitia").value, panitia_id: +$("#f_panitia").value, lomba: $("#f_lomba").value, jabatan: $("#f_jabatan").value, tugas: $("#f_tugas").value }; 
     if(k){ Object.assign(k, data); toast("Penugasan diperbarui", "success"); } 
     else { STATE.kepanitiaanLomba.unshift({ id: uid(), ...data }); toast("Penugasan baru ditambahkan", "success"); } 
     await syncDataToSupabase('kepanitiaan_lomba', STATE.kepanitiaanLomba);
+    
+    setBtnLoading(submitBtn, false);
     closeModal(); initKepanitiaanPage(); 
   });
 }
@@ -2603,6 +2715,9 @@ function openAutoUndianPanel() {
 
   $("#autoUndianForm").addEventListener("submit", async e => {
     e.preventDefault();
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    setBtnLoading(submitBtn, true);
+    
     const prefix = $("#autoPrefix").value || "TKT-", count = parseInt($("#autoCount").value) || 10, pad = parseInt($("#autoPad").value) || 3;
     let maxNum = 0;
     const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -2621,6 +2736,7 @@ function openAutoUndianPanel() {
     }
     await syncDataToSupabase('undian', STATE.undian); 
     initUndianPage(); 
+    setBtnLoading(submitBtn, false);
     toast(`${count} nomor undian berhasil dibuat!`, "success"); 
     previewTickets();
   });
@@ -2668,6 +2784,7 @@ function previewTickets() {
   $("#ticketPreviewGrid").innerHTML = html; $("#ticketPreviewArea").classList.remove("hidden-x"); lucide.createIcons();
   $("#ticketPreviewArea").scrollIntoView({ behavior: "smooth", block: "start" });
 }
+
 function printTickets() {
   if(STATE.undian.length === 0) { toast("Belum ada tiket untuk dicetak", "warn"); return; }
   let html = `<div style="text-align:center; width:100%;"><h1 style="font-family: 'Anton', sans-serif; font-size: 32px; color: #FF1F3D; margin-bottom: 5px;">UNDIAN HUT RI ke-81</h1><p style="font-size: 14px; margin-bottom: 20px;">Panitia Peringatan Kemerdekaan RI</p><div style="display: flex; flex-wrap: wrap; justify-content: center;">`;
@@ -2676,23 +2793,38 @@ function printTickets() {
   $("#printArea").innerHTML = html; $("#printArea").classList.remove("hidden-x"); window.print();
   setTimeout(() => { $("#printArea").classList.add("hidden-x"); $("#printArea").innerHTML = ""; }, 500);
 }
+
 async function clearAllTickets() { STATE.undian = []; await syncDataToSupabase('undian', STATE.undian); closeModal(); initUndianPage(); toast("Semua tiket undian telah dihapus", "info"); }
 
 function renderHadiahList(){
   $("#hadiahList").innerHTML = STATE.hadiah.map(h=>`<div class="p-3 rounded-xl border border-line hover:border-merah/30 transition group"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="${h.ikon}" class="w-5 h-5"></i></div><div class="flex-1 min-w-0"><div class="font-bold text-sm truncate">${h.nama}</div><div class="text-xs text-ink-2">${h.nilai}</div><div class="text-[10px] text-ink-2 mt-0.5">Terpakai: ${h.terpakai}/${h.jumlah}</div></div><button onclick="deleteHadiah(${h.id})" class="w-7 h-7 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition opacity-0 group-hover:opacity-100"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div><div class="mt-2 h-1.5 bg-cream-2 rounded-full overflow-hidden"><div class="h-full bg-merah rounded-full transition-all" style="width:${(h.terpakai/h.jumlah)*100}%"></div></div></div>`).join("");
   lucide.createIcons();
 }
+
 function openHadiahModal(){
   showModal(`<div class="card max-w-md w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">TAMBAH HADIAH</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="hadiahForm" class="p-6 space-y-4"><div><label class="label">Nama Hadiah</label><input type="text" id="f_hnama" class="input" placeholder="Mis. Sepeda Motor" required></div><div><label class="label">Nilai / Nominal</label><input type="text" id="f_hnilai" class="input" placeholder="Rp 15.000.000" required></div><div class="grid grid-cols-2 gap-4"><div><label class="label">Jumlah</label><input type="number" id="f_hjumlah" class="input" value="1" min="1" required></div><div><label class="label">Ikon</label><select id="f_hikon" class="input"><option value="gift">Gift</option><option value="bike">Motor</option><option value="smartphone">HP</option><option value="shopping-cart">Voucher</option><option value="package">Paket</option><option value="shirt">Kaos</option><option value="tv">TV</option><option value="laptop">Laptop</option></select></div></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button></div></form></div>`);
-  $("#hadiahForm").addEventListener("submit", async e=>{ e.preventDefault(); STATE.hadiah.push({ id: uid(), nama:$("#f_hnama").value, nilai:$("#f_hnilai").value, ikon:$("#f_hikon").value, jumlah:+$("#f_hjumlah").value, terpakai:0 }); await syncDataToSupabase('hadiah', STATE.hadiah); closeModal(); initUndianPage(); toast("Hadiah baru ditambahkan", "success"); });
+  $("#hadiahForm").addEventListener("submit", async e=>{ 
+    e.preventDefault(); 
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    setBtnLoading(submitBtn, true);
+    
+    STATE.hadiah.push({ id: uid(), nama:$("#f_hnama").value, nilai:$("#f_hnilai").value, ikon:$("#f_hikon").value, jumlah:+$("#f_hjumlah").value, terpakai:0 }); 
+    await syncDataToSupabase('hadiah', STATE.hadiah); 
+    
+    setBtnLoading(submitBtn, false);
+    closeModal(); initUndianPage(); toast("Hadiah baru ditambahkan", "success"); 
+  });
 }
+
 async function deleteHadiah(id){ STATE.hadiah = STATE.hadiah.filter(h=>h.id!==id); await syncDataToSupabase('hadiah', STATE.hadiah); initUndianPage(); toast("Hadiah dihapus", "info"); }
+
 function renderPemenangUndian(){
   const wrap = $("#pemenangUndianList"), pemenang = STATE.undian.filter(u=>u.status==="menang");
   if(pemenang.length === 0){ wrap.innerHTML = `<div class="col-span-full text-center py-8 text-ink-2"><i data-lucide="trophy" class="w-12 h-12 mx-auto mb-2 opacity-40"></i><div>Belum ada pemenang undian</div><div class="text-xs mt-1">Putar roda untuk memilih pemenang</div></div>`; lucide.createIcons(); return; }
   wrap.innerHTML = pemenang.map(u=>{ const h = STATE.hadiah.find(x=>x.id===u.hadiahId); return `<div class="p-4 rounded-xl bg-gradient-to-br from-gold/10 to-merah-soft border border-gold/30"><div class="flex items-start justify-between mb-2"><div class="w-10 h-10 rounded-lg bg-gold text-ink flex items-center justify-center"><i data-lucide="${h?.ikon||'gift'}" class="w-5 h-5"></i></div><span class="badge bg-gold text-ink">MENANG</span></div><div class="font-bold text-sm">${u.nama}</div><div class="text-xs text-ink-2">${u.nomor} · ${u.asal}</div><div class="mt-2 pt-2 border-t border-gold/20"><div class="text-[10px] uppercase tracking-wider text-gold-deep font-bold">Hadiah</div><div class="text-sm font-bold">${h?.nama||"-"}</div><div class="text-xs text-ink-2">${h?.nilai||""}</div></div></div>`; }).join("");
   lucide.createIcons();
 }
+
 function renderUndianTable(){
   const q = ($("#undianSearch")?.value || "").toLowerCase(), fs = $("#undianFilterStatus")?.value || "all";
   const items = STATE.undian.filter(u => (u.nama.toLowerCase().includes(q) || u.nomor.toLowerCase().includes(q)) && (fs==="all" || u.status===fs));
@@ -2701,16 +2833,22 @@ function renderUndianTable(){
   body.innerHTML = items.map(u=>{ const h = STATE.hadiah.find(x=>x.id===u.hadiahId); return `<tr class="row-hover transition"><td class="px-4 py-3"><div class="font-mono font-bold text-sm text-merah">${u.nomor}</div></td><td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-xs">${u.nama.split(" ").map(s=>s[0]).slice(0,2).join("")}</div><div class="font-bold text-sm">${u.nama}</div></div></td><td class="px-4 py-3 text-sm">${u.telepon}</td><td class="px-4 py-3 text-sm">${u.asal}</td><td class="px-4 py-3"><span class="badge ${UND_STATUS_COLOR[u.status]}">${UND_STATUS_LABEL[u.status]}</span></td><td class="px-4 py-3 text-sm">${h?`<span class="font-bold text-gold-deep">${h.nama}</span>`:"-"}</td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openUndianModal(${u.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="deleteUndian(${u.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`; }).join("");
   lucide.createIcons();
 }
+
 function openUndianModal(id){
   const u = id ? STATE.undian.find(x=>x.id===id) : null;
   showModal(`<div class="card max-w-lg w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">${u?'EDIT':'TAMBAH'} PESERTA UNDIAN</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="undianForm" class="p-6 space-y-4"><div><label class="label">Nomor Tiket</label><input type="text" id="f_unomor" class="input font-mono" value="${u?.nomor||'TKT-'+String(STATE.undian.length+1).padStart(3,'0')}" required></div><div><label class="label">Nama Lengkap</label><input type="text" id="f_unama" class="input" value="${u?.nama||''}" required></div><div class="grid grid-cols-2 gap-4"><div><label class="label">Telepon</label><input type="tel" id="f_utelepon" class="input" value="${u?.telepon||''}" required></div><div><label class="label">Asal Daerah</label><input type="text" id="f_uasal" class="input" value="${u?.asal||''}" required></div></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button></div></form></div>`);
   
   $("#undianForm").addEventListener("submit", async e => { 
     e.preventDefault(); 
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    setBtnLoading(submitBtn, true);
+    
     const data = { nomor:$("#f_unomor").value, nama:$("#f_unama").value, telepon:$("#f_utelepon").value, asal:$("#f_uasal").value, status:"eligible" }; 
     if(u){ Object.assign(u, data); toast("Data peserta diperbarui", "success"); } 
     else { STATE.undian.unshift({ id: uid(), ...data }); toast("Peserta undian ditambahkan", "success"); } 
     await syncDataToSupabase('undian', STATE.undian);
+    
+    setBtnLoading(submitBtn, false);
     closeModal(); initUndianPage(); $("#statUndian").textContent = STATE.undian.length; 
   });
 }
@@ -2733,6 +2871,7 @@ function spinWheel(isScreen = false) {
     const countdownInterval = setInterval(() => { count--; if (count > 0) { countdownContainer.innerHTML = `<div class="countdown-num">${count}</div>`; } else { clearInterval(countdownInterval); countdownContainer.innerHTML = `<div class="countdown-num" style="font-size: 8rem;">PUTAR!</div>`; executeSpin(isScreen, wheelEl, pointerEl, resEl, btnEl, eligible, hadiah); } }, 1000);
   } else { executeSpin(false, wheelEl, pointerEl, resEl, btnEl, eligible, hadiah); }
 }
+
 function executeSpin(isScreen, wheelEl, pointerEl, resEl, btnEl, eligible, hadiah) {
   const wheel = $(wheelEl), pointer = $(pointerEl), btn = $(btnEl), res = $(resEl);
   pointer.classList.add("pointer-spinning");
@@ -2847,6 +2986,9 @@ function openDaftarLombaModal() {
   
   $("#daftarLombaForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    setBtnLoading(submitBtn, true);
+    
     const data = { 
       id: uid(), nomor: 'LMBA-'+String(STATE.lomba.length+1).padStart(3,'0'), nama: $("#dl_nama").value, jenis: $("#dl_jenis").value, 
       golongan: $("#dl_gol").value, status: "pending"
@@ -2862,6 +3004,7 @@ function openDaftarLombaModal() {
       } catch(e) { console.error("Error insert lomba:", e); }
     }
     
+    setBtnLoading(submitBtn, false);
     closeModal(); 
     toast("Pendaftaran lomba berhasil! Status: Pending (menunggu verifikasi).", "success"); 
     
@@ -2874,10 +3017,6 @@ function openDaftarLombaModal() {
     );
   });
 }
-
-/* ============================================================
-   CHAT WIDGET LOGIC — Dengan Notifikasi & Jabatan
-============================================================ */
 
 function toggleChatWidget() {
   const widget = $("#chatWidget");
@@ -3034,7 +3173,6 @@ function checkAutoLogin() {
   }
 }
 
-// [OPTIMASI] Render Chat hanya dilakukan saat ada pesan baru, tidak melakukan loop setiap 3 detik lagi
 async function renderChatMessages() {
   const wrap = $("#chatWidgetMessages");
   const wrapInline = $("#chatMessagesPublic");
@@ -3349,10 +3487,6 @@ function setupSupabaseRealtime() {
   setupVisitorRealtime();
 }
 
-/* ============================================================
-   ADMIN: KELOLA ANGGOTA KARANG TARUNA (Daftar Kontak)
-============================================================ */
-
 let tempAnggotaImg = null;
 
 function renderAnggotaChatTable() {
@@ -3435,6 +3569,9 @@ function openAnggotaChatModal(id) {
   
   $("#anggotaChatForm").addEventListener("submit", async e => { 
     e.preventDefault(); 
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    setBtnLoading(submitBtn, true);
+    
     const finalFoto = tempAnggotaImg || $("#f_foto_text").value.toUpperCase() || '';
     const phoneVal = $("#f_anggota_pass").value;
     const data = { 
@@ -3462,6 +3599,7 @@ function openAnggotaChatModal(id) {
     if (!saved) {
       localStorage.setItem('hutri81_registered_users', JSON.stringify(STATE.chatMembers));
     }
+    setBtnLoading(submitBtn, false);
     closeModal(); renderAnggotaChatTable(); 
   });
 }
@@ -3506,6 +3644,117 @@ async function confirmDeleteAnggotaChat(id) {
   closeModal(); renderAnggotaChatTable(); toast("Anggota telah dihapus", "info");
 }
 
+/* ============================================================
+   REAL-TIME ONLINE USERS (Supabase Presence)
+============================================================ */
+let onlineChannel = null;
+let heartbeatInterval = null;
+let simulatedOnline = 0;
+const VISITOR_SESSION_ID = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+function updateOnlineCount(count) {
+  const el = $("#onlineCount");
+  if (!el) return;
+  count = Math.max(0, count);
+  const current = parseInt(el.textContent.replace(/\D/g, '')) || 0;
+  if (current === count) return;
+  
+  const diff = count - current;
+  const steps = Math.min(Math.abs(diff), 10);
+  const stepValue = diff / steps;
+  let cur = current;
+  let step = 0;
+  
+  const t = setInterval(() => {
+    step++;
+    cur = step === steps ? count : Math.round(current + (stepValue * step));
+    el.textContent = cur;
+    if (step >= steps) clearInterval(t);
+  }, 50);
+}
+
+function setupOnlinePresence() {
+  if (!supabaseClient) {
+    simulatedOnline = Math.floor(Math.random() * 12) + 8;
+    updateOnlineCount(simulatedOnline);
+    setInterval(() => {
+      simulatedOnline += Math.floor(Math.random() * 5) - 2;
+      if (simulatedOnline < 5) simulatedOnline = 5;
+      if (simulatedOnline > 35) simulatedOnline = 35;
+      updateOnlineCount(simulatedOnline);
+    }, 15000);
+    return;
+  }
+  
+  try {
+    onlineChannel = supabaseClient.channel('online-users-tracking', {
+      config: {
+        presence: {
+          key: VISITOR_SESSION_ID,
+        },
+      },
+    });
+    
+    onlineChannel
+      .on('presence', { event: 'sync' }, () => {
+        const state = onlineChannel.presenceState();
+        const count = Object.keys(state).length;
+        updateOnlineCount(count);
+      })
+      .on('presence', { event: 'join' }, ({ key, newPresences }) => {
+        console.log('🟢 User online:', key);
+      })
+      .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
+        console.log('🔴 User offline:', key);
+      })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await onlineChannel.track({
+            user_id: VISITOR_SESSION_ID,
+            online_at: new Date().toISOString(),
+            page: window.location.pathname
+          });
+        }
+      });
+    
+    heartbeatInterval = setInterval(async () => {
+      if (onlineChannel) {
+        try {
+          await onlineChannel.track({
+            user_id: VISITOR_SESSION_ID,
+            online_at: new Date().toISOString(),
+            page: window.location.pathname
+          });
+        } catch(e) { console.warn('Heartbeat failed:', e); }
+      }
+    }, 25000);
+    
+    window.addEventListener('beforeunload', async () => {
+      if (onlineChannel) {
+        try { 
+          await onlineChannel.untrack(); 
+          await onlineChannel.unsubscribe();
+        } catch(e) {}
+      }
+    });
+    
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && onlineChannel) {
+        onlineChannel.track({
+          user_id: VISITOR_SESSION_ID,
+          online_at: new Date().toISOString(),
+          page: window.location.pathname
+        });
+      }
+    });
+    
+  } catch(e) {
+    console.error('Online presence error:', e);
+    simulatedOnline = Math.floor(Math.random() * 12) + 8;
+    updateOnlineCount(simulatedOnline);
+  }
+}
+
 // === FUNGSI INIT UTAMA ===
 async function init(){
   lucide.createIcons();
@@ -3513,7 +3762,6 @@ async function init(){
   
   if (isSupabaseConnected) {
     try {
-      // [OPTIMASI] Fetch semua tabel secara paralel agar load awal jauh lebih cepat
       const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'peserta_lomba', 'kepanitiaan_lomba', 'undian', 'hadiah', 'chat', 'chat_members'];
       const fetchPromises = tables.map(table => loadDataFromSupabase(table));
       const results = await Promise.all(fetchPromises);
@@ -3567,6 +3815,8 @@ async function init(){
   loadNotifications();
   
   await trackVisitor();
+  
+  setupOnlinePresence();
   
   await renderChatMessages();
   
