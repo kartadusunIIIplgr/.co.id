@@ -112,6 +112,7 @@
   .sidebar-item:hover{ background:var(--merah-soft); color:var(--merah); }
   .sidebar-item.active{ background:var(--merah); color:#fff; box-shadow: 0 10px 24px -10px rgba(255,31,61,.65); }
   .sidebar-item.active svg{ color:#fff; }
+  /* Optimasi: Hapus backdrop-filter agar tidak berat */
   .modal-backdrop{ background: rgba(0,0,0,.75); }
   .modal-enter{ animation: fadeUp .35s cubic-bezier(.2,.7,.2,1); }
   @keyframes toastIn { from{ opacity:0; transform: translateY(20px) translateX(20px);} to{opacity:1; transform:none;} }
@@ -131,7 +132,7 @@
   .gallery-caption .title { font-size: 14px; font-weight: 700; color: var(--ink); margin-top: 4px; line-height: 1.3; }
   
   .hero-logo-img{ filter: drop-shadow(0 20px 40px rgba(0,0,0,.4)); }
-  .live-dot{ width:8px; height:8px; border-radius:50%; background:#22c55e; position:relative; flex-shrink: 0; }
+  .live-dot{ width:8px; height:8px; border-radius:50%; background:#22c55e; position:relative; }
   .live-dot::before{ content:""; position:absolute; inset:0; border-radius:50%; background:#22c55e; animation: pulseRing 1.6s ease-out infinite; }
   .div-flag{ width:60px; height:4px; border-radius:2px; background: linear-gradient(90deg, var(--merah) 0 50%, #fff 50% 100% ); }
   .row-hover:hover{ background: var(--merah-soft); }
@@ -181,45 +182,100 @@
   .jabatan-mini-badge { font-size: 8px !important; padding: 1px 5px !important; border-radius: 4px !important; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
 
   #floatChatBtn {
-    position: fixed; bottom: 1rem; right: 1rem; z-index: 50;
-    width: 3.5rem; height: 3.5rem; border-radius: 9999px;
-    background: var(--merah); color: white;
-    display: flex; align-items: center; justify-content: center;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 50;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 9999px;
+    background: var(--merah);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-shadow: 0 8px 25px -5px rgba(255,31,61,.5);
-    cursor: pointer; border: none;
+    cursor: pointer;
+    border: none;
     transition: transform .3s ease, box-shadow .3s ease;
     -webkit-tap-highlight-color: transparent;
   }
-  @media (min-width: 1024px) { #floatChatBtn { bottom: 1.5rem; right: 1.5rem; width: 4rem; height: 4rem; } }
+  @media (min-width: 1024px) {
+    #floatChatBtn { bottom: 1.5rem; right: 1.5rem; width: 4rem; height: 4rem; }
+  }
   #floatChatBtn:hover { transform: scale(1.1); box-shadow: 0 12px 30px -5px rgba(255,31,61,.7); }
   #floatChatBtn .chat-pulse {
-    position: absolute; inset: 0; border-radius: 9999px;
-    background: var(--merah); animation: pulseRing 2s ease-out infinite; z-index: -1;
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: var(--merah);
+    animation: pulseRing 2s ease-out infinite;
+    z-index: -1;
   }
   #floatChatBtn.has-notification { animation: shake 0.5s ease-in-out infinite; background: var(--gold); }
   #floatChatBtn .chat-badge {
-    position: absolute; top: -4px; right: -4px;
-    min-width: 1.25rem; height: 1.25rem; padding: 0 4px;
-    background: var(--gold); color: #000; font-size: 0.65rem; font-weight: 800;
-    border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 4px;
+    background: var(--gold);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 800;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 2px solid var(--cream);
   }
   #floatChatBtn.has-notification .chat-badge { background: var(--merah); color: white; animation: bounce-soft 0.6s ease-in-out infinite; }
 
   #chatWidget {
-    position: fixed; bottom: 5.5rem; right: 1rem; z-index: 50;
-    width: calc(100vw - 2rem); max-width: 24rem;
+    position: fixed;
+    bottom: 5.5rem;
+    right: 1rem;
+    z-index: 50;
+    width: calc(100vw - 2rem);
+    max-width: 24rem;
     animation: fadeUp .35s cubic-bezier(.2,.7,.2,1);
   }
-  @media (min-width: 1024px) { #chatWidget { bottom: 6.5rem; right: 1.5rem; } }
-  #chatWidget .chat-widget-card {
-    background: var(--bg-soft); border: 1px solid var(--line);
-    border-radius: 1.25rem; box-shadow: 0 20px 60px -15px rgba(0,0,0,.3);
-    overflow: hidden; display: flex; flex-direction: column; height: 30rem;
+  @media (min-width: 1024px) {
+    #chatWidget { bottom: 6.5rem; right: 1.5rem; }
   }
-  .chat-widget-header { background: var(--merah); color: white; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; }
-  .chat-widget-body { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; background: var(--cream-2); }
-  .chat-widget-footer { padding: 0.75rem; border-top: 1px solid var(--line); background: var(--bg-soft); }
+  #chatWidget .chat-widget-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 60px -15px rgba(0,0,0,.3);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 30rem;
+  }
+  .chat-widget-header {
+    background: var(--merah);
+    color: white;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .chat-widget-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: var(--cream-2);
+  }
+  .chat-widget-footer {
+    padding: 0.75rem;
+    border-top: 1px solid var(--line);
+    background: var(--bg-soft);
+  }
 
   @media print {
     body * { visibility: hidden; }
@@ -237,43 +293,80 @@
   .chat-message-row.same-sender .sender-name { display: none; }
   .chat-message-row.same-sender .chat-message { margin-top: -0.5rem; }
 
+  /* Notifikasi Toast Khusus Chat */
   #chatNotifToast {
-    position: fixed; top: 5rem; right: 1rem; z-index: 60;
-    max-width: 20rem; width: calc(100vw - 2rem);
+    position: fixed;
+    top: 5rem;
+    right: 1rem;
+    z-index: 60;
+    max-width: 20rem;
+    width: calc(100vw - 2rem);
   }
   .chat-notif-card {
-    background: var(--bg-soft); border: 1px solid var(--line); border-left: 4px solid var(--merah);
-    border-radius: 0.75rem; padding: 0.75rem 1rem; box-shadow: 0 10px 40px -10px rgba(0,0,0,.25);
-    display: flex; gap: 0.75rem; align-items: flex-start; cursor: pointer;
-    animation: fadeUp .35s ease; transition: transform .2s;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--merah);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,.25);
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    cursor: pointer;
+    animation: fadeUp .35s ease;
+    transition: transform .2s;
   }
   .chat-notif-card:hover { transform: translateX(-4px); }
 
+  /* CSS Notifikasi Dashboard */
   #notifDropdown {
-    position: fixed; top: 4rem; right: 1rem; z-index: 90;
-    width: 22rem; max-width: calc(100vw - 2rem);
+    position: fixed;
+    top: 4rem;
+    right: 1rem;
+    z-index: 90;
+    width: 22rem;
+    max-width: calc(100vw - 2rem);
   }
   .notif-item {
-    padding: 0.75rem 1rem; border-bottom: 1px solid var(--line);
-    cursor: pointer; transition: background-color .2s;
-    display: flex; gap: 0.75rem; align-items: flex-start;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background-color .2s;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
   }
   .notif-item:hover { background: var(--merah-soft); }
   .notif-item.unread { background: rgba(255, 31, 61, 0.05); border-left: 3px solid var(--merah); }
   .notif-item.unread:hover { background: rgba(255, 31, 61, 0.1); }
-  .notif-icon { width: 2.25rem; height: 2.25rem; border-radius: 0.6rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .notif-icon {
+    width: 2.25rem; height: 2.25rem; border-radius: 0.6rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
   .notif-content { flex: 1; min-width: 0; }
   .notif-title { font-size: 0.8rem; font-weight: 700; color: var(--ink); }
   .notif-desc { font-size: 0.7rem; color: var(--ink-2); margin-top: 0.15rem; line-height: 1.3; }
   .notif-time { font-size: 0.6rem; color: var(--ink-2); margin-top: 0.25rem; }
-  .notif-badge-pulse { animation: notifPulse 1.5s ease-in-out infinite; }
-  @keyframes notifPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+  .notif-badge-pulse {
+    animation: notifPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes notifPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
   .live-visitor-dot {
-    display: inline-block; width: 6px; height: 6px;
-    background: #22c55e; border-radius: 50%; margin-right: 4px;
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    margin-right: 4px;
     animation: livePulse 1.5s ease-in-out infinite;
   }
-  @keyframes livePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
 </style>
 </head>
 <body class="batik-bg">
@@ -283,42 +376,7 @@
 
 <!-- ============================ LANDING PAGE ============================ -->
 <div id="landing">
-  
-  <!-- TOP BAR: Social Media + Live Online Counter -->
-  <div class="bg-ink text-cream py-1.5 text-xs border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-4 lg:px-8 flex items-center justify-between gap-3">
-      <div class="flex items-center gap-2 text-cream/90">
-        <span class="live-dot"></span>
-        <span class="hidden sm:inline">Sedang online:</span>
-        <span id="onlineCount" class="font-bold text-gold counter-num">0</span>
-        <span class="hidden sm:inline">orang</span>
-      </div>
-      <div class="flex items-center gap-2.5">
-        <span class="text-cream/60 text-[10px] uppercase tracking-wider hidden md:block">Ikuti Kami:</span>
-        <a href="https://instagram.com/hutri81" target="_blank" rel="noopener" class="hover:text-merah transition" title="Instagram">
-          <i data-lucide="instagram" class="w-4 h-4"></i>
-        </a>
-        <a href="https://facebook.com/hutri81" target="_blank" rel="noopener" class="hover:text-merah transition" title="Facebook">
-          <i data-lucide="facebook" class="w-4 h-4"></i>
-        </a>
-        <a href="https://tiktok.com/@hutri81" target="_blank" rel="noopener" class="hover:text-merah transition" title="TikTok">
-          <i data-lucide="music-2" class="w-4 h-4"></i>
-        </a>
-        <a href="https://youtube.com/@hutri81" target="_blank" rel="noopener" class="hover:text-merah transition" title="YouTube">
-          <i data-lucide="youtube" class="w-4 h-4"></i>
-        </a>
-        <a href="https://wa.me/6281281002026" target="_blank" rel="noopener" class="hover:text-merah transition" title="WhatsApp">
-          <i data-lucide="message-circle" class="w-4 h-4"></i>
-        </a>
-        <span class="hidden md:block w-px h-3 bg-white/20"></span>
-        <a href="mailto:panitia@hutri81.go.id" class="hidden md:block hover:text-merah transition" title="Email">
-          <i data-lucide="mail" class="w-4 h-4"></i>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <div class="bg-ink text-cream py-2 overflow-hidden text-xs font-semibold tracking-wider border-t border-white/5">
+  <div class="bg-ink text-cream py-2 overflow-hidden text-xs font-semibold tracking-wider">
     <div class="flex marquee-track whitespace-nowrap">
       <div class="flex items-center gap-12 px-6">
         <span class="flex items-center gap-2"><i data-lucide="flag" class="w-3.5 h-3.5 text-merah"></i> HUT RI KE-81 — 17 AGUSTUS 2026</span>
@@ -425,7 +483,7 @@
       <div class="card p-4 md:p-6 lg:p-8 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="calendar-check-2" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="24">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Agenda Kegiatan</div></div></div>
         <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="users" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="1248">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Peserta Terdaftar</div></div></div>
-        <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="eye" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div id="visitorCount" class="font-display text-xl md:text-3xl counter-num flex items-center"><span class="live-visitor-dot"></span>0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Total Pengunjung</div></div></div>
+        <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="eye" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div id="visitorCount" class="font-display text-xl md:text-3xl counter-num flex items-center"><span class="live-visitor-dot"></span>0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Pengunjung Website</div></div></div>
         <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="trophy" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="56">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Penghargaan</div></div></div>
       </div>
     </div>
@@ -557,21 +615,10 @@
             <div class="flex items-start gap-3 md:gap-4"><div class="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="phone" class="w-5 h-5 md:w-6 md:h-6"></i></div><div><div class="text-[10px] md:text-xs uppercase tracking-widest text-ink-2 mb-1">Telepon / WA</div><div class="font-semibold text-sm md:text-base">+62 21 381 0000 · +62 812 8100 2026</div></div></div>
             <div class="flex items-start gap-3 md:gap-4"><div class="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="mail" class="w-5 h-5 md:w-6 md:h-6"></i></div><div><div class="text-[10px] md:text-xs uppercase tracking-widest text-ink-2 mb-1">Email</div><div class="font-semibold text-sm md:text-base">panitia@hutri81.go.id</div></div></div>
             <div class="flex gap-2 md:gap-3 pt-3 md:pt-4">
-              <a href="https://instagram.com/hutri81" target="_blank" rel="noopener" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition" title="Instagram">
-                <i data-lucide="instagram" class="w-5 h-5"></i>
-              </a>
-              <a href="https://facebook.com/hutri81" target="_blank" rel="noopener" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition" title="Facebook">
-                <i data-lucide="facebook" class="w-5 h-5"></i>
-              </a>
-              <a href="https://tiktok.com/@hutri81" target="_blank" rel="noopener" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition" title="TikTok">
-                <i data-lucide="music-2" class="w-5 h-5"></i>
-              </a>
-              <a href="https://youtube.com/@hutri81" target="_blank" rel="noopener" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition" title="YouTube">
-                <i data-lucide="youtube" class="w-5 h-5"></i>
-              </a>
-              <a href="https://wa.me/6281281002026" target="_blank" rel="noopener" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition" title="WhatsApp">
-                <i data-lucide="message-circle" class="w-5 h-5"></i>
-              </a>
+              <button onclick="toast('Membuka Instagram Panitia HUT RI 81','info')" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition"><i data-lucide="instagram" class="w-5 h-5"></i></button>
+              <button onclick="toast('Membuka Facebook Panitia HUT RI 81','info')" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition"><i data-lucide="facebook" class="w-5 h-5"></i></button>
+              <button onclick="toast('Membuka Twitter/X Panitia HUT RI 81','info')" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition"><i data-lucide="twitter" class="w-5 h-5"></i></button>
+              <button onclick="toast('Membuka YouTube Panitia HUT RI 81','info')" class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-ink text-cream flex items-center justify-center hover:bg-merah transition"><i data-lucide="youtube" class="w-5 h-5"></i></button>
             </div>
           </div>
         </div>
@@ -1122,7 +1169,7 @@
   <div class="flex-1 w-full flex items-center justify-center relative min-h-0">
     <div id="screenSpinResult" class="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4 opacity-0 transition-opacity duration-500"></div>
 
-    <div class="relative w-[75vw] h-[75vw] max-w-[400px] max-h-[400px] md:w-[55vh] md:h-[55vh] lg:w-[60vh] lg:h-[60vh] lg:max-w-[600px] lg:max-h-[600px">
+    <div class="relative w-[75vw] h-[75vw] max-w-[400px] max-h-[400px] md:w-[55vh] md:h-[55vh] lg:w-[60vh] lg:h-[60vh] lg:max-w-[600px] lg:max-h-[600px]">
       <div id="wheelPointerScreen" class="wheel-pointer absolute top-[-15px] left-1/2 -translate-x-1/2 z-30 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-t-[35px] border-t-[#FF1F3D] drop-shadow-lg"></div>
       <div class="absolute inset-0 rounded-full overflow-hidden" style="box-shadow: 0 0 80px rgba(255,31,61,.6), 0 0 40px rgba(255,179,0,.4), inset 0 0 40px rgba(0,0,0,.4);">
         <svg id="raffleWheelScreen" class="raffle-wheel w-full h-full" viewBox="0 0 200 200"></svg>
@@ -1281,19 +1328,6 @@ function toast(msg, type="success"){
   $("#toastContainer").appendChild(t);
   lucide.createIcons();
   setTimeout(()=>{ t.style.transition="all .35s"; t.style.opacity="0"; t.style.transform="translateX(20px)"; setTimeout(()=>t.remove(), 350); }, 3000);
-}
-
-function setBtnLoading(btn, isLoading, defaultText) {
-  if (!btn) return;
-  if (isLoading) {
-    btn.dataset.originalText = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Memproses...`;
-  } else {
-    btn.disabled = false;
-    btn.innerHTML = btn.dataset.originalText || defaultText;
-  }
-  lucide.createIcons();
 }
 
 function getAvatarHtml(photo, name, sizeClass = 'w-9 h-9') {
@@ -1468,6 +1502,7 @@ function initAgendaFilter(){
   });
 }
 
+// === HELPER UNTUK MENENTUKAN MEDIA TYPE (VIDEO / IMAGE) ===
 function getMediaType(g) {
   if (g.type) return g.type;
   if (g.img && (g.img.startsWith('data:video') || g.img.match(/\.(mp4|webm|ogg)$/i))) return 'video';
@@ -1650,17 +1685,12 @@ function openPanitiaModal(id){
   `);
   
   $("#panitiaForm").addEventListener("submit", async e=>{ 
-    e.preventDefault();
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setBtnLoading(submitBtn, true);
-    
+    e.preventDefault(); 
     const finalFoto = tempPanitiaImg || $("#f_foto_text").value.toUpperCase() || 'XX';
     const data = { nama:$("#f_nama").value, foto: finalFoto, jabatan:$("#f_jabatan").value }; 
     if(p){ Object.assign(p, data); toast("Data panitia diperbarui", "success"); } 
     else { STATE.panitia.unshift({ id: uid(), ...data }); toast("Panitia baru ditambahkan", "success"); } 
-    
     await syncDataToSupabase('panitia', STATE.panitia);
-    setBtnLoading(submitBtn, false);
     closeModal(); renderPanitiaCards(); renderLandingPanitia(); $("#statPanitia").textContent = STATE.panitia.length; 
   });
 }
@@ -2188,9 +2218,6 @@ function openAgendaModal(id){
   `);
   $("#agendaForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setBtnLoading(submitBtn, true);
-    
     const imgVal = $("#f_img_agenda").value;
     const data = { 
       judul:$("#f_judul").value, 
@@ -2206,8 +2233,6 @@ function openAgendaModal(id){
     if(a){ Object.assign(a, data); toast("Agenda berhasil diperbarui", "success"); } 
     else { STATE.agenda.unshift({ id: uid(), ...data }); toast("Agenda baru ditambahkan", "success"); } 
     await syncDataToSupabase('agenda', STATE.agenda);
-    
-    setBtnLoading(submitBtn, false);
     closeModal(); renderAgendaTable(); renderAgendaTimeline(); renderAgendaDetail(); $("#statAgenda").textContent = STATE.agenda.length; 
   });
 }
@@ -2220,6 +2245,7 @@ async function confirmDeleteAgenda(id){
   closeModal(); renderAgendaTable(); renderAgendaTimeline(); renderAgendaDetail(); $("#statAgenda").textContent = STATE.agenda.length; toast("Agenda telah dihapus", "info"); 
 }
 
+// === BATAS PERUBAHAN: FUNGSI GALERI YANG DIPERBARUI UNTUK DUKUNG VIDEO ===
 function renderGaleriAdmin(){
   const wrap = $("#galeriGridAdmin"); if(!wrap) return;
   if(STATE.galeri.length === 0){
@@ -2242,9 +2268,6 @@ function openGaleriModal(){
   showModal(`<div class="card max-w-lg w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">UNGGAH MEDIA</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="galeriForm" class="p-6 space-y-4"><div><label class="label">Judul Media</label><input type="text" id="f_judul" class="input" placeholder="Mis. Upacara Bendera" required></div><div><label class="label">Kategori</label><select id="f_kategori" class="input">${Object.entries(KATEGORI_LABEL).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></div><div><label class="label">Pratinjau Media</label><div id="imgPreview" class="aspect-landscape bg-cream-2 rounded-xl border-2 border-dashed border-line flex items-center justify-center text-ink-2 text-sm"><div class="text-center"><i data-lucide="image" class="w-10 h-10 mx-auto mb-2"></i><div>Pratinjau akan muncul di sini</div></div></div></div><div><label class="label">URL Media (atau unggah)</label><div class="flex gap-2"><input type="text" id="f_img" class="input flex-1" placeholder="https://..." oninput="updateMediaPreview(this.value)"><label class="btn btn-light cursor-pointer"><i data-lucide="upload" class="w-4 h-4"></i> Pilih<input type="file" accept="image/*,video/*" class="hidden" onchange="handleMediaUpload(event, 'f_img', 'imgPreview')"></label></div><div class="text-xs text-ink-2 mt-1">Kosongkan jika ingin menggunakan gambar acak. Unggah gambar (Maks 2MB) atau video (Maks 15MB).</div></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Unggah</button></div></form></div>`);
   $("#galeriForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setBtnLoading(submitBtn, true);
-    
     const judul = $("#f_judul").value, kategori = $("#f_kategori").value; 
     const imgInput = $("#f_img");
     const mediaUrl = imgInput.value || `https://picsum.photos/seed/${judul.replace(/\s/g,'-')}/800/800.jpg`; 
@@ -2252,8 +2275,6 @@ function openGaleriModal(){
     
     STATE.galeri.unshift({ id: uid(), judul, kategori, img: mediaUrl, type: mediaType }); 
     await syncDataToSupabase('galeri', STATE.galeri);
-    
-    setBtnLoading(submitBtn, false);
     closeModal(); renderGaleriAdmin(); renderLandingGaleri(); toast("Media berhasil diunggah", "success"); 
   });
 }
@@ -2328,6 +2349,7 @@ async function handleMediaUpload(e, inputId, previewId) {
     toast("Format file tidak didukung", "error");
   }
 }
+// === AKHIR PERUBAHAN GALERI ===
 
 async function deleteGaleri(id){ 
   STATE.galeri = STATE.galeri.filter(g=>g.id!==id); 
@@ -2335,6 +2357,7 @@ async function deleteGaleri(id){
   renderGaleriAdmin(); renderLandingGaleri(); toast("Media dihapus", "info"); 
 }
 
+// Fungsi ini tetap dipertahankan untuk form Agenda dan Pengumuman yang khusus gambar
 async function handleImgUploadGeneric(e, inputId, previewId) {
   const file = e.target.files[0];
   if (!file) return;
@@ -2403,9 +2426,6 @@ function openPengumumanModal(id){
   `);
   $("#pengumumanForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setBtnLoading(submitBtn, true);
-    
     const data = { 
       judul:$("#f_judul").value, 
       kategori:$("#f_kategori").value, 
@@ -2417,8 +2437,6 @@ function openPengumumanModal(id){
     if(p){ Object.assign(p, data); toast("Pengumuman diperbarui", "success"); } 
     else { STATE.pengumuman.unshift({ id: uid(), ...data }); toast("Pengumuman dibuat", "success"); } 
     await syncDataToSupabase('pengumuman', STATE.pengumuman);
-    
-    setBtnLoading(submitBtn, false);
     closeModal(); renderPengumumanTable(); renderLandingPengumuman(); 
   });
 }
@@ -2507,9 +2525,6 @@ function openLombaModal(id){
   
   $("#lombaForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setBtnLoading(submitBtn, true);
-    
     const data = { 
       nomor:$("#f_nomor").value, 
       status:$("#f_status").value, 
@@ -2520,8 +2535,6 @@ function openLombaModal(id){
     if(l){ Object.assign(l, data); toast("Data peserta diperbarui", "success"); } 
     else { STATE.lomba.unshift({ id: uid(), ...data }); toast("Peserta lomba ditambahkan", "success"); } 
     await syncDataToSupabase('peserta_lomba', STATE.lomba);
-    
-    setBtnLoading(submitBtn, false);
     closeModal(); initLombaPage(); $("#statPesertaLomba").textContent = STATE.lomba.length; 
   });
 }
@@ -2557,15 +2570,10 @@ function openKepanitiaanModal(id){
   showModal(`<div class="card max-w-lg w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">${k?'EDIT':'TAMBAH'} PENUGASAN</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="kepanitiaanForm" class="p-6 space-y-4"><div><label class="label">Pilih Panitia</label><select id="f_panitia" class="input" required>${STATE.panitia.map(p=>`<option value="${p.id}" ${k?.panitiaId===p.id?'selected':''}>${p.nama} (${p.jabatan})</option>`).join("")}</select></div><div><label class="label">Lomba</label><select id="f_lomba" class="input" required>${jenisLomba.map(j=>`<option value="${j}" ${k?.lomba===j?'selected':''}>${j}</option>`).join("")}</select></div><div><label class="label">Jabatan di Lomba</label><select id="f_jabatan" class="input" required>${JABATAN_LIST.map(j=>`<option value="${j}" ${k?.jabatan===j?'selected':''}>${j}</option>`).join("")}</select></div><div><label class="label">Tugas / Deskripsi</label><textarea id="f_tugas" class="input" rows="3" required>${k?.tugas||''}</textarea></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button></div></form></div>`);
   $("#kepanitiaanForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setBtnLoading(submitBtn, true);
-    
     const data = { panitiaId: +$("#f_panitia").value, panitia_id: +$("#f_panitia").value, lomba: $("#f_lomba").value, jabatan: $("#f_jabatan").value, tugas: $("#f_tugas").value }; 
     if(k){ Object.assign(k, data); toast("Penugasan diperbarui", "success"); } 
     else { STATE.kepanitiaanLomba.unshift({ id: uid(), ...data }); toast("Penugasan baru ditambahkan", "success"); } 
     await syncDataToSupabase('kepanitiaan_lomba', STATE.kepanitiaanLomba);
-    
-    setBtnLoading(submitBtn, false);
     closeModal(); initKepanitiaanPage(); 
   });
 }
@@ -2689,9 +2697,6 @@ function openAutoUndianPanel() {
 
   $("#autoUndianForm").addEventListener("submit", async e => {
     e.preventDefault();
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setBtnLoading(submitBtn, true);
-    
     const prefix = $("#autoPrefix").value || "TKT-", count = parseInt($("#autoCount").value) || 10, pad = parseInt($("#autoPad").value) || 3;
     let maxNum = 0;
     const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -2710,7 +2715,6 @@ function openAutoUndianPanel() {
     }
     await syncDataToSupabase('undian', STATE.undian); 
     initUndianPage(); 
-    setBtnLoading(submitBtn, false);
     toast(`${count} nomor undian berhasil dibuat!`, "success"); 
     previewTickets();
   });
@@ -2777,17 +2781,7 @@ function renderHadiahList(){
 
 function openHadiahModal(){
   showModal(`<div class="card max-w-md w-full modal-enter"><div class="px-6 py-4 border-b border-line flex items-center justify-between"><h3 class="font-display text-2xl">TAMBAH HADIAH</h3><button onclick="closeModal()" class="w-9 h-9 rounded-lg hover:bg-merah-soft flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button></div><form id="hadiahForm" class="p-6 space-y-4"><div><label class="label">Nama Hadiah</label><input type="text" id="f_hnama" class="input" placeholder="Mis. Sepeda Motor" required></div><div><label class="label">Nilai / Nominal</label><input type="text" id="f_hnilai" class="input" placeholder="Rp 15.000.000" required></div><div class="grid grid-cols-2 gap-4"><div><label class="label">Jumlah</label><input type="number" id="f_hjumlah" class="input" value="1" min="1" required></div><div><label class="label">Ikon</label><select id="f_hikon" class="input"><option value="gift">Gift</option><option value="bike">Motor</option><option value="smartphone">HP</option><option value="shopping-cart">Voucher</option><option value="package">Paket</option><option value="shirt">Kaos</option><option value="tv">TV</option><option value="laptop">Laptop</option></select></div></div><div class="flex items-center justify-end gap-2 pt-4 border-t border-line"><button type="button" onclick="closeModal()" class="btn btn-light">Batal</button><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button></div></form></div>`);
-  $("#hadiahForm").addEventListener("submit", async e=>{ 
-    e.preventDefault(); 
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setBtnLoading(submitBtn, true);
-    
-    STATE.hadiah.push({ id: uid(), nama:$("#f_hnama").value, nilai:$("#f_hnilai").value, ikon:$("#f_hikon").value, jumlah:+$("#f_hjumlah").value, terpakai:0 }); 
-    await syncDataToSupabase('hadiah', STATE.hadiah); 
-    
-    setBtnLoading(submitBtn, false);
-    closeModal(); initUndianPage(); toast("Hadiah baru ditambahkan", "success"); 
-  });
+  $("#hadiahForm").addEventListener("submit", async e=>{ e.preventDefault(); STATE.hadiah.push({ id: uid(), nama:$("#f_hnama").value, nilai:$("#f_hnilai").value, ikon:$("#f_hikon").value, jumlah:+$("#f_hjumlah").value, terpakai:0 }); await syncDataToSupabase('hadiah', STATE.hadiah); closeModal(); initUndianPage(); toast("Hadiah baru ditambahkan", "success"); });
 }
 
 async function deleteHadiah(id){ STATE.hadiah = STATE.hadiah.filter(h=>h.id!==id); await syncDataToSupabase('hadiah', STATE.hadiah); initUndianPage(); toast("Hadiah dihapus", "info"); }
@@ -2814,15 +2808,10 @@ function openUndianModal(id){
   
   $("#undianForm").addEventListener("submit", async e => { 
     e.preventDefault(); 
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setBtnLoading(submitBtn, true);
-    
     const data = { nomor:$("#f_unomor").value, nama:$("#f_unama").value, telepon:$("#f_utelepon").value, asal:$("#f_uasal").value, status:"eligible" }; 
     if(u){ Object.assign(u, data); toast("Data peserta diperbarui", "success"); } 
     else { STATE.undian.unshift({ id: uid(), ...data }); toast("Peserta undian ditambahkan", "success"); } 
     await syncDataToSupabase('undian', STATE.undian);
-    
-    setBtnLoading(submitBtn, false);
     closeModal(); initUndianPage(); $("#statUndian").textContent = STATE.undian.length; 
   });
 }
@@ -2840,7 +2829,7 @@ function spinWheel(isScreen = false) {
   if(eligible.length === 0){ toast("Tidak ada peserta eligible!", "warn"); return; }
   isSpinning = true; const btn = $(btnEl); if(btn) { btn.disabled = true; btn.classList.add("opacity-0", "pointer-events-none"); }
   if (isScreen) {
-    const    countdownContainer = $("#countdownContainer"); let count = 3;
+    const countdownContainer = $("#countdownContainer"); let count = 3;
     countdownContainer.classList.remove("hidden-x"); countdownContainer.innerHTML = `<div class="countdown-num">${count}</div>`;
     const countdownInterval = setInterval(() => { count--; if (count > 0) { countdownContainer.innerHTML = `<div class="countdown-num">${count}</div>`; } else { clearInterval(countdownInterval); countdownContainer.innerHTML = `<div class="countdown-num" style="font-size: 8rem;">PUTAR!</div>`; executeSpin(isScreen, wheelEl, pointerEl, resEl, btnEl, eligible, hadiah); } }, 1000);
   } else { executeSpin(false, wheelEl, pointerEl, resEl, btnEl, eligible, hadiah); }
@@ -2960,9 +2949,6 @@ function openDaftarLombaModal() {
   
   $("#daftarLombaForm").addEventListener("submit", async e=>{ 
     e.preventDefault(); 
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setBtnLoading(submitBtn, true);
-    
     const data = { 
       id: uid(), nomor: 'LMBA-'+String(STATE.lomba.length+1).padStart(3,'0'), nama: $("#dl_nama").value, jenis: $("#dl_jenis").value, 
       golongan: $("#dl_gol").value, status: "pending"
@@ -2978,7 +2964,6 @@ function openDaftarLombaModal() {
       } catch(e) { console.error("Error insert lomba:", e); }
     }
     
-    setBtnLoading(submitBtn, false);
     closeModal(); 
     toast("Pendaftaran lomba berhasil! Status: Pending (menunggu verifikasi).", "success"); 
     
@@ -2991,6 +2976,10 @@ function openDaftarLombaModal() {
     );
   });
 }
+
+/* ============================================================
+   CHAT WIDGET LOGIC — Dengan Notifikasi & Jabatan
+============================================================ */
 
 function toggleChatWidget() {
   const widget = $("#chatWidget");
@@ -3461,6 +3450,10 @@ function setupSupabaseRealtime() {
   setupVisitorRealtime();
 }
 
+/* ============================================================
+   ADMIN: KELOLA ANGGOTA KARANG TARUNA (Daftar Kontak)
+============================================================ */
+
 let tempAnggotaImg = null;
 
 function renderAnggotaChatTable() {
@@ -3543,9 +3536,6 @@ function openAnggotaChatModal(id) {
   
   $("#anggotaChatForm").addEventListener("submit", async e => { 
     e.preventDefault(); 
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setBtnLoading(submitBtn, true);
-    
     const finalFoto = tempAnggotaImg || $("#f_foto_text").value.toUpperCase() || '';
     const phoneVal = $("#f_anggota_pass").value;
     const data = { 
@@ -3573,7 +3563,6 @@ function openAnggotaChatModal(id) {
     if (!saved) {
       localStorage.setItem('hutri81_registered_users', JSON.stringify(STATE.chatMembers));
     }
-    setBtnLoading(submitBtn, false);
     closeModal(); renderAnggotaChatTable(); 
   });
 }
@@ -3616,117 +3605,6 @@ async function confirmDeleteAnggotaChat(id) {
     localStorage.setItem('hutri81_registered_users', JSON.stringify(STATE.chatMembers));
   }
   closeModal(); renderAnggotaChatTable(); toast("Anggota telah dihapus", "info");
-}
-
-/* ============================================================
-   REAL-TIME ONLINE USERS (Supabase Presence)
-============================================================ */
-let onlineChannel = null;
-let heartbeatInterval = null;
-let simulatedOnline = 0;
-const VISITOR_SESSION_ID = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-
-function updateOnlineCount(count) {
-  const el = $("#onlineCount");
-  if (!el) return;
-  count = Math.max(0, count);
-  const current = parseInt(el.textContent.replace(/\D/g, '')) || 0;
-  if (current === count) return;
-  
-  const diff = count - current;
-  const steps = Math.min(Math.abs(diff), 10);
-  const stepValue = diff / steps;
-  let cur = current;
-  let step = 0;
-  
-  const t = setInterval(() => {
-    step++;
-    cur = step === steps ? count : Math.round(current + (stepValue * step));
-    el.textContent = cur;
-    if (step >= steps) clearInterval(t);
-  }, 50);
-}
-
-function setupOnlinePresence() {
-  if (!supabaseClient) {
-    simulatedOnline = Math.floor(Math.random() * 12) + 8;
-    updateOnlineCount(simulatedOnline);
-    setInterval(() => {
-      simulatedOnline += Math.floor(Math.random() * 5) - 2;
-      if (simulatedOnline < 5) simulatedOnline = 5;
-      if (simulatedOnline > 35) simulatedOnline = 35;
-      updateOnlineCount(simulatedOnline);
-    }, 15000);
-    return;
-  }
-  
-  try {
-    onlineChannel = supabaseClient.channel('online-users-tracking', {
-      config: {
-        presence: {
-          key: VISITOR_SESSION_ID,
-        },
-      },
-    });
-    
-    onlineChannel
-      .on('presence', { event: 'sync' }, () => {
-        const state = onlineChannel.presenceState();
-        const count = Object.keys(state).length;
-        updateOnlineCount(count);
-      })
-      .on('presence', { event: 'join' }, ({ key, newPresences }) => {
-        console.log('🟢 User online:', key);
-      })
-      .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
-        console.log('🔴 User offline:', key);
-      })
-      .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          await onlineChannel.track({
-            user_id: VISITOR_SESSION_ID,
-            online_at: new Date().toISOString(),
-            page: window.location.pathname
-          });
-        }
-      });
-    
-    heartbeatInterval = setInterval(async () => {
-      if (onlineChannel) {
-        try {
-          await onlineChannel.track({
-            user_id: VISITOR_SESSION_ID,
-            online_at: new Date().toISOString(),
-            page: window.location.pathname
-          });
-        } catch(e) { console.warn('Heartbeat failed:', e); }
-      }
-    }, 25000);
-    
-    window.addEventListener('beforeunload', async () => {
-      if (onlineChannel) {
-        try { 
-          await onlineChannel.untrack(); 
-          await onlineChannel.unsubscribe();
-        } catch(e) {}
-      }
-    });
-    
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && onlineChannel) {
-        onlineChannel.track({
-          user_id: VISITOR_SESSION_ID,
-          online_at: new Date().toISOString(),
-          page: window.location.pathname
-        });
-      }
-    });
-    
-  } catch(e) {
-    console.error('Online presence error:', e);
-    simulatedOnline = Math.floor(Math.random() * 12) + 8;
-    updateOnlineCount(simulatedOnline);
-  }
 }
 
 // === FUNGSI INIT UTAMA ===
@@ -3789,8 +3667,6 @@ async function init(){
   loadNotifications();
   
   await trackVisitor();
-  
-  setupOnlinePresence();
   
   await renderChatMessages();
   
