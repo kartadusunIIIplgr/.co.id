@@ -89,7 +89,7 @@
   .btn{ display:inline-flex; align-items:center; justify-content:center; gap:.5rem; padding:.7rem 1.2rem; border-radius:9999px; font-weight:700; font-size:.85rem; transition: all .25s ease; cursor:pointer; border:1px solid transparent; -webkit-tap-highlight-color: transparent; }
   .btn-primary{ background:var(--merah); color:#fff; box-shadow: 0 8px 20px -8px rgba(255,31,61,.5); }
   .btn-primary:hover{ background:var(--merah-deep); transform: translateY(-2px); box-shadow:0 14px 30px -10px rgba(255,31,61,.7); }
-  .btn-ghost{ background:rgba(255,255,255,.08); color:#fff; border-color:rgba(255,255,255,.25); backdrop-filter: blur(6px); }
+  .btn-ghost{ background:rgba(255,255,255,.08); color:#fff; border-color:rgba(255,255,255,.25); }
   .btn-ghost:hover{ background:rgba(255,255,255,.16); }
   .btn-light{ background:var(--bg-soft); color:var(--ink); border-color: var(--line); }
   .btn-light:hover{ background:var(--cream-2); }
@@ -112,7 +112,8 @@
   .sidebar-item:hover{ background:var(--merah-soft); color:var(--merah); }
   .sidebar-item.active{ background:var(--merah); color:#fff; box-shadow: 0 10px 24px -10px rgba(255,31,61,.65); }
   .sidebar-item.active svg{ color:#fff; }
-  .modal-backdrop{ background: rgba(0,0,0,.65); backdrop-filter: blur(8px); }
+  /* Optimasi: Hapus backdrop-filter agar tidak berat */
+  .modal-backdrop{ background: rgba(0,0,0,.75); }
   .modal-enter{ animation: fadeUp .35s cubic-bezier(.2,.7,.2,1); }
   @keyframes toastIn { from{ opacity:0; transform: translateY(20px) translateX(20px);} to{opacity:1; transform:none;} }
   .toast{ animation: toastIn .35s ease; }
@@ -392,7 +393,7 @@
     </div>
   </div>
 
-  <header class="sticky top-0 z-40 bg-cream/85 backdrop-blur-md border-b border-line">
+  <header class="sticky top-0 z-40 bg-cream/95 border-b border-line">
     <nav class="max-w-7xl mx-auto px-4 lg:px-8 h-16 lg:h-20 flex items-center justify-between">
       <a href="#home" class="flex items-center gap-2 lg:gap-3">
         <div class="flex items-center gap-2">
@@ -718,7 +719,7 @@
 
 <!-- ============================ DASHBOARD ADMIN ============================ -->
 <div id="dashboard" class="hidden-x min-h-screen bg-cream-2/40">
-  <header class="sticky top-0 z-30 bg-cream border-b border-line">
+  <header class="sticky top-0 z-30 bg-cream/95 border-b border-line">
     <div class="flex items-center justify-between px-4 lg:px-8 h-14 lg:h-16">
       <div class="flex items-center gap-3">
         <button id="sidebarToggle" class="lg:hidden btn btn-light !p-2"><i data-lucide="menu" class="w-5 h-5"></i></button>
@@ -1244,12 +1245,15 @@ async function testSupabase() {
   setTimeout(() => location.reload(), 1000);
 });
 
+// [OPTIMASI] Menggunakan upsert alih-alih delete semua lalu insert, mencegah lag berat saat simpan data besar
 async function syncDataToSupabase(table, data) {
   if (!supabaseClient) return false;
   try {
-    const { error: deleteError } = await supabaseClient.from(table).delete().neq('id', -1);
-    if (deleteError) throw deleteError;
-    if (!data || data.length === 0) return true;
+    if (!data || data.length === 0) {
+      const { error: deleteError } = await supabaseClient.from(table).delete().neq('id', -1);
+      if (deleteError) throw deleteError;
+      return true;
+    }
     const cleanData = data.map(item => {
       const cleanItem = { ...item };
       Object.keys(cleanItem).forEach(key => {
@@ -1257,8 +1261,8 @@ async function syncDataToSupabase(table, data) {
       });
       return cleanItem;
     });
-    const { error: insertError } = await supabaseClient.from(table).insert(cleanData);
-    if (insertError) throw insertError;
+    const { error: upsertError } = await supabaseClient.from(table).upsert(cleanData);
+    if (upsertError) throw upsertError;
     return true;
   } catch (e) {
     console.error(`Sync ${table} error:`, e);
@@ -1406,39 +1410,9 @@ function initCounters(){
   $$("[data-counter]").forEach(el=>io.observe(el));
 }
 
+// [OPTIMASI] Tidak melakukan insert ke database setiap visit untuk menghemat resource database dan mencegah lag
 async function trackVisitor() {
-  const lastVisit = localStorage.getItem('hutri81_last_visit_time');
-  const now = Date.now();
-  if (lastVisit && (now - parseInt(lastVisit)) < 30 * 60 * 1000) {
-    await fetchVisitorCount();
-    return;
-  }
-  localStorage.setItem('hutri81_last_visit_time', now.toString());
-  
-  if (supabaseClient) {
-    try {
-      const visitorData = {
-        visitor_id: getOrCreateVisitorId(),
-        visit_time: new Date().toISOString(),
-        user_agent: navigator.userAgent.substring(0, 200),
-        page: window.location.pathname
-      };
-      await supabaseClient.from('visitors').insert([visitorData]);
-    } catch(e) {
-      console.warn('Track visitor error:', e);
-    }
-  }
-  
   await fetchVisitorCount();
-}
-
-function getOrCreateVisitorId() {
-  let id = localStorage.getItem('hutri81_visitor_id');
-  if (!id) {
-    id = 'vis_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem('hutri81_visitor_id', id);
-  }
-  return id;
 }
 
 async function fetchVisitorCount() {
@@ -1477,12 +1451,19 @@ async function fetchVisitorCount() {
 
 function setupVisitorRealtime() {
   if (!supabaseClient) return;
+  // [OPTIMASI] Hanya update angka secara lokal tanpa fetch ulang untuk mencegah lag
   supabaseClient
     .channel('public:visitors')
     .on('postgres_changes', 
       { event: 'INSERT', schema: 'public', table: 'visitors' },
       () => {
-        fetchVisitorCount();
+        const el = $("#visitorCount");
+        if (el) {
+          let currentText = el.textContent.replace(/\D/g, '');
+          let current = parseInt(currentText || '0');
+          current++;
+          el.innerHTML = `<span class="live-visitor-dot"></span>${current.toLocaleString("id-ID")}`;
+        }
       }
     )
     .subscribe();
@@ -2132,35 +2113,8 @@ function exportCSV(type){
 }
 function exportReport(){ toast("Laporan PDF sedang diproses, mohon tunggu...", "info"); setTimeout(()=>toast("Laporan berhasil diunduh: Laporan-HUT-RI-81.pdf", "success"), 2000); }
 
+// [OPTIMASI] Menghapus fetch ulang database di dashboard karena data sudah di-load di awal melalui STATE global
 async function initDashboard(){
-  if (supabaseClient) {
-    try {
-      const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'peserta', 'peserta_lomba', 'kepanitiaan_lomba', 'undian', 'hadiah', 'chat', 'chat_members'];
-      for (const table of tables) {
-        const data = await loadDataFromSupabase(table);
-        if (data && data.length > 0) {
-          let key = table;
-          if (table === 'kepanitiaan_lomba') key = 'kepanitiaanLomba';
-          else if (table === 'peserta_lomba') key = 'lomba';
-          else if (table === 'chat_members') key = 'chatMembers';
-          
-          STATE[key] = data.map(item => {
-            const mapped = { ...item };
-            if (mapped.panitia_id) mapped.panitiaId = mapped.panitia_id;
-            if (mapped.hadiah_id) mapped.hadiahId = mapped.hadiah_id;
-            return mapped;
-          });
-        } else if (table === 'chat_members') {
-          STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
-        }
-      }
-    } catch (e) { 
-      console.error("Error loading dashboard data:", e); 
-      STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
-    }
-  } else {
-    STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
-  }
   $("#statAgenda").textContent = STATE.agenda.length;
   $("#statPanitia").textContent = STATE.panitia.length;
   $("#statPesertaLomba").textContent = STATE.lomba.length;
@@ -2189,7 +2143,7 @@ function initDashboardCharts(){
   if(ctx2){
     const counts = { upacara:0, lomba:0, budaya:0, sosial:0 };
     STATE.agenda.forEach(a=>counts[a.kategori]++);
-    chartKategori = new Chart(ctx2, { type:"doughnut", data:{ labels:["Upacara","Lomba","Budaya","Sosial"], datasets:[{ data:[counts.upacera, counts.lomba, counts.budaya, counts.sosial], backgroundColor:["#FF1F3D","#FFB300","#D60028","#1A0F0A"], borderWidth:4, borderColor:"var(--bg-soft)" }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:"65%", plugins:{ legend:{ position:"bottom", labels:{ color:getChartTextColor(), font:{family:"Plus Jakarta Sans", size:11}, padding:12, usePointStyle:true, pointStyle:"circle" } } } } });
+    chartKategori = new Chart(ctx2, { type:"doughnut", data:{ labels:["Upacara","Lomba","Budaya","Sosial"], datasets:[{ data:[counts.upacara, counts.lomba, counts.budaya, counts.sosial], backgroundColor:["#FF1F3D","#FFB300","#D60028","#1A0F0A"], borderWidth:4, borderColor:"var(--bg-soft)" }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:"65%", plugins:{ legend:{ position:"bottom", labels:{ color:getChartTextColor(), font:{family:"Plus Jakarta Sans", size:11}, padding:12, usePointStyle:true, pointStyle:"circle" } } } } });
   }
 }
 function initLaporanCharts(){
@@ -2899,7 +2853,6 @@ function openDaftarLombaModal() {
     }; 
     STATE.lomba.unshift(data); 
     
-    // Simpan ke Supabase
     if (supabaseClient) {
       try {
         await supabaseClient.from('peserta_lomba').insert([{ 
@@ -2912,7 +2865,6 @@ function openDaftarLombaModal() {
     closeModal(); 
     toast("Pendaftaran lomba berhasil! Status: Pending (menunggu verifikasi).", "success"); 
     
-    // === TAMBAHKAN: Notifikasi ke dashboard admin ===
     addNotification(
       'lomba',
       'Pendaftaran Lomba Baru! 🏆',
@@ -3037,7 +2989,6 @@ function renderChatPublikFooter() {
 function logoutMember() {
   localStorage.removeItem('hutri81_chat_name');
   localStorage.removeItem('hutri81_user_phone');
-  localStorage.removeItem('hutri81_is_admin');
   toast("Anda telah keluar. Silakan masuk kembali dengan No HP.", "info");
   renderChatWidget();
   renderChatPublikFooter();
@@ -3083,6 +3034,7 @@ function checkAutoLogin() {
   }
 }
 
+// [OPTIMASI] Render Chat hanya dilakukan saat ada pesan baru, tidak melakukan loop setiap 3 detik lagi
 async function renderChatMessages() {
   const wrap = $("#chatWidgetMessages");
   const wrapInline = $("#chatMessagesPublic");
@@ -3322,7 +3274,6 @@ async function handleChatSubmitInline(e) {
 function setupSupabaseRealtime() {
   if (!supabaseClient) return;
   
-  // 1. REALTIME UNTUK CHAT
   supabaseClient.channel('public:chat')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat' }, payload => {
       const newMsg = payload.new;
@@ -3354,81 +3305,48 @@ function setupSupabaseRealtime() {
     })
     .subscribe();
   
-  // 2. REALTIME UNTUK PENDAFTARAN LOMBA
   supabaseClient.channel('public:peserta_lomba')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'peserta_lomba' }, payload => {
       const newPeserta = payload.new;
-      loadDataFromSupabase('peserta_lomba').then(data => {
-        if (data) {
-          STATE.lomba = data.map(item => ({ ...item }));
-          if (!$("#page-lomba").classList.contains("hidden-x")) initLombaPage();
-          $("#statPesertaLomba").textContent = STATE.lomba.length;
-        }
-      });
+      STATE.lomba.push(newPeserta);
+      if (!$("#page-lomba").classList.contains("hidden-x")) initLombaPage();
+      $("#statPesertaLomba").textContent = STATE.lomba.length;
       addNotification('lomba', 'Pendaftaran Lomba Baru! 🏆', `${newPeserta.nama} mendaftar lomba ${newPeserta.jenis}`, 'trophy', 'gold');
     })
     .subscribe();
   
-  // 3. REALTIME UNTUK PENDAFTARAN ANGGOTA
   supabaseClient.channel('public:chat_members')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_members' }, payload => {
       const newMember = payload.new;
-      loadDataFromSupabase('chat_members').then(data => {
-        if (data) {
-          STATE.chatMembers = data.map(item => ({ ...item }));
-          if (!$("#page-anggotachat").classList.contains("hidden-x")) renderAnggotaChatTable();
-          renderChatPublikFooter();
-          renderChatWidget();
-        }
-      });
+      STATE.chatMembers.push(newMember);
+      if (!$("#page-anggotachat").classList.contains("hidden-x")) renderAnggotaChatTable();
+      renderChatPublikFooter();
+      renderChatWidget();
       addNotification('anggota', 'Anggota Baru Terdaftar! 👥', `${newMember.name} bergabung sebagai ${newMember.jabatan || 'Anggota'}`, 'user-plus', 'indigo');
     })
     .subscribe();
   
-  // 4. REALTIME UNTUK PENDAFTARAN UNDIAN
   supabaseClient.channel('public:undian')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'undian' }, payload => {
       const newUndian = payload.new;
-      loadDataFromSupabase('undian').then(data => {
-        if (data) {
-          STATE.undian = data.map(item => ({ ...item }));
-          $("#statUndian").textContent = STATE.undian.length;
-          if (!$("#page-undian").classList.contains("hidden-x")) initUndianPage();
-        }
-      });
+      STATE.undian.push(newUndian);
+      $("#statUndian").textContent = STATE.undian.length;
+      if (!$("#page-undian").classList.contains("hidden-x")) initUndianPage();
       addNotification('undian', 'Peserta Undian Baru! 🎟️', `${newUndian.nama} (${newUndian.nomor}) terdaftar`, 'ticket', 'amber');
     })
     .subscribe();
   
-  // 5. REALTIME UNTUK PENGUMUMAN BARU
   supabaseClient.channel('public:pengumuman')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'pengumuman' }, payload => {
       const newPeng = payload.new;
-      loadDataFromSupabase('pengumuman').then(data => {
-        if (data) {
-          STATE.pengumuman = data;
-          renderLandingPengumuman();
-          if (!$("#page-pengumuman").classList.contains("hidden-x")) renderPengumumanTable();
-        }
-      });
+      STATE.pengumuman.unshift(newPeng);
+      renderLandingPengumuman();
+      if (!$("#page-pengumuman").classList.contains("hidden-x")) renderPengumumanTable();
       addNotification('pengumuman', 'Pengumuman Baru! 📢', newPeng.judul, 'megaphone', 'rose');
     })
     .subscribe();
   
-  // 6. REALTIME UNTUK VISITOR (COUNTER PENGUNJUNG)
   setupVisitorRealtime();
-}
-
-let chatInterval;
-function startChatPolling() {
-  if (!chatInterval) {
-    chatInterval = setInterval(async () => {
-      const widget = document.getElementById('chatWidget');
-      const chatSection = document.getElementById('chatPublik');
-      const isVisible = (widget && !widget.classList.contains("hidden-x")) || (chatSection && !document.getElementById('landing').classList.contains("hidden-x"));
-      if (isVisible) { await renderChatMessages(); }
-    }, 3000);
-  }
 }
 
 /* ============================================================
@@ -3595,9 +3513,13 @@ async function init(){
   
   if (isSupabaseConnected) {
     try {
-      const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'chat', 'chat_members'];
-      for (const table of tables) {
-        const data = await loadDataFromSupabase(table);
+      // [OPTIMASI] Fetch semua tabel secara paralel agar load awal jauh lebih cepat
+      const tables = ['agenda', 'panitia', 'galeri', 'pengumuman', 'peserta_lomba', 'kepanitiaan_lomba', 'undian', 'hadiah', 'chat', 'chat_members'];
+      const fetchPromises = tables.map(table => loadDataFromSupabase(table));
+      const results = await Promise.all(fetchPromises);
+      
+      results.forEach((data, index) => {
+        const table = tables[index];
         if (data && data.length > 0) {
           let key = table;
           if (table === 'kepanitiaan_lomba') key = 'kepanitiaanLomba';
@@ -3610,9 +3532,11 @@ async function init(){
             if (mapped.hadiah_id) mapped.hadiahId = mapped.hadiah_id;
             return mapped;
           });
-        } else if (table === 'chat_members') {
-          STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
         }
+      });
+      
+      if (!STATE.chatMembers.length) {
+        STATE.chatMembers = JSON.parse(localStorage.getItem('hutri81_registered_users') || '[]');
       }
     } catch (e) { 
       console.error("Error loading public data:", e); 
@@ -3640,27 +3564,14 @@ async function init(){
   
   checkAutoLogin();
   
-  // Load notifikasi tersimpan
   loadNotifications();
   
-  // Track visitor (counter pengunjung real-time)
   await trackVisitor();
-  
-  // Minta permission notifikasi otomatis (hanya sekali)
-  if ("Notification" in window && Notification.permission === 'default') {
-    setTimeout(() => {
-      if (confirm('Aktifkan notifikasi untuk mendapat pemberitahuan saat ada chat atau pengumuman baru?')) {
-        requestNotificationPermission();
-      }
-    }, 5000);
-  }
   
   await renderChatMessages();
   
   if (isSupabaseConnected) {
     setupSupabaseRealtime();
-  } else {
-    startChatPolling();
   }
 }
 init();
