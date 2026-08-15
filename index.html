@@ -37,7 +37,6 @@
     --line:rgba(255,255,255,.15);
     --bg-soft:#18181B;
   }
-  /* Tombol Hapus Pesan Individual */
   .chat-del-btn { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; background: #e11d48; color: white; border-radius: 9999px; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-size: 12px; line-height: 1; font-weight: bold; border: 1px solid white; }
   .chat-message:hover .chat-del-btn { display: flex; }
   *{ -webkit-font-smoothing:antialiased; }
@@ -73,6 +72,8 @@
   @keyframes shine { to{ background-position: 200% center; } }
   @keyframes confettiFall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
   @keyframes countdownPop { 0%{ transform: scale(0.5); opacity: 0; } 50%{ transform: scale(1.2); opacity: 1; } 100%{ transform: scale(2); opacity: 0; } }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px) rotate(-5deg); } 75% { transform: translateX(3px) rotate(5deg); } }
+  @keyframes bounce-soft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
   .reveal{ opacity:0; } .reveal.in{ animation: fadeUp .9s cubic-bezier(.2,.7,.2,1) forwards; }
   .float{ animation: floatY 6s ease-in-out infinite; }
@@ -167,19 +168,18 @@
   .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .table-wrap table { min-width: 600px; }
 
-  /* Chat Public Section Styles */
   .chat-messages-box { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; }
   
   .chat-message-row { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; align-items: flex-end; }
   .chat-message-row.sent { justify-content: flex-end; }
   .chat-message-row.received { justify-content: flex-start; }
   
-  .chat-message { max-width: 75%; padding: 0.5rem 0.8rem; border-radius: 0.8rem; font-size: 0.85rem; line-height: 1.3; word-wrap: break-word; }
+  .chat-message { max-width: 75%; padding: 0.5rem 0.8rem; border-radius: 0.8rem; font-size: 0.85rem; line-height: 1.3; word-wrap: break-word; position: relative; }
   .chat-message.sent { background: var(--merah); color: white; border-bottom-right-radius: 0.2rem; }
   .chat-message.received { background: var(--cream-2); color: var(--ink); border-bottom-left-radius: 0.2rem; }
-  .chat-message .sender-name { font-size: 0.7rem; font-weight: 700; margin-bottom: 0.2rem; opacity: 0.8; }
+  .chat-message .sender-name { font-size: 0.7rem; font-weight: 700; margin-bottom: 0.2rem; opacity: 0.8; display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; }
+  .jabatan-mini-badge { font-size: 8px !important; padding: 1px 5px !important; border-radius: 4px !important; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
 
-  /* Floating Chat Button & Widget */
   #floatChatBtn {
     position: fixed;
     bottom: 1rem;
@@ -211,12 +211,14 @@
     animation: pulseRing 2s ease-out infinite;
     z-index: -1;
   }
+  #floatChatBtn.has-notification { animation: shake 0.5s ease-in-out infinite; background: var(--gold); }
   #floatChatBtn .chat-badge {
     position: absolute;
     top: -4px;
     right: -4px;
-    width: 1.25rem;
+    min-width: 1.25rem;
     height: 1.25rem;
+    padding: 0 4px;
     background: var(--gold);
     color: #000;
     font-size: 0.65rem;
@@ -227,6 +229,7 @@
     justify-content: center;
     border: 2px solid var(--cream);
   }
+  #floatChatBtn.has-notification .chat-badge { background: var(--merah); color: white; animation: bounce-soft 0.6s ease-in-out infinite; }
 
   #chatWidget {
     position: fixed;
@@ -272,8 +275,6 @@
     border-top: 1px solid var(--line);
     background: var(--bg-soft);
   }
-  .chat-auth-btns { display: flex; gap: 0.5rem; }
-  .chat-auth-btns button { flex: 1; }
 
   @media print {
     body * { visibility: hidden; }
@@ -282,21 +283,45 @@
     .print-ticket { border: 1px dashed #ccc; page-break-inside: avoid; }
     .ticket-grid { display: block; }
   }
-  /* Gaya Pesan Chat seperti WhatsApp */
   .chat-time { font-size: 0.65rem; opacity: 0.8; text-align: right; margin-top: 0.15rem; display: block; }
   .chat-message.sent .chat-time { color: rgba(255,255,255,0.9); }
   .chat-message.received .chat-time { color: var(--ink-2); }
   .chat-date-sep { display: flex; justify-content: center; margin: 1rem 0 0.5rem; }
   .chat-date-sep span { background: rgba(0,0,0,0.1); color: var(--ink-2); padding: 0.2rem 0.8rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; }
   
-  /* Menyembunyikan nama pengirim HANYA jika pesannya beruntun dari orang yang sama */
   .chat-message-row.same-sender .sender-name { display: none; }
   .chat-message-row.same-sender .chat-message { margin-top: -0.5rem; }
+
+  /* Notifikasi Toast Khusus Chat */
+  #chatNotifToast {
+    position: fixed;
+    top: 5rem;
+    right: 1rem;
+    z-index: 60;
+    max-width: 20rem;
+    width: calc(100vw - 2rem);
+  }
+  .chat-notif-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--merah);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,.25);
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    cursor: pointer;
+    animation: fadeUp .35s ease;
+    transition: transform .2s;
+  }
+  .chat-notif-card:hover { transform: translateX(-4px); }
 </style>
 </head>
 <body class="batik-bg">
 
 <div id="printArea" class="hidden-x"></div>
+<div id="chatNotifToast" class="hidden-x"></div>
 
 <!-- ============================ LANDING PAGE ============================ -->
 <div id="landing">
@@ -588,17 +613,14 @@
     </div>
   </footer>
 
-  <!-- Tombol Admin dipindahkan ke kiri bawah -->
   <button onclick="openAdminLogin()" class="fixed bottom-4 left-4 lg:bottom-6 lg:left-6 z-40 w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-merah text-white flex items-center justify-center shadow-2xl shadow-merah/40 hover:scale-110 transition" title="Login Admin"><i data-lucide="shield-check" class="w-5 h-5 lg:w-6 lg:h-6"></i></button>
 
-  <!-- Tombol Chat Mengambang -->
   <button id="floatChatBtn" onclick="toggleChatWidget()" title="Buka Chat">
     <span class="chat-pulse"></span>
     <i data-lucide="message-circle" class="w-6 h-6 lg:w-7 lg:h-7"></i>
-    <span class="chat-badge hidden-x" id="chatFloatBadge">!</span>
+    <span class="chat-badge hidden-x" id="chatFloatBadge">0</span>
   </button>
 
-  <!-- Widget Chat Popup -->
   <div id="chatWidget" class="hidden-x">
     <div class="chat-widget-card">
       <div class="chat-widget-header">
@@ -606,7 +628,7 @@
           <i data-lucide="messages-square" class="w-5 h-5"></i>
           <div>
             <div class="font-bold text-sm">Grup Chat Pengunjung</div>
-            <div id="chatWidgetUserStatus" class="text-[10px] text-white/80">Tamu (Pilih Nama Anggota)</div>
+            <div id="chatWidgetUserStatus" class="text-[10px] text-white/80">Tamu (Masukkan No HP)</div>
           </div>
         </div>
         <button onclick="toggleChatWidget()" class="w-8 h-8 rounded-lg hover:bg-white/20 flex items-center justify-center transition">
@@ -975,9 +997,10 @@
         </div>
       </section>
 
+      <!-- PERUBAHAN 1: Tabel Anggota Karang Taruna dengan kolom Jabatan -->
       <section id="page-anggotachat" class="dash-page hidden-x">
         <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
-          <div><h1 class="font-display text-2xl lg:text-4xl">KELOLA ANGGOTA KARANG TARUNA</h1><p class="text-ink-2 mt-1 text-sm">Daftarkan anggota Karang Taruna. Anggota yang didaftarkan akan tampil sebagai daftar kontak di ruang chat publik.</p></div>
+          <div><h1 class="font-display text-2xl lg:text-4xl">KELOLA ANGGOTA KARANG TARUNA</h1><p class="text-ink-2 mt-1 text-sm">Daftarkan anggota Karang Taruna beserta jabatan. Anggota yang didaftarkan akan tampil sebagai daftar kontak di ruang chat publik.</p></div>
           <button onclick="openAnggotaChatModal()" class="btn btn-primary"><i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Anggota</button>
         </div>
         <div class="card overflow-hidden">
@@ -986,7 +1009,8 @@
               <thead class="bg-cream-2 text-xs uppercase tracking-wider text-ink-2">
                 <tr>
                   <th class="text-left px-4 py-3 font-bold">Nama Anggota</th>
-                  <th class="text-left px-4 py-3 font-bold">Jabatan / Role</th>
+                  <th class="text-left px-4 py-3 font-bold">Jabatan</th>
+                  <th class="text-left px-4 py-3 font-bold">No. HP</th>
                   <th class="text-left px-4 py-3 font-bold">Tanggal Dibuat</th>
                   <th class="text-right px-4 py-3 font-bold">Aksi</th>
                 </tr>
@@ -1067,7 +1091,7 @@
   </div>
 </div>
 
-<!-- ============================ HALAMAN LAYAR UNDIAN (FULLSCREEN TANPA SCROLL) ============================ -->
+<!-- ============================ HALAMAN LAYAR UNDIAN ============================ -->
 <div id="screenUndian" class="hidden-x fixed inset-0 z-[200] flex flex-col items-center justify-between py-4 md:py-6 overflow-hidden" style="background: radial-gradient(circle at 50% 20%, #4a0e1f 0%, #160404 60%, #050101 100%);">
   <div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: radial-gradient(circle, #FFB300 1px, transparent 1px); background-size: 40px 40px;"></div>
   <div class="absolute -top-40 -left-40 w-96 h-96 bg-merah/30 rounded-full blur-[120px] animate-pulse"></div>
@@ -1167,26 +1191,17 @@ async function syncDataToSupabase(table, data) {
   if (!supabaseClient) return false;
   try {
     const { error: deleteError } = await supabaseClient.from(table).delete().neq('id', -1);
-    if (deleteError) {
-      console.error(`Delete ${table} error:`, deleteError);
-      throw deleteError;
-    }
+    if (deleteError) throw deleteError;
     if (!data || data.length === 0) return true;
-
     const cleanData = data.map(item => {
       const cleanItem = { ...item };
-      // Hapus field yang tidak diperlukan agar tidak bentrok di database
       Object.keys(cleanItem).forEach(key => {
         if (cleanItem[key] === undefined) delete cleanItem[key];
       });
       return cleanItem;
     });
-
     const { error: insertError } = await supabaseClient.from(table).insert(cleanData);
-    if (insertError) {
-      console.error(`Insert ${table} error:`, insertError);
-      throw insertError;
-    }
+    if (insertError) throw insertError;
     return true;
   } catch (e) {
     console.error(`Sync ${table} error:`, e);
@@ -1205,7 +1220,7 @@ async function loadDataFromSupabase(table) {
 }
 
 const STATE = {
-  agenda: [], panitia: [], galeri: [], pengumuman: [], peserta: [], lomba: [], kepanitiaanLomba: [], undian: [], hadiah: [], chat: [], chatMembers: [], lastChatId: 0,
+  agenda: [], panitia: [], galeri: [], pengumuman: [], peserta: [], lomba: [], kepanitiaanLomba: [], undian: [], hadiah: [], chat: [], chatMembers: [], lastChatId: 0, unreadCount: 0,
   activities: [
     { icon:"user-plus", color:"merah", title:"Pendaftaran baru", desc:"Budi Santoso mendaftar lomba balap karung · 5 menit lalu" },
     { icon:"check-circle-2", color:"emerald", title:"Agenda disetujui", desc:"Upacara bendera 17 Agustus · 1 jam lalu" },
@@ -1214,6 +1229,14 @@ const STATE = {
     { icon:"trophy", color:"indigo", title:"Pemenang diumumkan", desc:"Lomba tari tradisional · kemarin" }
   ]
 };
+
+// PERUBAHAN: Daftar Jabatan untuk Anggota Karang Taruna
+const JABATAN_KARANG_TARUNA = [
+  "Ketua", "Wakil Ketua", "Sekretaris", "Bendahara", 
+  "Seksi Acara", "Seksi Lomba", "Seksi Konsumsi", 
+  "Seksi Dekorasi", "Seksi Keamanan", "Seksi Dokumentasi",
+  "Seksi Peralatan", "Seksi Humas", "Anggota"
+];
 
 const KATEGORI_LABEL = { upacara:"Upacara", lomba:"Lomba", budaya:"Budaya", sosial:"Sosial" };
 const KATEGORI_COLOR = { upacara:"bg-rose-100 text-rose-700", lomba:"bg-amber-100 text-amber-700", budaya:"bg-indigo-100 text-indigo-700", sosial:"bg-emerald-100 text-emerald-700" };
@@ -1658,7 +1681,7 @@ function enterDashboard(){
   $("#landing").classList.add("hidden-x"); 
   $("#dashboard").classList.remove("hidden-x"); 
   window.scrollTo(0,0); 
-  localStorage.setItem('hutri81_is_admin', 'true'); // Tandai sebagai Admin
+  localStorage.setItem('hutri81_is_admin', 'true');
   initDashboard(); 
 }
 
@@ -1666,7 +1689,7 @@ function logoutAdmin(){
   $("#dashboard").classList.add("hidden-x"); 
   $("#landing").classList.remove("hidden-x"); 
   window.scrollTo(0,0); 
-  localStorage.removeItem('hutri81_is_admin'); // Hapus status Admin
+  localStorage.removeItem('hutri81_is_admin'); 
   toast("Anda telah keluar dari dashboard", "info"); 
 }
 function openNotifPanel(){
@@ -1719,7 +1742,6 @@ async function initDashboard(){
       for (const table of tables) {
         const data = await loadDataFromSupabase(table);
         if (data && data.length > 0) {
-          // Perbaikan penamaan variabel STATE di sini
           let key = table;
           if (table === 'kepanitiaan_lomba') key = 'kepanitiaanLomba';
           else if (table === 'peserta_lomba') key = 'lomba';
@@ -2485,7 +2507,7 @@ function openDaftarLombaModal() {
 }
 
 /* ============================================================
-   CHAT WIDGET LOGIC — Tanpa Login, Pilih Nama Langsung Chat
+   CHAT WIDGET LOGIC — Dengan Notifikasi & Jabatan
 ============================================================ */
 
 function toggleChatWidget() {
@@ -2494,10 +2516,27 @@ function toggleChatWidget() {
   
   if (isHidden) {
     widget.classList.remove("hidden-x");
-    $("#chatFloatBadge").classList.add("hidden-x");
+    // Reset unread counter ketika widget dibuka
+    STATE.unreadCount = 0;
+    updateChatBadge();
+    $("#floatChatBtn").classList.remove("has-notification");
     renderChatWidget();
   } else {
     widget.classList.add("hidden-x");
+  }
+}
+
+// PERUBAHAN: Fungsi update badge notifikasi chat
+function updateChatBadge() {
+  const badge = $("#chatFloatBadge");
+  if (!badge) return;
+  if (STATE.unreadCount > 0) {
+    badge.classList.remove("hidden-x");
+    badge.textContent = STATE.unreadCount > 99 ? "99+" : STATE.unreadCount;
+    $("#floatChatBtn").classList.add("has-notification");
+  } else {
+    badge.classList.add("hidden-x");
+    $("#floatChatBtn").classList.remove("has-notification");
   }
 }
 
@@ -2508,7 +2547,13 @@ function renderChatWidget() {
   const statusEl = $("#chatWidgetUserStatus");
 
   if (statusEl) {
-    statusEl.textContent = isValidMember ? `Anggota: ${currentMemberName}` : "Tamu (Masukkan No HP)";
+    // PERUBAHAN: Tampilkan jabatan di status
+    const member = STATE.chatMembers.find(m => m.name.toLowerCase() === currentMemberName?.toLowerCase());
+    if (isValidMember && member) {
+      statusEl.textContent = `${member.name} · ${member.jabatan || 'Anggota'}`;
+    } else {
+      statusEl.textContent = "Tamu (Masukkan No HP)";
+    }
   }
 
   if (isValidMember) {
@@ -2647,7 +2692,7 @@ async function renderChatMessages() {
   }
 
   const members = STATE.chatMembers || [];
-  const isOfficialMember = (name) => members.some(m => m.name.toLowerCase() === name.toLowerCase());
+  const getMemberData = (name) => members.find(m => m.name.toLowerCase() === name.toLowerCase());
 
   const getDayLabel = (iso) => {
     const d = new Date(iso);
@@ -2676,8 +2721,12 @@ async function renderChatMessages() {
       }
       
       const isSent = c.user === currentName;
-      const official = isOfficialMember(c.user);
-      const avatar = getAvatarHtml(c.photo, c.user, 'w-8 h-8 mt-auto');
+      const memberData = getMemberData(c.user);
+      const official = !!memberData;
+      const jabatan = memberData?.jabatan || 'Anggota';
+      const photo = memberData?.photo || c.photo || '';
+      
+      const avatar = getAvatarHtml(photo, c.user, 'w-8 h-8 mt-auto');
       const timeStr = getTimeLabel(c.created_at);
       const canDelete = isSent || isAdmin; 
       const isSameSender = c.user === lastUser;
@@ -2687,7 +2736,7 @@ async function renderChatMessages() {
           ${!isSent ? avatar : ''}
           <div class="chat-message ${isSent ? 'sent' : 'received'}">
             ${canDelete ? `<div class="chat-del-btn" onclick="deleteChatMessage('${c.id}')">×</div>` : ''}
-            ${!isSent ? `<div class="sender-name flex items-center gap-1">${c.user} ${official ? '<span class="badge bg-merah text-white text-[8px] py-0 px-1 rounded-sm">Anggota</span>' : ''}</div>` : ''}
+            ${!isSent ? `<div class="sender-name">${c.user} ${official ? `<span class="badge bg-merah text-white jabatan-mini-badge">${jabatan}</span>` : ''}</div>` : ''}
             <div>${escapeHtml(c.text)}</div>
             <span class="chat-time">${timeStr}</span>
           </div>
@@ -2726,11 +2775,15 @@ function appendSingleMessage(c) {
   const currentName = localStorage.getItem('hutri81_chat_name') || '';
   const isAdmin = localStorage.getItem('hutri81_is_admin') === 'true';
   const members = STATE.chatMembers || [];
-  const isOfficialMember = (name) => members.some(m => m.name.toLowerCase() === name.toLowerCase());
+  const getMemberData = (name) => members.find(m => m.name.toLowerCase() === name.toLowerCase());
 
   const isSent = c.user === currentName;
-  const official = isOfficialMember(c.user);
-  const avatar = getAvatarHtml(c.photo, c.user, 'w-8 h-8 mt-auto');
+  const memberData = getMemberData(c.user);
+  const official = !!memberData;
+  const jabatan = memberData?.jabatan || 'Anggota';
+  const photo = memberData?.photo || c.photo || '';
+  
+  const avatar = getAvatarHtml(photo, c.user, 'w-8 h-8 mt-auto');
   const timeStr = new Date(c.created_at).toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
   const canDelete = isSent || isAdmin;
 
@@ -2744,7 +2797,7 @@ function appendSingleMessage(c) {
       ${!isSent ? avatar : ''}
       <div class="chat-message ${isSent ? 'sent' : 'received'}">
         ${canDelete ? `<div class="chat-del-btn" onclick="deleteChatMessage('${c.id}')">×</div>` : ''}
-        ${!isSent ? `<div class="sender-name flex items-center gap-1">${c.user} ${official ? '<span class="badge bg-merah text-white text-[8px] py-0 px-1 rounded-sm">Anggota</span>' : ''}</div>` : ''}
+        ${!isSent ? `<div class="sender-name">${c.user} ${official ? `<span class="badge bg-merah text-white jabatan-mini-badge">${jabatan}</span>` : ''}</div>` : ''}
         <div>${escapeHtml(c.text)}</div>
         <span class="chat-time">${timeStr}</span>
       </div>
@@ -2871,6 +2924,40 @@ function showBrowserNotification(title, body) {
   }
 }
 
+// PERUBAHAN: Notifikasi muncul di dalam layar (In-App Notification)
+function showInPageNotification(user, text, photo) {
+  const wrap = $("#chatNotifToast");
+  if(!wrap) return;
+  
+  const avatar = getAvatarHtml(photo, user, 'w-10 h-10');
+  
+  const card = document.createElement("div");
+  card.className = "chat-notif-card mb-2";
+  card.onclick = () => {
+    toggleChatWidget();
+    card.remove();
+  };
+  
+  card.innerHTML = `
+    ${avatar}
+    <div class="flex-1 min-w-0">
+      <div class="font-bold text-sm truncate">${user}</div>
+      <div class="text-xs text-ink-2 truncate">${escapeHtml(text)}</div>
+    </div>
+    <button onclick="event.stopPropagation(); this.parentElement.remove()" class="text-ink-2 hover:text-ink ml-1">
+      <i data-lucide="x" class="w-4 h-4"></i>
+    </button>
+  `;
+  
+  wrap.appendChild(card);
+  lucide.createIcons();
+  
+  // Hilangkan notifikasi setelah 5 detik
+  setTimeout(() => {
+    if(card.parentElement) card.remove();
+  }, 5000);
+}
+
 function setupSupabaseRealtime() {
   if (!supabaseClient) return;
   supabaseClient.channel('public:chat')
@@ -2880,9 +2967,18 @@ function setupSupabaseRealtime() {
         STATE.chat.push(newMsg);
         STATE.lastChatId = parseInt(newMsg.id);
         appendSingleMessage(newMsg);
+        
         const currentName = localStorage.getItem('hutri81_chat_name');
         if (newMsg.user !== currentName) {
+          const widget = $("#chatWidget");
+          // Jika widget tertutup, tambahkan hitungan belum dibaca
+          if (widget.classList.contains("hidden-x")) {
+            STATE.unreadCount++;
+            updateChatBadge();
+          }
+          // Tampilkan Notifikasi Browser dan In-App
           showBrowserNotification("💬 Pesan Baru di Grup Chat", `${newMsg.user}: ${newMsg.text}`);
+          showInPageNotification(newMsg.user, newMsg.text, newMsg.photo);
         }
       }
     })
@@ -2905,6 +3001,7 @@ function startChatPolling() {
     }, 3000);
   }
 }
+
 /* ============================================================
    ADMIN: KELOLA ANGGOTA KARANG TARUNA (Daftar Kontak)
 ============================================================ */
@@ -2915,7 +3012,7 @@ function renderAnggotaChatTable() {
   const body = $("#anggotaChatTableBody"); if(!body) return;
   
   if (STATE.chatMembers.length === 0) {
-    body.innerHTML = `<tr><td colspan="4" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Belum ada anggota Karang Taruna ditambahkan</div></td></tr>`;
+    body.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Belum ada anggota Karang Taruna ditambahkan</div></td></tr>`;
     lucide.createIcons();
     return;
   }
@@ -2927,6 +3024,9 @@ function renderAnggotaChatTable() {
           ${getAvatarHtml(m.photo, m.name)}
           <div class="font-bold text-sm">${m.name}</div>
         </div>
+      </td>
+      <td class="px-4 py-3 text-sm">
+        <span class="badge bg-merah-soft text-merah">${m.jabatan || 'Anggota'}</span>
       </td>
       <td class="px-4 py-3 text-sm font-semibold">${m.phone || m.password || '-'}</td>
       <td class="px-4 py-3 text-sm">${fmtTanggal(m.created_at)}</td>
@@ -2940,11 +3040,17 @@ function renderAnggotaChatTable() {
   `).join("");
   lucide.createIcons();
 }
+
 function openAnggotaChatModal(id) {
   tempAnggotaImg = null; 
   const m = id ? STATE.chatMembers.find(x=>x.id===id) : null;
   const currentFoto = m?.photo || '';
   const isImage = currentFoto.startsWith('http') || currentFoto.startsWith('data:image');
+  
+  // Buat opsi jabatan dari array JABATAN_KARANG_TARUNA
+  const jabatanOptions = JABATAN_KARANG_TARUNA.map(j => 
+    `<option value="${j}" ${m?.jabatan===j?'selected':''}>${j}</option>`
+  ).join("");
   
   showModal(`
     <div class="card max-w-lg w-full modal-enter">
@@ -2964,6 +3070,14 @@ function openAnggotaChatModal(id) {
           <div class="text-xs text-ink-2 mt-1 text-center">Kosongkan jika ingin menggunakan inisial nama.</div>
         </div>
         <div><label class="label">Nama Anggota</label><input type="text" id="f_anggota_nama" class="input" value="${m?.name||''}" required></div>
+        
+        <div>
+          <label class="label">Jabatan dalam Karang Taruna</label>
+          <select id="f_anggota_jabatan" class="input">
+            ${jabatanOptions}
+          </select>
+        </div>
+        
         <div><label class="label">Nomor HP (Untuk Verifikasi Chat)</label><input type="tel" id="f_anggota_pass" class="input" value="${m?.phone||m?.password||''}" placeholder="08xxxxxxxxxx" required></div>
         <div class="flex items-center justify-end gap-2 pt-4 border-t border-line">
           <button type="button" onclick="closeModal()" class="btn btn-light">Batal</button>
@@ -2982,6 +3096,7 @@ function openAnggotaChatModal(id) {
       phone: phoneVal,
       password: phoneVal, // Simpan juga di password untuk fallback
       photo: finalFoto,
+      jabatan: $("#f_anggota_jabatan").value,
       created_at: m?.created_at || new Date().toISOString()
     }; 
     
@@ -3019,6 +3134,7 @@ async function handleAnggotaImgUpload(e) {
   };
   reader.readAsDataURL(file);
 }
+
 function updateAnggotaPreview(val) {
   tempAnggotaImg = null; 
   const p = $("#anggotaImgPreview");
@@ -3055,7 +3171,6 @@ async function init(){
       for (const table of tables) {
         const data = await loadDataFromSupabase(table);
         if (data && data.length > 0) {
-          // Perbaikan penamaan variabel STATE di sini
           let key = table;
           if (table === 'kepanitiaan_lomba') key = 'kepanitiaanLomba';
           else if (table === 'peserta_lomba') key = 'lomba';
@@ -3096,7 +3211,7 @@ async function init(){
   renderChatWidget();
   renderChatPublikFooter();
   
-  checkAutoLogin(); // Pastikan baris ini ada
+  checkAutoLogin();
   
   await renderChatMessages();
   
