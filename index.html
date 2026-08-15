@@ -316,6 +316,56 @@
     transition: transform .2s;
   }
   .chat-notif-card:hover { transform: translateX(-4px); }
+
+  /* CSS Notifikasi Dashboard */
+  #notifDropdown {
+    position: fixed;
+    top: 4rem;
+    right: 1rem;
+    z-index: 90;
+    width: 22rem;
+    max-width: calc(100vw - 2rem);
+  }
+  .notif-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background-color .2s;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .notif-item:hover { background: var(--merah-soft); }
+  .notif-item.unread { background: rgba(255, 31, 61, 0.05); border-left: 3px solid var(--merah); }
+  .notif-item.unread:hover { background: rgba(255, 31, 61, 0.1); }
+  .notif-icon {
+    width: 2.25rem; height: 2.25rem; border-radius: 0.6rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .notif-content { flex: 1; min-width: 0; }
+  .notif-title { font-size: 0.8rem; font-weight: 700; color: var(--ink); }
+  .notif-desc { font-size: 0.7rem; color: var(--ink-2); margin-top: 0.15rem; line-height: 1.3; }
+  .notif-time { font-size: 0.6rem; color: var(--ink-2); margin-top: 0.25rem; }
+  .notif-badge-pulse {
+    animation: notifPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes notifPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  .live-visitor-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    margin-right: 4px;
+    animation: livePulse 1.5s ease-in-out infinite;
+  }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
 </style>
 </head>
 <body class="batik-bg">
@@ -366,6 +416,9 @@
       <div class="flex items-center gap-1.5 lg:gap-2">
         <button onclick="toggleTheme()" id="themeBtn" class="btn btn-light !p-2" title="Ganti tema">
           <i data-lucide="sun" class="w-5 h-5"></i>
+        </button>
+        <button onclick="requestNotificationPermission()" class="btn btn-light !p-2" title="Aktifkan Notifikasi">
+          <i data-lucide="bell-ring" class="w-5 h-5"></i>
         </button>
         <button onclick="openAdminLogin()" class="btn btn-light hidden sm:inline-flex"><i data-lucide="shield-check" class="w-4 h-4"></i> Admin</button>
         <a href="#agenda" class="btn btn-primary"><i data-lucide="calendar-heart" class="w-4 h-4"></i> <span class="hidden md:inline">Lihat Agenda</span><span class="md:hidden">Agenda</span></a>
@@ -429,7 +482,7 @@
       <div class="card p-4 md:p-6 lg:p-8 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="calendar-check-2" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="24">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Agenda Kegiatan</div></div></div>
         <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="users" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="1248">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Peserta Terdaftar</div></div></div>
-        <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="eye" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div id="visitorCount" class="font-display text-xl md:text-3xl counter-num">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Pengunjung Website</div></div></div>
+        <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="eye" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div id="visitorCount" class="font-display text-xl md:text-3xl counter-num flex items-center"><span class="live-visitor-dot"></span>0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Pengunjung Website</div></div></div>
         <div class="flex items-center gap-3 md:gap-4"><div class="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="trophy" class="w-6 h-6 md:w-7 md:h-7"></i></div><div><div class="font-display text-xl md:text-3xl counter-num" data-counter="56">0</div><div class="text-[10px] md:text-xs uppercase tracking-wider text-ink-2 mt-1">Penghargaan</div></div></div>
       </div>
     </div>
@@ -528,7 +581,6 @@
     </div>
   </section>
 
-  <!-- RUANG CHAT PUBLIK DI HALAMAN DEPAN -->
   <section id="chatPublik" class="py-16 md:py-24 bg-cream-2/40 px-4 lg:px-8">
     <div class="max-w-3xl mx-auto">
       <div class="text-center mb-8 md:mb-12 reveal">
@@ -680,7 +732,13 @@
         <button onclick="toggleTheme()" id="themeBtnDash" class="btn btn-light !p-2" title="Ganti tema">
           <i data-lucide="sun" class="w-5 h-5"></i>
         </button>
-        <button onclick="openNotifPanel()" class="btn btn-light !p-2 relative"><i data-lucide="bell" class="w-5 h-5"></i><span class="absolute -top-1 -right-1 w-4 h-4 bg-merah text-white text-[10px] font-bold rounded-full flex items-center justify-center" id="notifCount">3</span></button>
+        <button onclick="requestNotificationPermission()" class="btn btn-light !p-2" title="Aktifkan Notifikasi Browser">
+          <i data-lucide="bell-ring" class="w-5 h-5"></i>
+        </button>
+        <button onclick="openNotifPanel()" class="btn btn-light !p-2 relative">
+          <i data-lucide="bell" class="w-5 h-5"></i>
+          <span class="absolute -top-1 -right-1 w-4 h-4 bg-merah text-white text-[10px] font-bold rounded-full items-center justify-center hidden-x" id="notifCount" style="display:none;">0</span>
+        </button>
         <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-bg-soft border border-line rounded-xl">
           <div class="w-8 h-8 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-sm">AS</div>
           <div class="hidden md:block"><div class="text-xs font-bold leading-tight text-ink">Admin Sekretariat</div><div class="text-[10px] text-ink-2">Super Admin</div></div>
@@ -997,7 +1055,6 @@
         </div>
       </section>
 
-      <!-- PERUBAHAN 1: Tabel Anggota Karang Taruna dengan kolom Jabatan -->
       <section id="page-anggotachat" class="dash-page hidden-x">
         <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
           <div><h1 class="font-display text-2xl lg:text-4xl">KELOLA ANGGOTA KARANG TARUNA</h1><p class="text-ink-2 mt-1 text-sm">Daftarkan anggota Karang Taruna beserta jabatan. Anggota yang didaftarkan akan tampil sebagai daftar kontak di ruang chat publik.</p></div>
@@ -1221,6 +1278,7 @@ async function loadDataFromSupabase(table) {
 
 const STATE = {
   agenda: [], panitia: [], galeri: [], pengumuman: [], peserta: [], lomba: [], kepanitiaanLomba: [], undian: [], hadiah: [], chat: [], chatMembers: [], lastChatId: 0, unreadCount: 0,
+  notifications: [],
   activities: [
     { icon:"user-plus", color:"merah", title:"Pendaftaran baru", desc:"Budi Santoso mendaftar lomba balap karung · 5 menit lalu" },
     { icon:"check-circle-2", color:"emerald", title:"Agenda disetujui", desc:"Upacara bendera 17 Agustus · 1 jam lalu" },
@@ -1230,7 +1288,6 @@ const STATE = {
   ]
 };
 
-// PERUBAHAN: Daftar Jabatan untuk Anggota Karang Taruna
 const JABATAN_KARANG_TARUNA = [
   "Ketua", "Wakil Ketua", "Sekretaris", "Bendahara", 
   "Seksi Acara", "Seksi Lomba", "Seksi Konsumsi", 
@@ -1349,20 +1406,86 @@ function initCounters(){
   $$("[data-counter]").forEach(el=>io.observe(el));
 }
 
-function initVisitorCounter() {
-  let visits = localStorage.getItem('hutri81_visits') || 0;
-  visits = parseInt(visits) + 1;
-  localStorage.setItem('hutri81_visits', visits);
+async function trackVisitor() {
+  const lastVisit = localStorage.getItem('hutri81_last_visit_time');
+  const now = Date.now();
+  if (lastVisit && (now - parseInt(lastVisit)) < 30 * 60 * 1000) {
+    await fetchVisitorCount();
+    return;
+  }
+  localStorage.setItem('hutri81_last_visit_time', now.toString());
+  
+  if (supabaseClient) {
+    try {
+      const visitorData = {
+        visitor_id: getOrCreateVisitorId(),
+        visit_time: new Date().toISOString(),
+        user_agent: navigator.userAgent.substring(0, 200),
+        page: window.location.pathname
+      };
+      await supabaseClient.from('visitors').insert([visitorData]);
+    } catch(e) {
+      console.warn('Track visitor error:', e);
+    }
+  }
+  
+  await fetchVisitorCount();
+}
+
+function getOrCreateVisitorId() {
+  let id = localStorage.getItem('hutri81_visitor_id');
+  if (!id) {
+    id = 'vis_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('hutri81_visitor_id', id);
+  }
+  return id;
+}
+
+async function fetchVisitorCount() {
+  let count = 0;
+  
+  if (supabaseClient) {
+    try {
+      const { count: supaCount, error } = await supabaseClient
+        .from('visitors')
+        .select('*', { count: 'exact', head: true });
+      
+      if (!error && supaCount !== null) {
+        count = supaCount;
+      }
+    } catch(e) {
+      console.warn('Fetch visitor error:', e);
+    }
+  }
+  
+  if (count === 0) {
+    let visits = parseInt(localStorage.getItem('hutri81_visits') || '0');
+    count = visits + 1248; 
+  }
+  
   const el = $("#visitorCount");
   if (el) {
     let cur = 0;
-    const step = Math.max(1, Math.floor(visits / 40));
+    const step = Math.max(1, Math.floor(count / 50));
     const t = setInterval(() => {
       cur += step;
-      if (cur >= visits) { cur = visits; clearInterval(t); }
-      el.textContent = cur.toLocaleString("id-ID");
-    }, 30);
+      if (cur >= count) { cur = count; clearInterval(t); }
+      el.innerHTML = `<span class="live-visitor-dot"></span>${cur.toLocaleString("id-ID")}`;
+    }, 25);
   }
+}
+
+function setupVisitorRealtime() {
+  if (!supabaseClient) return;
+  supabaseClient
+    .channel('public:visitors')
+    .on('postgres_changes', 
+      { event: 'INSERT', schema: 'public', table: 'visitors' },
+      () => {
+        fetchVisitorCount();
+      }
+    )
+    .subscribe();
 }
 
 let agendaActiveId = 1;
@@ -1692,14 +1815,288 @@ function logoutAdmin(){
   localStorage.removeItem('hutri81_is_admin'); 
   toast("Anda telah keluar dari dashboard", "info"); 
 }
-function openNotifPanel(){
+
+// === SYSTEM NOTIFIKASI BROWSER (HP & PC) ===
+function playNotificationSound() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    
+    const playTone = (freq, startTime, duration) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = freq;
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0, ctx.currentTime + startTime);
+      gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + startTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+      osc.start(ctx.currentTime + startTime);
+      osc.stop(ctx.currentTime + startTime + duration);
+    };
+    playTone(880, 0, 0.15);    
+    playTone(1320, 0.12, 0.2); 
+  } catch(e) { console.warn('Sound error:', e); }
+}
+
+function vibrateDevice() {
+  if ('vibrate' in navigator) {
+    navigator.vibrate([200, 100, 200]); 
+  }
+}
+
+function showBrowserNotification(title, body, icon, tag) {
+  if (!("Notification" in window)) return;
+  if (Notification.permission !== "granted") return;
+  
+  try {
+    const options = {
+      body: body,
+      icon: icon || 'https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg',
+      badge: 'https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg',
+      tag: tag || 'hutri81-chat',
+      renotify: true,
+      requireInteraction: false,
+      silent: false,
+      vibrate: [200, 100, 200]
+    };
+    const notification = new Notification(title, options);
+    notification.onclick = () => {
+      window.focus();
+      notification.close();
+      const widget = $("#chatWidget");
+      if (widget && widget.classList.contains("hidden-x")) {
+        toggleChatWidget();
+      }
+    };
+    setTimeout(() => notification.close(), 8000);
+  } catch(e) { console.warn('Notif error:', e); }
+}
+
+function requestNotificationPermission() {
+  if (!("Notification" in window)) {
+    console.warn('Browser tidak mendukung notifikasi');
+    return;
+  }
+  if (Notification.permission === 'default') {
+    Notification.requestPermission().then(permission => {
+      if (permission === 'granted') {
+        toast('✅ Notifikasi browser diaktifkan!', 'success');
+        setTimeout(() => {
+          showBrowserNotification(
+            'Notifikasi Aktif! 🎉',
+            'Anda akan menerima pemberitahuan saat ada chat baru atau pendaftaran.',
+            null,
+            'notif-test'
+          );
+        }, 500);
+      } else {
+        toast('Notifikasi tidak diaktifkan. Anda bisa aktifkan kapan saja.', 'warn');
+      }
+    });
+  } else if (Notification.permission === 'granted') {
+    toast('Notifikasi sudah aktif', 'info');
+  } else {
+    toast('Notifikasi diblokir. Aktifkan di pengaturan browser.', 'warn');
+  }
+}
+
+function showInPageNotification(user, text, photo) {
+  const wrap = $("#chatNotifToast");
+  if(!wrap) return;
+  
+  const avatar = getAvatarHtml(photo, user, 'w-10 h-10');
+  
+  const card = document.createElement("div");
+  card.className = "chat-notif-card mb-2";
+  card.onclick = () => {
+    toggleChatWidget();
+    card.remove();
+  };
+  
+  card.innerHTML = `
+    ${avatar}
+    <div class="flex-1 min-w-0">
+      <div class="font-bold text-sm truncate">${user}</div>
+      <div class="text-xs text-ink-2 truncate">${escapeHtml(text)}</div>
+    </div>
+    <button onclick="event.stopPropagation(); this.parentElement.remove()" class="text-ink-2 hover:text-ink ml-1">
+      <i data-lucide="x" class="w-4 h-4"></i>
+    </button>
+  `;
+  
+  wrap.appendChild(card);
+  lucide.createIcons();
+  
+  setTimeout(() => {
+    if(card.parentElement) card.remove();
+  }, 6000);
+}
+
+// === SISTEM NOTIFIKASI DASHBOARD ===
+function addNotification(type, title, desc, icon, color) {
+  const notif = {
+    id: uid(),
+    type: type,
+    title: title,
+    desc: desc,
+    icon: icon || 'bell',
+    color: color || 'merah',
+    time: new Date().toISOString(),
+    read: false
+  };
+  STATE.notifications.unshift(notif);
+  if (STATE.notifications.length > 50) {
+    STATE.notifications = STATE.notifications.slice(0, 50);
+  }
+  localStorage.setItem('hutri81_notifications', JSON.stringify(STATE.notifications));
+  updateNotifBadge();
+  
+  if (localStorage.getItem('hutri81_is_admin') === 'true') {
+    toast(`🔔 ${title}`, 'info');
+    playNotificationSound();
+    vibrateDevice();
+    showBrowserNotification(title, desc, null, 'dashboard-notif');
+  }
+}
+
+function updateNotifBadge() {
+  const unread = STATE.notifications.filter(n => !n.read).length;
+  const badge = $("#notifCount");
+  if (badge) {
+    badge.textContent = unread > 99 ? '99+' : unread;
+    if (unread > 0) {
+      badge.classList.add('notif-badge-pulse');
+      badge.style.display = 'flex';
+    } else {
+      badge.classList.remove('notif-badge-pulse');
+      badge.style.display = unread > 0 ? 'flex' : 'none';
+    }
+  }
+}
+
+function loadNotifications() {
+  STATE.notifications = JSON.parse(localStorage.getItem('hutri81_notifications') || '[]');
+  updateNotifBadge();
+}
+
+function formatTimeAgo(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const sec = Math.floor(diff / 1000);
+  const min = Math.floor(sec / 60);
+  const hr = Math.floor(min / 60);
+  const day = Math.floor(hr / 24);
+  if (sec < 60) return 'Baru saja';
+  if (min < 60) return `${min} menit lalu`;
+  if (hr < 24) return `${hr} jam lalu`;
+  if (day < 7) return `${day} hari lalu`;
+  return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+}
+
+function renderNotifPanel() {
   const panel = $("#notifPanel");
-  if(!panel.classList.contains("hidden-x")){ panel.classList.add("hidden-x"); return; }
-  panel.classList.remove("hidden-x");
-  panel.innerHTML = `<div class="card w-80 p-0 overflow-hidden modal-enter"><div class="px-4 py-3 border-b border-line flex items-center justify-between bg-cream"><h4 class="font-bold">Notifikasi</h4><button onclick="markAllRead()" class="text-xs text-merah font-bold">Tandai dibaca</button></div><div class="max-h-96 overflow-y-auto"><div class="p-3 border-b border-line hover:bg-merah-soft cursor-pointer flex gap-3"><div class="w-9 h-9 rounded-lg bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="user-plus" class="w-4 h-4"></i></div><div class="text-sm"><div class="font-semibold">Pendaftaran baru</div><div class="text-xs text-ink-2">Budi Santoso mendaftar lomba balap karung</div><div class="text-[10px] text-ink-2 mt-1">5 menit lalu</div></div></div><div class="p-3 border-b border-line hover:bg-merah-soft cursor-pointer flex gap-3"><div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div><div class="text-sm"><div class="font-semibold">Agenda disetujui</div><div class="text-xs text-ink-2">Upacara bendera 17 Agustus</div><div class="text-[10px] text-ink-2 mt-1">1 jam lalu</div></div></div><div class="p-3 hover:bg-merah-soft cursor-pointer flex gap-3"><div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0"><i data-lucide="image" class="w-4 h-4"></i></div><div class="text-sm"><div class="font-semibold">Foto diunggah</div><div class="text-xs text-ink-2">12 foto baru ke galeri</div><div class="text-[10px] text-ink-2 mt-1">3 jam lalu</div></div></div></div><div class="p-2 border-t border-line text-center"><button onclick="$('#notifPanel').classList.add('hidden-x')" class="text-sm text-merah font-bold">Lihat semua</button></div></div>`;
+  if (!panel) return;
+  
+  if (STATE.notifications.length === 0) {
+    panel.innerHTML = `
+      <div class="card w-80 p-0 overflow-hidden modal-enter">
+        <div class="px-4 py-3 border-b border-line flex items-center justify-between bg-cream">
+          <h4 class="font-bold">Notifikasi</h4>
+          <button onclick="$('#notifPanel').classList.add('hidden-x')" class="text-ink-2 hover:text-ink">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <div class="p-8 text-center text-ink-2">
+          <i data-lucide="bell-off" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
+          <div class="text-sm">Belum ada notifikasi</div>
+        </div>
+      </div>
+    `;
+    lucide.createIcons();
+    return;
+  }
+  
+  const colorMap = {
+    merah: "bg-merah-soft text-merah",
+    emerald: "bg-emerald-50 text-emerald-600",
+    amber: "bg-amber-50 text-amber-600",
+    indigo: "bg-indigo-50 text-indigo-600",
+    rose: "bg-rose-50 text-rose-600",
+    gold: "bg-gold/20 text-gold-deep"
+  };
+  
+  panel.innerHTML = `
+    <div class="card w-80 p-0 overflow-hidden modal-enter">
+      <div class="px-4 py-3 border-b border-line flex items-center justify-between bg-cream">
+        <h4 class="font-bold">Notifikasi (${STATE.notifications.filter(n=>!n.read).length} baru)</h4>
+        <div class="flex gap-2">
+          <button onclick="markAllRead()" class="text-xs text-merah font-bold">Tandai dibaca</button>
+          <button onclick="$('#notifPanel').classList.add('hidden-x')" class="text-ink-2 hover:text-ink">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+      <div class="max-h-96 overflow-y-auto">
+        ${STATE.notifications.map(n => `
+          <div class="notif-item ${!n.read ? 'unread' : ''}" onclick="markNotifRead(${n.id})">
+            <div class="notif-icon ${colorMap[n.color] || colorMap.merah}">
+              <i data-lucide="${n.icon}" class="w-4 h-4"></i>
+            </div>
+            <div class="notif-content">
+              <div class="notif-title">${n.title}</div>
+              <div class="notif-desc">${n.desc}</div>
+              <div class="notif-time">${formatTimeAgo(n.time)}</div>
+            </div>
+            ${!n.read ? '<div class="w-2 h-2 bg-merah rounded-full mt-2 flex-shrink-0"></div>' : ''}
+          </div>
+        `).join('')}
+      </div>
+      <div class="p-2 border-t border-line text-center">
+        <button onclick="clearAllNotif()" class="text-xs text-rose-600 font-bold">Hapus Semua Notifikasi</button>
+      </div>
+    </div>
+  `;
   lucide.createIcons();
 }
-function markAllRead(){ $("#notifCount").textContent = "0"; toast("Semua notifikasi ditandai dibaca", "success"); $("#notifPanel").classList.add("hidden-x"); }
+
+function openNotifPanel(){
+  const panel = $("#notifPanel");
+  if(!panel.classList.contains("hidden-x")){
+    panel.classList.add("hidden-x");
+    return;
+  }
+  renderNotifPanel();
+  panel.classList.remove("hidden-x");
+}
+
+function markNotifRead(id) {
+  const n = STATE.notifications.find(x => x.id === id);
+  if (n) {
+    n.read = true;
+    localStorage.setItem('hutri81_notifications', JSON.stringify(STATE.notifications));
+    updateNotifBadge();
+    renderNotifPanel();
+  }
+}
+
+function markAllRead() {
+  STATE.notifications.forEach(n => n.read = true);
+  localStorage.setItem('hutri81_notifications', JSON.stringify(STATE.notifications));
+  updateNotifBadge();
+  renderNotifPanel();
+  toast('Semua notifikasi ditandai dibaca', 'success');
+}
+
+function clearAllNotif() {
+  if (!confirm('Hapus semua notifikasi?')) return;
+  STATE.notifications = [];
+  localStorage.setItem('hutri81_notifications', JSON.stringify(STATE.notifications));
+  updateNotifBadge();
+  renderNotifPanel();
+  toast('Semua notifikasi dihapus', 'info');
+}
 
 function goPage(page){
   $$(".dash-page").forEach(p=>p.classList.add("hidden-x"));
@@ -2501,8 +2898,28 @@ function openDaftarLombaModal() {
       golongan: $("#dl_gol").value, status: "pending"
     }; 
     STATE.lomba.unshift(data); 
-    await syncDataToSupabase('peserta_lomba', STATE.lomba);
-    closeModal(); toast("Pendaftaran lomba berhasil! Status: Pending (menunggu verifikasi).", "success"); 
+    
+    // Simpan ke Supabase
+    if (supabaseClient) {
+      try {
+        await supabaseClient.from('peserta_lomba').insert([{ 
+          id: data.id, nomor: data.nomor, nama: data.nama, 
+          jenis: data.jenis, golongan: data.golongan, status: data.status 
+        }]);
+      } catch(e) { console.error("Error insert lomba:", e); }
+    }
+    
+    closeModal(); 
+    toast("Pendaftaran lomba berhasil! Status: Pending (menunggu verifikasi).", "success"); 
+    
+    // === TAMBAHKAN: Notifikasi ke dashboard admin ===
+    addNotification(
+      'lomba',
+      'Pendaftaran Lomba Baru! 🏆',
+      `${data.nama} mendaftar lomba ${data.jenis} (Gol: ${GOL_LABEL[data.golongan]})`,
+      'trophy',
+      'gold'
+    );
   });
 }
 
@@ -2516,7 +2933,6 @@ function toggleChatWidget() {
   
   if (isHidden) {
     widget.classList.remove("hidden-x");
-    // Reset unread counter ketika widget dibuka
     STATE.unreadCount = 0;
     updateChatBadge();
     $("#floatChatBtn").classList.remove("has-notification");
@@ -2526,7 +2942,6 @@ function toggleChatWidget() {
   }
 }
 
-// PERUBAHAN: Fungsi update badge notifikasi chat
 function updateChatBadge() {
   const badge = $("#chatFloatBadge");
   if (!badge) return;
@@ -2547,7 +2962,6 @@ function renderChatWidget() {
   const statusEl = $("#chatWidgetUserStatus");
 
   if (statusEl) {
-    // PERUBAHAN: Tampilkan jabatan di status
     const member = STATE.chatMembers.find(m => m.name.toLowerCase() === currentMemberName?.toLowerCase());
     if (isValidMember && member) {
       statusEl.textContent = `${member.name} · ${member.jabatan || 'Anggota'}`;
@@ -2717,7 +3131,7 @@ async function renderChatMessages() {
       if (msgDate !== lastDate) {
         htmlContent += `<div class="chat-date-sep"><span>${msgDate}</span></div>`;
         lastDate = msgDate;
-        lastUser = ""; // Reset last user on new day
+        lastUser = ""; 
       }
       
       const isSent = c.user === currentName;
@@ -2787,7 +3201,6 @@ function appendSingleMessage(c) {
   const timeStr = new Date(c.created_at).toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
   const canDelete = isSent || isAdmin;
 
-  // Cek apakah pesan terakhir dikirim oleh user yang sama
   const allRows = document.querySelectorAll('.chat-message-row');
   const lastRow = allRows[allRows.length - 1];
   const isSameSender = lastRow && lastRow.dataset.lastUser === c.user;
@@ -2834,7 +3247,6 @@ async function deleteChatMessage(id) {
   }
 }
 
-// === Handle Submit Pesan (Widget Kanan Bawah) ===
 async function handleChatSubmit(e) {
   e.preventDefault();
   const input = $("#chatWidgetInputText");
@@ -2855,11 +3267,7 @@ async function handleChatSubmit(e) {
   
   input.value = "";
   STATE.chat.push(msg);
-  
-  // PENTING: Update lastChatId agar Realtime tidak mendeteksinya sebagai pesan baru dari orang lain
   STATE.lastChatId = parseInt(msg.id);
-  
-  // Tampilkan pesan langsung ke layar
   appendSingleMessage(msg);
   
   if (supabaseClient) {
@@ -2868,14 +3276,13 @@ async function handleChatSubmit(e) {
     } catch (e) {
       toast("Gagal mengirim pesan", "error");
       STATE.chat = STATE.chat.filter(m => m.id !== msg.id);
-      renderChatMessages(); // Jika gagal kirim, render ulang untuk menghapus pesan
+      renderChatMessages(); 
     }
   } else {
     localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
   }
 }
 
-// === Handle Submit Pesan (Halaman Publik) ===
 async function handleChatSubmitInline(e) {
   e.preventDefault();
   const input = $("#chatInputTextPublic");
@@ -2896,11 +3303,7 @@ async function handleChatSubmitInline(e) {
   
   input.value = "";
   STATE.chat.push(msg);
-  
-  // PENTING: Update lastChatId agar Realtime tidak mendeteksinya sebagai pesan baru dari orang lain
   STATE.lastChatId = parseInt(msg.id);
-  
-  // Tampilkan pesan langsung ke layar
   appendSingleMessage(msg);
   
   if (supabaseClient) {
@@ -2909,57 +3312,17 @@ async function handleChatSubmitInline(e) {
     } catch (e) {
       toast("Gagal mengirim pesan", "error");
       STATE.chat = STATE.chat.filter(m => m.id !== msg.id);
-      renderChatMessages(); // Jika gagal kirim, render ulang untuk menghapus pesan
+      renderChatMessages(); 
     }
   } else {
     localStorage.setItem('hutri81_local_chat', JSON.stringify(STATE.chat));
   }
 }
 
-function showBrowserNotification(title, body) {
-  if (!("Notification" in window)) return;
-  if (Notification.permission === "granted") {
-    const notification = new Notification(title, { body, icon: 'https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg' });
-    notification.onclick = () => { window.focus(); notification.close(); };
-  }
-}
-
-// PERUBAHAN: Notifikasi muncul di dalam layar (In-App Notification)
-function showInPageNotification(user, text, photo) {
-  const wrap = $("#chatNotifToast");
-  if(!wrap) return;
-  
-  const avatar = getAvatarHtml(photo, user, 'w-10 h-10');
-  
-  const card = document.createElement("div");
-  card.className = "chat-notif-card mb-2";
-  card.onclick = () => {
-    toggleChatWidget();
-    card.remove();
-  };
-  
-  card.innerHTML = `
-    ${avatar}
-    <div class="flex-1 min-w-0">
-      <div class="font-bold text-sm truncate">${user}</div>
-      <div class="text-xs text-ink-2 truncate">${escapeHtml(text)}</div>
-    </div>
-    <button onclick="event.stopPropagation(); this.parentElement.remove()" class="text-ink-2 hover:text-ink ml-1">
-      <i data-lucide="x" class="w-4 h-4"></i>
-    </button>
-  `;
-  
-  wrap.appendChild(card);
-  lucide.createIcons();
-  
-  // Hilangkan notifikasi setelah 5 detik
-  setTimeout(() => {
-    if(card.parentElement) card.remove();
-  }, 5000);
-}
-
 function setupSupabaseRealtime() {
   if (!supabaseClient) return;
+  
+  // 1. REALTIME UNTUK CHAT
   supabaseClient.channel('public:chat')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat' }, payload => {
       const newMsg = payload.new;
@@ -2971,14 +3334,16 @@ function setupSupabaseRealtime() {
         const currentName = localStorage.getItem('hutri81_chat_name');
         if (newMsg.user !== currentName) {
           const widget = $("#chatWidget");
-          // Jika widget tertutup, tambahkan hitungan belum dibaca
           if (widget.classList.contains("hidden-x")) {
             STATE.unreadCount++;
             updateChatBadge();
           }
-          // Tampilkan Notifikasi Browser dan In-App
-          showBrowserNotification("💬 Pesan Baru di Grup Chat", `${newMsg.user}: ${newMsg.text}`);
+          showBrowserNotification(`💬 Pesan Baru dari ${newMsg.user}`, newMsg.text, newMsg.photo, 'chat-' + newMsg.id);
           showInPageNotification(newMsg.user, newMsg.text, newMsg.photo);
+          playNotificationSound();
+          vibrateDevice();
+          
+          addNotification('chat', `Chat Baru dari ${newMsg.user}`, newMsg.text.substring(0, 80) + (newMsg.text.length > 80 ? '...' : ''), 'message-circle', 'merah');
         }
       }
     })
@@ -2988,6 +3353,70 @@ function setupSupabaseRealtime() {
       STATE.chat = STATE.chat.filter(m => String(m.id) !== String(deletedId));
     })
     .subscribe();
+  
+  // 2. REALTIME UNTUK PENDAFTARAN LOMBA
+  supabaseClient.channel('public:peserta_lomba')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'peserta_lomba' }, payload => {
+      const newPeserta = payload.new;
+      loadDataFromSupabase('peserta_lomba').then(data => {
+        if (data) {
+          STATE.lomba = data.map(item => ({ ...item }));
+          if (!$("#page-lomba").classList.contains("hidden-x")) initLombaPage();
+          $("#statPesertaLomba").textContent = STATE.lomba.length;
+        }
+      });
+      addNotification('lomba', 'Pendaftaran Lomba Baru! 🏆', `${newPeserta.nama} mendaftar lomba ${newPeserta.jenis}`, 'trophy', 'gold');
+    })
+    .subscribe();
+  
+  // 3. REALTIME UNTUK PENDAFTARAN ANGGOTA
+  supabaseClient.channel('public:chat_members')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_members' }, payload => {
+      const newMember = payload.new;
+      loadDataFromSupabase('chat_members').then(data => {
+        if (data) {
+          STATE.chatMembers = data.map(item => ({ ...item }));
+          if (!$("#page-anggotachat").classList.contains("hidden-x")) renderAnggotaChatTable();
+          renderChatPublikFooter();
+          renderChatWidget();
+        }
+      });
+      addNotification('anggota', 'Anggota Baru Terdaftar! 👥', `${newMember.name} bergabung sebagai ${newMember.jabatan || 'Anggota'}`, 'user-plus', 'indigo');
+    })
+    .subscribe();
+  
+  // 4. REALTIME UNTUK PENDAFTARAN UNDIAN
+  supabaseClient.channel('public:undian')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'undian' }, payload => {
+      const newUndian = payload.new;
+      loadDataFromSupabase('undian').then(data => {
+        if (data) {
+          STATE.undian = data.map(item => ({ ...item }));
+          $("#statUndian").textContent = STATE.undian.length;
+          if (!$("#page-undian").classList.contains("hidden-x")) initUndianPage();
+        }
+      });
+      addNotification('undian', 'Peserta Undian Baru! 🎟️', `${newUndian.nama} (${newUndian.nomor}) terdaftar`, 'ticket', 'amber');
+    })
+    .subscribe();
+  
+  // 5. REALTIME UNTUK PENGUMUMAN BARU
+  supabaseClient.channel('public:pengumuman')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'pengumuman' }, payload => {
+      const newPeng = payload.new;
+      loadDataFromSupabase('pengumuman').then(data => {
+        if (data) {
+          STATE.pengumuman = data;
+          renderLandingPengumuman();
+          if (!$("#page-pengumuman").classList.contains("hidden-x")) renderPengumumanTable();
+        }
+      });
+      addNotification('pengumuman', 'Pengumuman Baru! 📢', newPeng.judul, 'megaphone', 'rose');
+    })
+    .subscribe();
+  
+  // 6. REALTIME UNTUK VISITOR (COUNTER PENGUNJUNG)
+  setupVisitorRealtime();
 }
 
 let chatInterval;
@@ -3047,7 +3476,6 @@ function openAnggotaChatModal(id) {
   const currentFoto = m?.photo || '';
   const isImage = currentFoto.startsWith('http') || currentFoto.startsWith('data:image');
   
-  // Buat opsi jabatan dari array JABATAN_KARANG_TARUNA
   const jabatanOptions = JABATAN_KARANG_TARUNA.map(j => 
     `<option value="${j}" ${m?.jabatan===j?'selected':''}>${j}</option>`
   ).join("");
@@ -3094,7 +3522,7 @@ function openAnggotaChatModal(id) {
     const data = { 
       name: $("#f_anggota_nama").value, 
       phone: phoneVal,
-      password: phoneVal, // Simpan juga di password untuk fallback
+      password: phoneVal, 
       photo: finalFoto,
       jabatan: $("#f_anggota_jabatan").value,
       created_at: m?.created_at || new Date().toISOString()
@@ -3199,7 +3627,6 @@ async function init(){
   setInterval(updateCountdown, 1000);
   initReveal();
   initCounters();
-  initVisitorCounter();
   
   renderAgendaTimeline();
   renderAgendaDetail();
@@ -3212,6 +3639,21 @@ async function init(){
   renderChatPublikFooter();
   
   checkAutoLogin();
+  
+  // Load notifikasi tersimpan
+  loadNotifications();
+  
+  // Track visitor (counter pengunjung real-time)
+  await trackVisitor();
+  
+  // Minta permission notifikasi otomatis (hanya sekali)
+  if ("Notification" in window && Notification.permission === 'default') {
+    setTimeout(() => {
+      if (confirm('Aktifkan notifikasi untuk mendapat pemberitahuan saat ada chat atau pengumuman baru?')) {
+        requestNotificationPermission();
+      }
+    }, 5000);
+  }
   
   await renderChatMessages();
   
