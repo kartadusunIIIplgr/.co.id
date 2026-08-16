@@ -1207,26 +1207,26 @@ async function syncDataToSupabase(table, data) {
       return true;
     }
     
-    // Copy data dan hapus properti yang tidak ada di Supabase
+    // Pembersihan data sebelum dikirim ke Supabase
     const cleanData = data.map(item => {
       const cleanItem = { ...item };
       Object.keys(cleanItem).forEach(key => {
-        // Hapus undefined
+        // Hapus nilai undefined
         if (cleanItem[key] === undefined) delete cleanItem[key];
         
-        // Hapus properti tambahan dari frontend agar match dengan kolom DB
+        // Pastikan tipe data ID adalah number (integer)
+        if (key === 'id' && table !== 'chat') {
+          cleanItem[key] = parseInt(cleanItem[key]);
+        }
+        
+        // Hapus properti virtual yang hanya ada di frontend
         if (key === 'panitiaId' && table !== 'kepanitiaan_lomba') delete cleanItem[key];
         if (key === 'hadiahId' && table !== 'undian') delete cleanItem[key];
-        
-        // Jika tabel galeri, pastikan hanya properti valid yang dikirim
-        if (table === 'galeri') {
-           const allowedKeys = ['id', 'judul', 'kategori', 'img', 'type', 'created_at'];
-           if (!allowedKeys.includes(key)) delete cleanItem[key];
-        }
       });
       return cleanItem;
     });
 
+    // Eksekusi Upsert ke Supabase
     const { error: upsertError } = await supabaseClient.from(table).upsert(cleanData);
     if (upsertError) throw upsertError;
     
@@ -1234,16 +1234,15 @@ async function syncDataToSupabase(table, data) {
   } catch (e) {
     console.error(`Sync ${table} error:`, e);
     
-    // Notifikasi detail penyebab error
+    // Tampilkan error detail di Toast agar tahu penyebabnya
     let errMsg = e.message || "Unknown error";
     if (e.details) errMsg += ` | Details: ${e.details}`;
     if (e.hint) errMsg += ` | Hint: ${e.hint}`;
     
-    toast(`Gagal sinkronisasi tabel ${table}: ${errMsg}`, "error");
+    toast(`Gagal sinkron ${table}: ${errMsg}`, "error");
     return false;
   }
 }
-
 async function loadDataFromSupabase(table) {
   if (!supabaseClient) return null;
   try {
