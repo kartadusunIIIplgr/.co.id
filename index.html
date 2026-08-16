@@ -1329,6 +1329,16 @@ function fmtTanggal(iso){
   const bln = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"][d.getMonth()];
   return `${hari}, ${d.getDate()} ${bln} ${d.getFullYear()}`;
 }
+function processFotoInput(input) {
+  const val = (input || '').trim();
+  if (!val) return '';
+  // Jangan ubah URL atau base64 image - biarkan apa adanya
+  if (val.toLowerCase().startsWith('http') || val.startsWith('data:image')) {
+    return val;
+  }
+  // Jika bukan URL, asumsikan sebagai inisial - ubah ke uppercase
+  return val.toUpperCase();
+}
 function toast(msg, type="success"){
   const colors = { success:"bg-emerald-600", error:"bg-rose-600", info:"bg-indigo-600", warn:"bg-amber-600" };
   const icons = { success:"check-circle-2", error:"x-circle", info:"info", warn:"alert-triangle" };
@@ -1711,7 +1721,7 @@ function openPanitiaModal(id){
     const submitBtn = e.target.querySelector('button[type="submit"]');
     setBtnLoading(submitBtn, true);
     
-    const finalFoto = tempPanitiaImg || $("#f_foto_text").value.toUpperCase() || 'XX';
+    const finalFoto = tempPanitiaImg || processFotoInput($("#f_foto_text").value) || 'XX';
     const data = { nama:$("#f_nama").value, foto: finalFoto, jabatan:$("#f_jabatan").value }; 
     if(p){ Object.assign(p, data); toast("Data panitia diperbarui", "success"); } 
     else { STATE.panitia.unshift({ id: uid(), ...data }); toast("Panitia baru ditambahkan", "success"); } 
@@ -3683,7 +3693,7 @@ function openAnggotaChatModal(id) {
     const submitBtn = e.target.querySelector('button[type="submit"]');
     setBtnLoading(submitBtn, true);
     
-    const finalFoto = tempAnggotaImg || $("#f_foto_text").value.toUpperCase() || '';
+    const finalFoto = tempAnggotaImg || processFotoInput($("#f_foto_text").value) || '';
     const phoneVal = $("#f_anggota_pass").value;
     const data = { 
       name: $("#f_anggota_nama").value, 
