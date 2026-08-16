@@ -1777,13 +1777,24 @@ function renderLandingPengumuman(){
 
 function openPengumumanDetail(id){
   const p = STATE.pengumuman.find(x=>x.id===id); if(!p) return;
+  
+  // Cek apakah ada gambar, jika ada buat bisa diklik dan ada tombol downloadnya
+  const imgHtml = p.img 
+    ? `<img src="${p.img}" class="w-full h-full object-cover cursor-pointer" onclick="openImageViewer('${p.img}', '${p.judul.replace(/'/g, "")}')" alt="${p.judul}">` 
+    : `<div class="hero-mesh w-full h-full"></div>`;
+
+  // Tombol download hanya muncul jika ada gambar
+  const downloadBtn = p.img 
+    ? `<button onclick="downloadImage('${p.img}', 'Pengumuman-${p.judul.replace(/'/g, "")}')" class="btn btn-primary"><i data-lucide="download" class="w-4 h-4"></i> Download Gambar</button>` 
+    : '';
+
   showModal(`
     <div class="card max-w-2xl w-full p-0 overflow-hidden modal-enter">
       <div class="relative h-48 overflow-hidden">
-        ${p.img ? `<img src="${p.img}" class="w-full h-full object-cover">` : `<div class="hero-mesh w-full h-full"></div>`}
-        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
+        ${imgHtml}
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent pointer-events-none"></div>
         <button onclick="closeModal()" class="absolute top-4 right-4 w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white backdrop-blur"><i data-lucide="x" class="w-5 h-5"></i></button>
-        <div class="absolute bottom-4 left-6 right-6 text-white">
+        <div class="absolute bottom-4 left-6 right-6 text-white pointer-events-none">
           <div class="flex items-center gap-2 mb-3">
             <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gold text-ink">${p.kategori}</span>
             <span class="text-xs text-white/70">${fmtTanggal(p.tanggal)}</span>
@@ -1793,7 +1804,7 @@ function openPengumumanDetail(id){
       </div>
       <div class="p-6">
         <p class="text-ink-2 leading-relaxed whitespace-pre-line">${p.isi}</p>
-        <div class="mt-6 pt-6 border-t border-line flex items-center justify-between">
+        <div class="mt-6 pt-6 border-t border-line flex items-center justify-between flex-wrap gap-3">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-sm">PA</div>
             <div>
@@ -1801,8 +1812,35 @@ function openPengumumanDetail(id){
               <div class="text-xs text-ink-2">Sekretariat Resmi</div>
             </div>
           </div>
-          <button onclick="closeModal()" class="btn btn-light">Tutup</button>
+          <div class="flex gap-2">
+            ${downloadBtn}
+            <button onclick="closeModal()" class="btn btn-light">Tutup</button>
+          </div>
         </div>
+      </div>
+    </div>
+  `);
+  lucide.createIcons();
+}
+
+// Fungsi baru untuk menampilkan gambar dalam ukuran penuh (popup)
+function openImageViewer(imgUrl, title) {
+  showModal(`
+    <div class="card max-w-4xl w-full modal-enter overflow-hidden">
+      <div class="relative">
+        <button onclick="closeModal()" class="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-md transition">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+        <img src="${imgUrl}" alt="${title}" class="w-full max-h-[80vh] object-contain bg-black/10">
+      </div>
+      <div class="p-5 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-merah font-bold">Gambar Pengumuman</div>
+          <h3 class="font-display text-2xl leading-tight mt-1">${title}</h3>
+        </div>
+        <button onclick="downloadImage('${imgUrl}', '${title.replace(/'/g, "")}')" class="btn btn-primary">
+          <i data-lucide="download" class="w-5 h-5"></i> Download
+        </button>
       </div>
     </div>
   `);
