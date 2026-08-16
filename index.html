@@ -1148,6 +1148,43 @@
 
 <script>
 /* ============================================================
+   SERVICE WORKER REGISTRATION (Blob Pattern for single file)
+============================================================ */
+async function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  const swCode = `
+    self.addEventListener('install', (event) => { self.skipWaiting(); });
+    self.addEventListener('activate', (event) => { event.waitUntil(self.clients.claim()); });
+    self.addEventListener('push', (event) => {
+      let data = { title: 'Notifikasi Baru', body: 'Ada pemberitahuan masuk' };
+      if (event.data) {
+        try { data = event.data.json(); } catch (e) { data.body = event.data.text(); }
+      }
+      const options = {
+        body: data.body,
+        icon: data.icon || 'https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg',
+        badge: 'https://z-cdn-media.chatglm.cn/files/9f36662d-4cff-4f1c-b08d-839e701ceab9.jpg',
+        vibrate: [200, 100, 200],
+        tag: data.tag || 'hutri81-notif'
+      };
+      event.waitUntil(self.registration.showNotification(data.title, options));
+    });
+    self.addEventListener('notificationclick', (event) => {
+      event.notification.close();
+      event.waitUntil(clients.openWindow('/'));
+    });
+  `;
+  try {
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+    await navigator.serviceWorker.register(swUrl);
+    console.log('Service Worker terdaftar untuk notifikasi background');
+  } catch(e) {
+    console.warn('Gagal daftar Service Worker:', e);
+  }
+}
+
+/* ============================================================
    SUPABASE CONFIGURATION
 ============================================================ */
 const SUPABASE_URL = 'https://bdhgahinhdjmkmuhcfyt.supabase.co';
@@ -1688,7 +1725,7 @@ function openPanitiaModal(id){
 async function handlePanitiaImgUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) { toast("Ukuran file terlalu besar (Maks 5MB)", "warn"); return; }
+  if (file.size > 5 * 1024 * 1024) { toast("Ukuran file terlalu besar (Maks 5MB)", "warn"); return; }
   toast("Memproses gambar...", "info");
   const reader = new FileReader();
   reader.onload = function(event) {
@@ -1834,7 +1871,35 @@ function vibrateDevice() {
   }
 }
 
-function showBrowserNotification(title, body, icon, tag) {
+async function requestNotificationPermission() {
+  if (!("Notification" in window)) {
+    toast('Browser tidak mendukung notifikasi', 'warn');
+    return;
+  }
+  
+  if (Notification.permission === 'default') {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      toast('✅ Notifikasi browser diaktifkan!', 'success');
+      setTimeout(() => {
+        showBrowserNotification(
+          'Notifikasi Aktif! 🎉',
+          'Anda akan menerima pemberitahuan meskipun website berada di latar belakang.',
+          null,
+          'notif-test'
+        );
+      }, 500);
+    } else {
+      toast('Notifikasi tidak diaktifkan. Anda bisa aktifkan kapan saja.', 'warn');
+    }
+  } else if (Notification.permission === 'granted') {
+    toast('Notifikasi sudah aktif', 'info');
+  } else {
+    toast('Notifikasi diblokir. Aktifkan di pengaturan browser.', 'warn');
+  }
+}
+
+async function showBrowserNotification(title, body, icon, tag) {
   if (!("Notification" in window)) return;
   if (Notification.permission !== "granted") return;
   
@@ -1849,6 +1914,15 @@ function showBrowserNotification(title, body, icon, tag) {
       silent: false,
       vibrate: [200, 100, 200]
     };
+    
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      if (regs.length > 0) {
+        await regs[0].showNotification(title, options);
+        return;
+      }
+    }
+    
     const notification = new Notification(title, options);
     notification.onclick = () => {
       window.focus();
@@ -1859,34 +1933,8 @@ function showBrowserNotification(title, body, icon, tag) {
       }
     };
     setTimeout(() => notification.close(), 8000);
-  } catch(e) { console.warn('Notif error:', e); }
-}
-
-function requestNotificationPermission() {
-  if (!("Notification" in window)) {
-    console.warn('Browser tidak mendukung notifikasi');
-    return;
-  }
-  if (Notification.permission === 'default') {
-    Notification.requestPermission().then(permission => {
-      if (permission === 'granted') {
-        toast('✅ Notifikasi browser diaktifkan!', 'success');
-        setTimeout(() => {
-          showBrowserNotification(
-            'Notifikasi Aktif! 🎉',
-            'Anda akan menerima pemberitahuan saat ada chat baru atau pendaftaran.',
-            null,
-            'notif-test'
-          );
-        }, 500);
-      } else {
-        toast('Notifikasi tidak diaktifkan. Anda bisa aktifkan kapan saja.', 'warn');
-      }
-    });
-  } else if (Notification.permission === 'granted') {
-    toast('Notifikasi sudah aktif', 'info');
-  } else {
-    toast('Notifikasi diblokir. Aktifkan di pengaturan browser.', 'warn');
+  } catch(e) { 
+    console.warn('Notif error:', e); 
   }
 }
 
@@ -2389,7 +2437,7 @@ async function deleteGaleri(id){
 async function handleImgUploadGeneric(e, inputId, previewId) {
   const file = e.target.files[0];
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) { toast("Ukuran file terlalu besar (Maks 5MB)", "warn"); return; }
+  if (file.size > 5 * 1024 * 1024) { toast("Ukuran file terlalu besar (Maks 5MB)", "warn"); return; }
   toast("Memproses dan mengompres gambar...", "info");
   const reader = new FileReader();
   reader.onload = function(event) {
@@ -2596,7 +2644,7 @@ function renderKepanitiaanTable(){
   const q = ($("#kepanitiaanSearch")?.value || "").toLowerCase();
   const fl = $("#kepanitiaanFilterLomba")?.value || "all";
   const fj = $("#kepanitiaanFilterJabatan")?.value || "all";
-  const items = STATE.kepanitiaanLomba.filter(k => { const panitia = STATE.panitia.find(p=>p.id===k.panitiaId); const panitiaName = panitia ? panitia.nama.toLowerCase() : ""; return (panitiaName.includes(q) || k.lomba.toLowerCase().includes(q) || k.jabatan.toLowerCase().includes(q)) && (fl==="all" || k.lomba===fl) && (fj==="all" || k.jabatan===fj); });
+  const items = STATE.kepanitiaanLomba.filter(k => { constpanitia = STATE.panitia.find(p=>p.id===k.panitiaId); const panitiaName = panitia ? panitia.nama.toLowerCase() : ""; return (panitiaName.includes(q) || k.lomba.toLowerCase().includes(q) || k.jabatan.toLowerCase().includes(q)) && (fl==="all" || k.lomba===fl) && (fj==="all" || k.jabatan===fj); });
   const body = $("#kepanitiaanTableBody");
   if(items.length === 0){ body.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada penugasan ditemukan</div></td></tr>`; lucide.createIcons(); return; }
   body.innerHTML = items.map(k=>{ const p = STATE.panitia.find(x=>x.id===k.panitiaId); const initials = p ? p.nama.split(" ").map(s=>s[0]).slice(0,2).join("") : "?"; const jabatanColor = k.jabatan.includes("Juri") ? "bg-indigo-50 text-indigo-700" : k.jabatan.includes("Penanggung Jawab") ? "bg-merah-soft text-merah" : "bg-amber-50 text-amber-700"; return `<tr class="row-hover transition"><td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-xs">${initials}</div><div><div class="font-bold text-sm">${p?.nama||"Panitia Dihapus"}</div><div class="text-xs text-ink-2">${p?.divisi||""}</div></div></div></td><td class="px-4 py-3 text-sm font-semibold">${k.lomba}</td><td class="px-4 py-3"><span class="badge ${jabatanColor}">${k.jabatan}</span></td><td class="px-4 py-3 text-sm text-ink-2">${k.tugas}</td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openKepanitiaanModal(${k.id})" class="btn btn-primary !py-1.5 !px-3 text-xs"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</button><button onclick="deleteKepanitiaan(${k.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`; }).join("");
@@ -3632,7 +3680,7 @@ function openAnggotaChatModal(id) {
 async function handleAnggotaImgUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) { toast("Ukuran file terlalu besar (Maks 5MB)", "warn"); return; }
+  if (file.size > 5 * 1024 * 1024) { toast("Ukuran file terlalu besar (Maks 5MB)", "warn"); return; }
   toast("Memproses gambar...", "info");
   const reader = new FileReader();
   reader.onload = function(event) {
@@ -3783,6 +3831,10 @@ function setupOnlinePresence() {
 // === FUNGSI INIT UTAMA ===
 async function init(){
   lucide.createIcons();
+  
+  // Daftarkan Service Worker
+  await registerServiceWorker();
+  
   const isSupabaseConnected = initSupabase();
   
   if (isSupabaseConnected) {
