@@ -2303,71 +2303,14 @@ async function handleMediaUpload(e, inputId, previewId) {
   const progressContainer = $("#uploadProgressContainer");
   const progressBar = $("#uploadProgressBar");
   const progressText = $("#uploadProgressText");
-  progressContainer.classList.remove("hidden-x");
-  progressBar.style.width = "0%";
-  progressText.textContent = "Mengunggah 0%";
+  if(progressContainer) {
+    progressContainer.classList.remove("hidden-x");
+    progressBar.style.width = "0%";
+    progressText.textContent = "Memproses 0%";
+  }
 
   if (isVideo) {
     if (file.size > 15 * 1024 * 1024) { toast("Ukuran video terlalu besar (Maks 15MB)", "warn"); progressContainer.classList.add("hidden-x"); return; }
-  } else if (isImage) {
-    if (file.size > 5 * 1024 * 1024) { toast("Ukuran gambar terlalu besar (Maks 5MB)", "warn"); progressContainer.classList.add("hidden-x"); return; }
-  } else {
-    toast("Format file tidak didukung", "error");
-    progressContainer.classList.add("hidden-x");
-    return;
-  }
-
-  // Jika Supabase terhubung, unggah ke Storage
-  if (supabaseClient) {
-    try {
-      const ext = file.name.split('.').pop();
-      const fileName = `media_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
-      const filePath = `public/${fileName}`;
-
-      const { error: uploadError } = await supabaseClient
-        .storage
-        .from('galeri')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false,
-          onUploadProgress: (ev) => {
-            let percent = Math.round((ev.loaded / ev.total) * 100);
-            progressBar.style.width = percent + "%";
-            progressText.textContent = `Mengunggah ${percent}%`;
-          }
-        });
-
-      if (uploadError) throw uploadError;
-
-      // Dapatkan URL publik dari file yang diunggah
-      const { data: urlData } = supabaseClient.storage.from('galeri').getPublicUrl(filePath);
-      const publicUrl = urlData.publicUrl;
-
-      const input = document.getElementById(inputId);
-      const preview = document.getElementById(previewId);
-      
-      if(input) {
-        input.value = publicUrl;
-        input.dataset.type = isVideo ? 'video' : 'image';
-      }
-      
-      if (isVideo) {
-        if(preview) preview.innerHTML = `<video src="${publicUrl}" class="w-full h-full object-cover rounded-xl" muted></video>`;
-      } else {
-        if(preview) preview.innerHTML = `<img src="${publicUrl}" class="w-full h-full object-cover rounded-xl">`;
-      }
-
-      progressText.textContent = "Unggah Selesai";
-      setTimeout(() => progressContainer.classList.add("hidden-x"), 500);
-      toast("Media berhasil diunggah ke Storage.", "success");
-
-    } catch (err) {
-      console.error("Error upload storage:", err);
-      toast("Gagal mengunggah ke Storage: " + err.message, "error");
-      progressContainer.classList.add("hidden-x");
-    }
-  } else {
-    // Fallback jika tidak pakai Supabase (menggunakan Base64 seperti kode asli)
     const reader = new FileReader();
     reader.onprogress = function(event) {
       if (event.lengthComputable) {
@@ -2378,26 +2321,63 @@ async function handleMediaUpload(e, inputId, previewId) {
     };
     reader.onload = function(event) {
       progressBar.style.width = "100%";
-      progressText.textContent = "Memproses 100%";
+      progressText.textContent = "Mengunggah 100%";
       setTimeout(() => progressContainer.classList.add("hidden-x"), 500);
-      
-      const mediaUrl = event.target.result;
+      const videoUrl = event.target.result;
       const input = document.getElementById(inputId);
       const preview = document.getElementById(previewId);
-      
       if(input) {
-        input.value = mediaUrl;
-        input.dataset.type = isVideo ? 'video' : 'image';
+        input.value = videoUrl;
+        input.dataset.type = 'video';
       }
-      
-      if (isVideo) {
-        if(preview) preview.innerHTML = `<video src="${mediaUrl}" class="w-full h-full object-cover rounded-xl" muted></video>`;
-      } else {
-        if(preview) preview.innerHTML = `<img src="${mediaUrl}" class="w-full h-full object-cover rounded-xl">`;
-      }
-      toast("Media siap disimpan (Mode Offline).", "success");
+      if(preview) preview.innerHTML = `<video src="${videoUrl}" class="w-full h-full object-cover rounded-xl" muted></video>`;
+      toast("Video siap disimpan. Klik 'Unggah'.", "success");
     };
     reader.readAsDataURL(file);
+  } else if (isImage) {
+    if (file.size > 5 * 1024 * 1024) { toast("Ukuran gambar terlalu besar (Maks 5MB)", "warn"); progressContainer.classList.add("hidden-x"); return; }
+    
+    const reader = new FileReader();
+    reader.onprogress = function(event) {
+      if (event.lengthComputable) {
+        let percent = Math.round((event.loaded / event.total) * 100);
+        progressBar.style.width = percent + "%";
+        progressText.textContent = `Mengunggah ${percent}%`;
+      }
+    };
+    reader.onload = function(event) {
+      progressBar.style.width = "100%";
+      progressText.textContent = "Mengompres 100%";
+      
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let width = img.width; let height = img.height;
+        const MAX_WIDTH = 1024; const MAX_HEIGHT = 1024; // Diperbesar agar gambar tidak pecah
+        if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
+        else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+        
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        if(input) {
+          input.value = compressedBase64;
+          input.dataset.type = 'image';
+        }
+        if(preview) preview.innerHTML = `<img src="${compressedBase64}" class="w-full h-full object-cover rounded-xl">`;
+        
+        setTimeout(() => progressContainer.classList.add("hidden-x"), 500);
+        toast("Gambar siap disimpan. Klik 'Unggah'.", "success");
+      };
+    };
+    reader.readAsDataURL(file);
+  } else {
+    toast("Format file tidak didukung", "error");
+    if(progressContainer) progressContainer.classList.add("hidden-x");
   }
 }
 async function deleteGaleri(id){ 
