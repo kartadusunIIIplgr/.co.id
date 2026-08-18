@@ -11,13 +11,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-  tailwind.config = {
-    darkMode: 'class',
-  }
+  tailwind.config = { darkMode: 'class' }
 </script>
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
   :root{
@@ -1150,7 +1148,8 @@
 /* ============================================================
    SERVICE WORKER REGISTRATION (Blob Pattern for single file)
 ============================================================ */
-async function registerServiceWorker() {
+// Init Service Worker dilakukan di akhir script setelah seluruh element siap.
+function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   const swCode = `
     self.addEventListener('install', (event) => { self.skipWaiting(); });
@@ -1177,10 +1176,11 @@ async function registerServiceWorker() {
   try {
     const blob = new Blob([swCode], { type: 'application/javascript' });
     const swUrl = URL.createObjectURL(blob);
-    await navigator.serviceWorker.register(swUrl);
-    console.log('Service Worker terdaftar untuk notifikasi background');
+    navigator.serviceWorker.register(swUrl).then(() => {
+      console.log('Service Worker registered for background notifications');
+    }).catch(e => console.warn('SW registration failed:', e));
   } catch(e) {
-    console.warn('Gagal daftar Service Worker:', e);
+    console.warn('Failed to create SW blob:', e);
   }
 }
 
@@ -1191,13 +1191,12 @@ const SUPABASE_URL = 'https://bdhgahinhdjmkmuhcfyt.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkaGdhaGluaGRqbWttdWhjZnl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NTc5ODksImV4cCI6MjEwMTQzMzk4OX0.BBekcTCGfPGuvmVc3p6F0kBlm1jzhnXD2mW8kDW467o';
 
 let supabaseClient = null;
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 function initSupabase() {
   const url = localStorage.getItem('supabase_url') || SUPABASE_URL;
   const key = localStorage.getItem('supabase_key') || SUPABASE_ANON_KEY;
   if (url && key && url !== 'https://your-project-id.supabase.co') {
     try {
-      supabaseClient = supabase.createClient(url, key);
+      supabaseClient = window.supabase.createClient(url, key);
       if($("#supabaseUrl")) $("#supabaseUrl").value = url;
       if($("#supabaseKey")) $("#supabaseKey").value = key;
       if($("#supabaseStatus")) $("#supabaseStatus").innerHTML = '<span class="text-emerald-600 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> Supabase Terhubung</span>';
@@ -1244,38 +1243,28 @@ async function syncDataToSupabase(table, data) {
       return true;
     }
     
-    // Pembersihan data sebelum dikirim ke Supabase
     const cleanData = data.map(item => {
       const cleanItem = { ...item };
       Object.keys(cleanItem).forEach(key => {
-        // Hapus nilai undefined
         if (cleanItem[key] === undefined) delete cleanItem[key];
-        
-        // Pastikan tipe data ID adalah number (integer)
         if (key === 'id' && table !== 'chat') {
           cleanItem[key] = parseInt(cleanItem[key]);
         }
-        
-        // Hapus properti virtual yang hanya ada di frontend
         if (key === 'panitiaId' && table !== 'kepanitiaan_lomba') delete cleanItem[key];
         if (key === 'hadiahId' && table !== 'undian') delete cleanItem[key];
       });
       return cleanItem;
     });
 
-    // Eksekusi Upsert ke Supabase
     const { error: upsertError } = await supabaseClient.from(table).upsert(cleanData);
     if (upsertError) throw upsertError;
     
     return true;
   } catch (e) {
     console.error(`Sync ${table} error:`, e);
-    
-    // Tampilkan error detail di Toast agar tahu penyebabnya
     let errMsg = e.message || "Unknown error";
     if (e.details) errMsg += ` | Details: ${e.details}`;
     if (e.hint) errMsg += ` | Hint: ${e.hint}`;
-    
     toast(`Gagal sinkron ${table}: ${errMsg}`, "error");
     return false;
   }
@@ -1332,11 +1321,9 @@ function fmtTanggal(iso){
 function processFotoInput(input) {
   const val = (input || '').trim();
   if (!val) return '';
-  // Jangan ubah URL atau base64 image - biarkan apa adanya
   if (val.toLowerCase().startsWith('http') || val.startsWith('data:image')) {
     return val;
   }
-  // Jika bukan URL, asumsikan sebagai inisial - ubah ke uppercase
   return val.toUpperCase();
 }
 function toast(msg, type="success"){
@@ -1346,7 +1333,7 @@ function toast(msg, type="success"){
   t.className = `toast ${colors[type]} text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 min-w-[260px] max-w-sm`;
   t.innerHTML = `<i data-lucide="${icons[type]}" class="w-5 h-5 flex-shrink-0"></i><div class="text-sm font-semibold">${msg}</div>`;
   $("#toastContainer").appendChild(t);
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
   setTimeout(()=>{ t.style.transition="all .35s"; t.style.opacity="0"; t.style.transform="translateX(20px)"; setTimeout(()=>t.remove(), 350); }, 3000);
 }
 
@@ -1360,7 +1347,7 @@ function setBtnLoading(btn, isLoading, defaultText) {
     btn.disabled = false;
     btn.innerHTML = btn.dataset.originalText || defaultText;
   }
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function getAvatarHtml(photo, name, sizeClass = 'w-9 h-9') {
@@ -1383,7 +1370,7 @@ function toggleTheme() {
   if (chartKategori) updateChartColors(chartKategori);
   if (chartPendaftaran) updateChartColors(chartPendaftaran);
   if (chartPartisipasi) updateChartColors(chartPartisipasi);
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
   if (!$("#page-undian").classList.contains("hidden-x")) buildWheel("#raffleWheel");
   if (!$("#screenUndian").classList.contains("hidden-x")) buildWheel("#raffleWheelScreen");
 }
@@ -1521,7 +1508,7 @@ function renderAgendaDetail(){
   const wrap = $("#agendaDetail"); 
   const img = a.img || `https://picsum.photos/seed/agenda${a.id}/800/500.jpg`;
   wrap.innerHTML = `<div class="relative h-56 overflow-hidden"><img src="${img}" alt="${a.judul}" class="w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent"></div><div class="absolute bottom-4 left-5 right-5 text-white"><div class="flex items-center gap-2 mb-2"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${KATEGORI_COLOR[a.kategori]} bg-white/95">${KATEGORI_LABEL[a.kategori]}</span><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${STATUS_COLOR[a.status]} bg-white/95">${a.status}</span></div><h3 class="font-display text-2xl lg:text-3xl">${a.judul}</h3></div></div><div class="p-6"><div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="calendar" class="w-5 h-5"></i></div><div><div class="text-[10px] uppercase tracking-wider text-ink-2">Tanggal</div><div class="font-bold text-sm">${fmtTanggal(a.tanggal)}</div></div></div><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="clock" class="w-5 h-5"></i></div><div><div class="text-[10px] uppercase tracking-wider text-ink-2">Waktu</div><div class="font-bold text-sm">${a.waktu} WIB</div></div></div><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah-soft text-merah flex items-center justify-center"><i data-lucide="map-pin" class="w-5 h-5"></i></div><div><div class="text-[10px] uppercase tracking-wider text-ink-2">Lokasi</div><div class="font-bold text-sm">${a.lokasi}</div></div></div></div><p class="text-ink-2 leading-relaxed mb-5">${a.deskripsi}</p><div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-line"><div class="flex items-center gap-3"><div class="flex -space-x-2">${[1,2,3].map(i=>`<div class="w-8 h-8 rounded-full bg-cream-2 border-2 border-white flex items-center justify-center text-xs font-bold text-ink-2">${String.fromCharCode(64+i)}</div>`).join("")}</div><div class="text-sm"><span class="font-bold">${a.peserta.toLocaleString("id-ID")}</span> <span class="text-ink-2">peserta terdaftar</span></div></div><button onclick="openDaftarLombaModal()" class="btn btn-primary"><i data-lucide="user-plus" class="w-4 h-4"></i> Daftar Sekarang</button></div></div>`;
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 function initAgendaFilter(){
   $$("#agendaFilter button").forEach(btn=>{
@@ -1546,7 +1533,7 @@ function renderLandingGaleri(){
   if(!grid) return;
   if(STATE.galeri.length === 0){
     grid.innerHTML = `<div class="col-span-full text-center py-10 text-ink-2"><i data-lucide="image-off" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Belum ada dokumentasi</div></div>`;
-    lucide.createIcons();
+    if (window.lucide) lucide.createIcons();
     return;
   }
   grid.innerHTML = STATE.galeri.map(g=>{
@@ -1676,7 +1663,7 @@ function renderPanitiaCards(){
       </div>
     </div>
   `).join("");
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 let tempPanitiaImg = null; 
@@ -1782,18 +1769,16 @@ function renderLandingPengumuman(){
       </div>
     </div>
   `).join("");
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function openPengumumanDetail(id){
   const p = STATE.pengumuman.find(x=>x.id===id); if(!p) return;
   
-  // Cek apakah ada gambar, jika ada buat bisa diklik dan ada tombol downloadnya
   const imgHtml = p.img 
     ? `<img src="${p.img}" class="w-full h-full object-cover cursor-pointer" onclick="openImageViewer('${p.img}', '${p.judul.replace(/'/g, "")}')" alt="${p.judul}">` 
     : `<div class="hero-mesh w-full h-full"></div>`;
 
-  // Tombol download hanya muncul jika ada gambar
   const downloadBtn = p.img 
     ? `<button onclick="downloadImage('${p.img}', 'Pengumuman-${p.judul.replace(/'/g, "")}')" class="btn btn-primary"><i data-lucide="download" class="w-4 h-4"></i> Download Gambar</button>` 
     : '';
@@ -1830,10 +1815,9 @@ function openPengumumanDetail(id){
       </div>
     </div>
   `);
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
-// Fungsi baru untuk menampilkan gambar dalam ukuran penuh (popup)
 function openImageViewer(imgUrl, title) {
   showModal(`
     <div class="card max-w-4xl w-full modal-enter overflow-hidden">
@@ -1854,23 +1838,23 @@ function openImageViewer(imgUrl, title) {
       </div>
     </div>
   `);
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function showModal(html){
   const c = $("#modalContainer");
   c.innerHTML = `<div class="fixed inset-0 z-[100] modal-backdrop flex items-start justify-center p-4 md:p-8 overflow-y-auto" onclick="if(event.target===this) closeModal()">${html}</div>`;
-  document.body.style.overflow = "hidden"; lucide.createIcons();
+  document.body.style.overflow = "hidden"; if (window.lucide) lucide.createIcons();
 }
 function closeModal(){ $("#modalContainer").innerHTML = ""; document.body.style.overflow = ""; }
 
-function openAdminLogin(){ $("#adminLoginModal").classList.remove("hidden-x"); document.body.style.overflow = "hidden"; lucide.createIcons(); }
+function openAdminLogin(){ $("#adminLoginModal").classList.remove("hidden-x"); document.body.style.overflow = "hidden"; if (window.lucide) lucide.createIcons(); }
 function closeAdminLogin(){ $("#adminLoginModal").classList.add("hidden-x"); document.body.style.overflow = ""; }
 function togglePass(id, btn){
   const inp = document.getElementById(id);
   if(inp.type === "password"){ inp.type="text"; btn.innerHTML='<i data-lucide="eye-off" class="w-4 h-4"></i>'; }
   else { inp.type="password"; btn.innerHTML='<i data-lucide="eye" class="w-4 h-4"></i>'; }
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
  $("#loginForm").addEventListener("submit", e=>{ e.preventDefault(); const u = $("#loginUser").value.trim(); const p = $("#loginPass").value.trim(); if(u === "karangtarunaplgr" && p === "kartadusun3plgr"){ closeAdminLogin(); enterDashboard(); toast("Selamat datang, Admin!", "success"); } else { toast("Username atau password salah", "error"); } });
 function enterDashboard(){ 
@@ -2011,7 +1995,7 @@ function showInPageNotification(user, text, photo) {
   `;
   
   wrap.appendChild(card);
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
   
   setTimeout(() => {
     if(card.parentElement) card.remove();
@@ -2096,7 +2080,7 @@ function renderNotifPanel() {
         </div>
       </div>
     `;
-    lucide.createIcons();
+    if (window.lucide) lucide.createIcons();
     return;
   }
   
@@ -2140,7 +2124,7 @@ function renderNotifPanel() {
       </div>
     </div>
   `;
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function openNotifPanel(){
@@ -2223,14 +2207,14 @@ async function initDashboard(){
   $("#dashAgendaList").innerHTML = upcoming.map(a=>`<div class="flex items-center gap-3 p-3 rounded-xl hover:bg-cream-2/50 transition"><div class="w-12 h-12 rounded-xl bg-merah-soft text-merah flex flex-col items-center justify-center flex-shrink-0"><div class="text-[10px] font-bold uppercase">${new Date(a.tanggal).toLocaleDateString("id-ID",{month:"short"})}</div><div class="font-display text-lg leading-none">${new Date(a.tanggal).getDate()}</div></div><div class="flex-1 min-w-0"><div class="font-bold text-sm truncate">${a.judul}</div><div class="text-xs text-ink-2 flex items-center gap-2 mt-0.5"><i data-lucide="clock" class="w-3 h-3"></i> ${a.waktu} · <i data-lucide="map-pin" class="w-3 h-3"></i> ${a.lokasi}</div></div><span class="px-2 py-1 rounded-full text-[10px] font-bold ${KATEGORI_COLOR[a.kategori]}">${KATEGORI_LABEL[a.kategori]}</span></div>`).join("");
   const colorMap = { merah:"bg-merah-soft text-merah", emerald:"bg-emerald-50 text-emerald-600", amber:"bg-amber-50 text-amber-600", rose:"bg-rose-50 text-rose-600", indigo:"bg-indigo-50 text-indigo-600" };
   $("#dashActivity").innerHTML = STATE.activities.map(a=>`<div class="flex gap-3"><div class="w-8 h-8 rounded-lg ${colorMap[a.color]} flex items-center justify-center flex-shrink-0"><i data-lucide="${a.icon}" class="w-4 h-4"></i></div><div class="text-sm"><div class="font-semibold">${a.title}</div><div class="text-xs text-ink-2">${a.desc}</div></div></div>`).join("");
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
   initDashboardCharts(); renderAgendaTable(); renderPanitiaCards(); renderGaleriAdmin(); renderPengumumanTable(); renderPesertaTable();
-  renderLandingGaleri(); renderLandingPanitia(); renderLandingPengumuman(); renderAgendaTimeline(); renderAgendaDetail();
 }
 let chartKehadiran, chartKategori, chartPendaftaran, chartPartisipasi;
 function getChartTextColor() { return document.documentElement.classList.contains('dark') ? '#D4D4D8' : '#475569'; }
 function getChartGridColor() { return document.documentElement.classList.contains('dark') ? 'rgba(255,255,255,0.1)' : 'rgba(15, 23, 42, 0.1)'; }
 function initDashboardCharts(){
+  if (typeof Chart === 'undefined') return;
   if(chartKehadiran) chartKehadiran.destroy();
   if(chartKategori) chartKategori.destroy();
   const ctx1 = $("#chartKehadiran");
@@ -2247,6 +2231,7 @@ function initDashboardCharts(){
   }
 }
 function initLaporanCharts(){
+  if (typeof Chart === 'undefined') return;
   if(chartPendaftaran) chartPendaftaran.destroy();
   if(chartPartisipasi) chartPartisipasi.destroy();
   const ctx1 = $("#chartPendaftaran");
@@ -2261,9 +2246,9 @@ function renderAgendaTable(){
   const fs = $("#agendaFilterStatus")?.value || "all";
   const items = STATE.agenda.filter(a=> (a.judul.toLowerCase().includes(q) || a.lokasi.toLowerCase().includes(q)) && (fc==="all" || a.kategori===fc) && (fs==="all" || a.status===fs));
   const body = $("#agendaTableBody");
-  if(items.length === 0){ body.innerHTML = `<tr><td colspan="6" class="text-center py-12 text-ink-2"><i data-lucide="calendar-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada agenda ditemukan</div></td></tr>`; lucide.createIcons(); return; }
+  if(items.length === 0){ body.innerHTML = `<tr><td colspan="6" class="text-center py-12 text-ink-2"><i data-lucide="calendar-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada agenda ditemukan</div></td></tr>`; if (window.lucide) lucide.createIcons(); return; }
   body.innerHTML = items.map(a=>`<tr class="row-hover transition"><td class="px-4 py-3"><div class="font-bold text-sm">${a.judul}</div><div class="text-xs text-ink-2">${a.waktu} WIB</div></td><td class="px-4 py-3"><span class="badge ${KATEGORI_COLOR[a.kategori]}">${KATEGORI_LABEL[a.kategori]}</span></td><td class="px-4 py-3 text-sm">${fmtTanggal(a.tanggal)}</td><td class="px-4 py-3 text-sm">${a.lokasi}</td><td class="px-4 py-3"><span class="badge ${STATUS_COLOR[a.status]}">${a.status}</span></td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="viewAgenda(${a.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="eye" class="w-4 h-4"></i></button><button onclick="openAgendaModal(${a.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="deleteAgenda(${a.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`).join("");
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function openAgendaModal(id){
@@ -2340,7 +2325,7 @@ function renderGaleriAdmin(){
   const wrap = $("#galeriGridAdmin"); if(!wrap) return;
   if(STATE.galeri.length === 0){
     wrap.innerHTML = `<div class="col-span-full text-center py-12 text-ink-2"><i data-lucide="image-off" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Belum ada media di galeri</div></div>`;
-    lucide.createIcons();
+    if (window.lucide) lucide.createIcons();
     return;
   }
   wrap.innerHTML = STATE.galeri.map(g=>{
@@ -2351,7 +2336,7 @@ function renderGaleriAdmin(){
     
     return `<div class="card overflow-hidden group"><div class="aspect-landscape relative overflow-hidden">${mediaHtml}<div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition"></div><div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition"><button onclick="deleteGaleri(${g.id})" class="w-8 h-8 rounded-lg bg-white/95 hover:bg-rose-500 hover:text-white text-ink flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>${mediaType === 'video' ? '<div class="absolute bottom-2 left-2 bg-black/60 text-white rounded-full p-1.5"><i data-lucide="video" class="w-4 h-4"></i></div>' : ''}</div><div class="p-3"><div class="text-[10px] uppercase tracking-widest text-merah font-bold">${KATEGORI_LABEL[g.kategori]||g.kategori}</div><div class="font-bold text-sm mt-0.5 truncate">${g.judul}</div></div></div>`;
   }).join("");
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function openGaleriModal(){
@@ -2450,7 +2435,7 @@ async function handleMediaUpload(e, inputId, previewId) {
       img.onload = function() {
         const canvas = document.createElement('canvas');
         let width = img.width; let height = img.height;
-        const MAX_WIDTH = 1024; const MAX_HEIGHT = 1024; // Diperbesar agar gambar tidak pecah
+        const MAX_WIDTH = 1024; const MAX_HEIGHT = 1024; 
         if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
         else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
         canvas.width = width; canvas.height = height;
@@ -2514,7 +2499,7 @@ async function handleImgUploadGeneric(e, inputId, previewId) {
 function renderPengumumanTable(){
   const body = $("#pengumumanTableBody"); if(!body) return;
   body.innerHTML = STATE.pengumuman.map(p=>`<tr class="row-hover transition"><td class="px-4 py-3"><div class="font-bold text-sm">${p.judul}</div><div class="text-xs text-ink-2 line-clamp-1">${p.isi}</div></td><td class="px-4 py-3"><span class="badge bg-gold/20 text-gold-deep">${p.kategori}</span></td><td class="px-4 py-3 text-sm">${fmtTanggal(p.tanggal)}</td><td class="px-4 py-3"><span class="badge ${STATUS_COLOR[p.status]}">${p.status}</span></td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openPengumumanModal(${p.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="deletePengumuman(${p.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`).join("");
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function openPengumumanModal(id){
@@ -2603,7 +2588,7 @@ function renderLombaTable(){
   const fg = $("#lombaFilterGol")?.value || "all";
   const items = STATE.lomba.filter(l => (l.nama.toLowerCase().includes(q) || l.nomor.toLowerCase().includes(q)) && (fj==="all" || l.jenis===fj) && (fs==="all" || l.status===fs) && (fg==="all" || l.golongan===fg));
   const body = $("#lombaTableBody");
-  if(items.length === 0){ body.innerHTML = `<tr><td colspan="6" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada peserta ditemukan</div></td></tr>`; lucide.createIcons(); return; }
+  if(items.length === 0){ body.innerHTML = `<tr><td colspan="6" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada peserta ditemukan</div></td></tr>`; if (window.lucide) lucide.createIcons(); return; }
   
   body.innerHTML = items.map(l=>`
     <tr class="row-hover transition">
@@ -2620,7 +2605,7 @@ function renderLombaTable(){
       </div></td>
     </tr>
   `).join("");
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function openLombaModal(id){
@@ -2694,9 +2679,9 @@ function renderKepanitiaanTable(){
   const fj = $("#kepanitiaanFilterJabatan")?.value || "all";
   const items = STATE.kepanitiaanLomba.filter(k => { constpanitia = STATE.panitia.find(p=>p.id===k.panitiaId); const panitiaName = panitia ? panitia.nama.toLowerCase() : ""; return (panitiaName.includes(q) || k.lomba.toLowerCase().includes(q) || k.jabatan.toLowerCase().includes(q)) && (fl==="all" || k.lomba===fl) && (fj==="all" || k.jabatan===fj); });
   const body = $("#kepanitiaanTableBody");
-  if(items.length === 0){ body.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada penugasan ditemukan</div></td></tr>`; lucide.createIcons(); return; }
+  if(items.length === 0){ body.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada penugasan ditemukan</div></td></tr>`; if (window.lucide) lucide.createIcons(); return; }
   body.innerHTML = items.map(k=>{ const p = STATE.panitia.find(x=>x.id===k.panitiaId); const initials = p ? p.nama.split(" ").map(s=>s[0]).slice(0,2).join("") : "?"; const jabatanColor = k.jabatan.includes("Juri") ? "bg-indigo-50 text-indigo-700" : k.jabatan.includes("Penanggung Jawab") ? "bg-merah-soft text-merah" : "bg-amber-50 text-amber-700"; return `<tr class="row-hover transition"><td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-xs">${initials}</div><div><div class="font-bold text-sm">${p?.nama||"Panitia Dihapus"}</div><div class="text-xs text-ink-2">${p?.divisi||""}</div></div></div></td><td class="px-4 py-3 text-sm font-semibold">${k.lomba}</td><td class="px-4 py-3"><span class="badge ${jabatanColor}">${k.jabatan}</span></td><td class="px-4 py-3 text-sm text-ink-2">${k.tugas}</td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openKepanitiaanModal(${k.id})" class="btn btn-primary !py-1.5 !px-3 text-xs"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</button><button onclick="deleteKepanitiaan(${k.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`; }).join("");
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 function openKepanitiaanModal(id){
   const k = id ? STATE.kepanitiaanLomba.find(x=>x.id===id) : null;
@@ -2902,7 +2887,7 @@ async function generateCustomUndian() {
 function previewTickets() {
   if(STATE.undian.length === 0) { toast("Belum ada tiket untuk ditampilkan", "warn"); return; }
   let html = ''; STATE.undian.forEach(u => { html += `<div class="print-ticket"><p>HUT RI ke-81</p><h2>${u.nomor}</h2><p>Doorprize Penonton</p></div>`; });
-  $("#ticketPreviewGrid").innerHTML = html; $("#ticketPreviewArea").classList.remove("hidden-x"); lucide.createIcons();
+  $("#ticketPreviewGrid").innerHTML = html; $("#ticketPreviewArea").classList.remove("hidden-x"); if (window.lucide) lucide.createIcons();
   $("#ticketPreviewArea").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -2919,7 +2904,7 @@ async function clearAllTickets() { STATE.undian = []; await syncDataToSupabase('
 
 function renderHadiahList(){
   $("#hadiahList").innerHTML = STATE.hadiah.map(h=>`<div class="p-3 rounded-xl border border-line hover:border-merah/30 transition group"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-merah-soft text-merah flex items-center justify-center flex-shrink-0"><i data-lucide="${h.ikon}" class="w-5 h-5"></i></div><div class="flex-1 min-w-0"><div class="font-bold text-sm truncate">${h.nama}</div><div class="text-xs text-ink-2">${h.nilai}</div><div class="text-[10px] text-ink-2 mt-0.5">Terpakai: ${h.terpakai}/${h.jumlah}</div></div><button onclick="deleteHadiah(${h.id})" class="w-7 h-7 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition opacity-0 group-hover:opacity-100"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div><div class="mt-2 h-1.5 bg-cream-2 rounded-full overflow-hidden"><div class="h-full bg-merah rounded-full transition-all" style="width:${(h.terpakai/h.jumlah)*100}%"></div></div></div>`).join("");
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function openHadiahModal(){
@@ -2941,18 +2926,18 @@ async function deleteHadiah(id){ STATE.hadiah = STATE.hadiah.filter(h=>h.id!==id
 
 function renderPemenangUndian(){
   const wrap = $("#pemenangUndianList"), pemenang = STATE.undian.filter(u=>u.status==="menang");
-  if(pemenang.length === 0){ wrap.innerHTML = `<div class="col-span-full text-center py-8 text-ink-2"><i data-lucide="trophy" class="w-12 h-12 mx-auto mb-2 opacity-40"></i><div>Belum ada pemenang undian</div><div class="text-xs mt-1">Putar roda untuk memilih pemenang</div></div>`; lucide.createIcons(); return; }
+  if(pemenang.length === 0){ wrap.innerHTML = `<div class="col-span-full text-center py-8 text-ink-2"><i data-lucide="trophy" class="w-12 h-12 mx-auto mb-2 opacity-40"></i><div>Belum ada pemenang undian</div><div class="text-xs mt-1">Putar roda untuk memilih pemenang</div></div>`; if (window.lucide) lucide.createIcons(); return; }
   wrap.innerHTML = pemenang.map(u=>{ const h = STATE.hadiah.find(x=>x.id===u.hadiahId); return `<div class="p-4 rounded-xl bg-gradient-to-br from-gold/10 to-merah-soft border border-gold/30"><div class="flex items-start justify-between mb-2"><div class="w-10 h-10 rounded-lg bg-gold text-ink flex items-center justify-center"><i data-lucide="${h?.ikon||'gift'}" class="w-5 h-5"></i></div><span class="badge bg-gold text-ink">MENANG</span></div><div class="font-bold text-sm">${u.nama}</div><div class="text-xs text-ink-2">${u.nomor} · ${u.asal}</div><div class="mt-2 pt-2 border-t border-gold/20"><div class="text-[10px] uppercase tracking-wider text-gold-deep font-bold">Hadiah</div><div class="text-sm font-bold">${h?.nama||"-"}</div><div class="text-xs text-ink-2">${h?.nilai||""}</div></div></div>`; }).join("");
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function renderUndianTable(){
   const q = ($("#undianSearch")?.value || "").toLowerCase(), fs = $("#undianFilterStatus")?.value || "all";
   const items = STATE.undian.filter(u => (u.nama.toLowerCase().includes(q) || u.nomor.toLowerCase().includes(q)) && (fs==="all" || u.status===fs));
   const body = $("#undianTableBody");
-  if(items.length === 0){ body.innerHTML = `<tr><td colspan="7" class="text-center py-12 text-ink-2"><i data-lucide="ticket-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada peserta undian</div></td></tr>`; lucide.createIcons(); return; }
+  if(items.length === 0){ body.innerHTML = `<tr><td colspan="7" class="text-center py-12 text-ink-2"><i data-lucide="ticket-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada peserta undian</div></td></tr>`; if (window.lucide) lucide.createIcons(); return; }
   body.innerHTML = items.map(u=>{ const h = STATE.hadiah.find(x=>x.id===u.hadiahId); return `<tr class="row-hover transition"><td class="px-4 py-3"><div class="font-mono font-bold text-sm text-merah">${u.nomor}</div></td><td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-xs">${u.nama.split(" ").map(s=>s[0]).slice(0,2).join("")}</div><div class="font-bold text-sm">${u.nama}</div></div></td><td class="px-4 py-3 text-sm">${u.telepon}</td><td class="px-4 py-3 text-sm">${u.asal}</td><td class="px-4 py-3"><span class="badge ${UND_STATUS_COLOR[u.status]}">${UND_STATUS_LABEL[u.status]}</span></td><td class="px-4 py-3 text-sm">${h?`<span class="font-bold text-gold-deep">${h.nama}</span>`:"-"}</td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openUndianModal(${u.id})" class="w-8 h-8 rounded-lg hover:bg-merah-soft text-ink-2 hover:text-merah flex items-center justify-center transition"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="deleteUndian(${u.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`; }).join("");
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function openUndianModal(id){
@@ -3025,14 +3010,14 @@ function executeSpin(isScreen, wheelEl, pointerEl, resEl, btnEl, eligible, hadia
           </div>
         `; 
         res.style.opacity = "1"; 
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
       }, 300); 
     } 
     else { res.innerHTML = `<div class="p-5 rounded-xl bg-gradient-to-br from-gold/20 to-merah-soft border-2 border-gold/40 shadow-lg"><div class="flex items-center justify-center gap-2 mb-2"><span class="text-2xl">🎉</span><div class="text-xs uppercase tracking-wider text-gold-deep font-bold">PEMENANG DOORPRIZE</div><span class="text-2xl">🎉</span></div><div class="font-display text-3xl text-merah">${winner.nama}</div><div class="text-sm text-ink-2 mt-1">Tiket: <span class="font-mono font-bold">${winner.nomor}</span> ${winner.asal !== 'Undian Angka' ? '· '+winner.asal : ''}</div><div class="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold text-ink font-bold text-sm shadow-md"><i data-lucide="${hadiah.ikon}" class="w-4 h-4"></i> ${hadiah.nama} (${hadiah.nilai})</div></div>`; }
     await syncDataToSupabase('undian', STATE.undian); await syncDataToSupabase('hadiah', STATE.hadiah);
     launchConfetti(isScreen); isSpinning = false; if(btn) { btn.classList.add("hidden-x"); }
     if(!isScreen) initUndianPage(); else { const sel = $("#screenHadiahSelect"); sel.innerHTML = '<option value="" class="text-black">Pilih Hadiah...</option>' + STATE.hadiah.map(h=>`<option value="${h.id}" class="text-black">${h.nama} (${h.nilai}) - Sisa: ${h.jumlah-h.terpakai}</option>`).join(""); }
-    lucide.createIcons();
+    if (window.lucide) lucide.createIcons();
   }, 10200); 
 }
 
@@ -3206,7 +3191,7 @@ function renderChatWidget() {
     $("#chatWidgetLoginForm").addEventListener("submit", handlePhoneLogin);
   }
   
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
   setTimeout(() => { const inp = $("#chatWidgetInputText"); if(inp) inp.focus(); }, 100);
   renderChatMessages();
 }
@@ -3243,7 +3228,7 @@ function renderChatPublikFooter() {
     `;
     $("#chatPublicLoginForm").addEventListener("submit", handlePhoneLogin);
   }
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function logoutMember() {
@@ -3380,7 +3365,7 @@ async function renderChatMessages() {
     wrapInline.innerHTML = htmlContent;
     wrapInline.scrollTop = wrapInline.scrollHeight;
   }
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function escapeHtml(text) {
@@ -3615,7 +3600,7 @@ function renderAnggotaChatTable() {
   
   if (STATE.chatMembers.length === 0) {
     body.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Belum ada anggota Karang Taruna ditambahkan</div></td></tr>`;
-    lucide.createIcons();
+    if (window.lucide) lucide.createIcons();
     return;
   }
 
@@ -3640,7 +3625,7 @@ function renderAnggotaChatTable() {
       </td>
     </tr>
   `).join("");
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 }
 
 function openAnggotaChatModal(id) {
@@ -3765,9 +3750,6 @@ async function confirmDeleteAnggotaChat(id) {
   closeModal(); renderAnggotaChatTable(); toast("Anggota telah dihapus", "info");
 }
 
-/* ============================================================
-   REAL-TIME ONLINE USERS (Supabase Presence)
-============================================================ */
 let onlineChannel = null;
 let heartbeatInterval = null;
 let simulatedOnline = 0;
@@ -3876,12 +3858,8 @@ function setupOnlinePresence() {
   }
 }
 
-// === FUNGSI INIT UTAMA ===
-async function init(){
-  lucide.createIcons();
-  
-  // Daftarkan Service Worker
-  await registerServiceWorker();
+async function init() {
+  if (window.lucide) lucide.createIcons();
   
   const isSupabaseConnected = initSupabase();
   
@@ -3948,8 +3926,20 @@ async function init(){
   if (isSupabaseConnected) {
     setupSupabaseRealtime();
   }
+  
+  // Init SW Setelah Window Load agar tidak block rendering
+  if (document.readyState === "complete") {
+    registerServiceWorker();
+  } else {
+    window.addEventListener('load', registerServiceWorker);
+  }
 }
-init();
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
 </script>
 </body>
 </html>
