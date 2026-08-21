@@ -134,7 +134,7 @@
   .div-flag{ width:60px; height:4px; border-radius:2px; background: linear-gradient(90deg, var(--merah) 0 50%, #fff 50% 100% ); }
   .row-hover:hover{ background: var(--merah-soft); }
   
-  .raffle-wheel{ transition: transform 10s cubic-bezier(0.25, 1, 0.5, 1); transform-origin: 50% 50%; transform-box: fill-box; }
+  .raffle-wheel{ transition: transform 15s cubic-bezier(0.15, 0.85, 0.25, 1); transform-origin: 50% 50%; transform-box: fill-box; }
   .confetti{ position:fixed; width:10px; height:10px; pointer-events:none; z-index:300; animation: confettiFall 3s linear forwards; }
   .badge{ display:inline-flex; align-items:center; gap:.25rem; padding:.25rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; }
 
@@ -306,7 +306,7 @@
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
         </a>
         <a href="https://wa.me/6281281002026" target="_blank" rel="noopener" class="hover:scale-110 transition" title="WhatsApp">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891,11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
         </a>
         <span class="hidden md:block w-px h-3 bg-white/20"></span>
         <a href="mailto:panitia@hutri81.go.id" class="hidden md:block hover:scale-110 transition" title="Email">
@@ -1148,7 +1148,6 @@
 /* ============================================================
    SERVICE WORKER REGISTRATION (Blob Pattern for single file)
 ============================================================ */
-// Init Service Worker dilakukan di akhir script setelah seluruh element siap.
 function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   const swCode = `
@@ -1179,9 +1178,7 @@ function registerServiceWorker() {
     navigator.serviceWorker.register(swUrl).then(() => {
       console.log('Service Worker registered for background notifications');
     }).catch(e => console.warn('SW registration failed:', e));
-  } catch(e) {
-    console.warn('Failed to create SW blob:', e);
-  }
+  } catch(e) { console.warn('Failed to create SW blob:', e); }
 }
 
 /* ============================================================
@@ -1245,13 +1242,28 @@ async function syncDataToSupabase(table, data) {
     
     const cleanData = data.map(item => {
       const cleanItem = { ...item };
+      
+      // SELALU hapus versi camelCase (alias JS saja), 
+      // karena kolom Supabase pakai snake_case
+      // Pastikan snake_case versinya ada sebelum dihapus
+      if (cleanItem.panitiaId !== undefined && cleanItem.panitia_id === undefined) {
+        cleanItem.panitia_id = cleanItem.panitiaId;
+      }
+      if (cleanItem.hadiahId !== undefined && cleanItem.hadiah_id === undefined) {
+        cleanItem.hadiah_id = cleanItem.hadiahId;
+      }
+      delete cleanItem.panitiaId;
+      delete cleanItem.hadiahId;
+      
       Object.keys(cleanItem).forEach(key => {
         if (cleanItem[key] === undefined) delete cleanItem[key];
         if (key === 'id' && table !== 'chat') {
           cleanItem[key] = parseInt(cleanItem[key]);
         }
-        if (key === 'panitiaId' && table !== 'kepanitiaan_lomba') delete cleanItem[key];
-        if (key === 'hadiahId' && table !== 'undian') delete cleanItem[key];
+        // Untuk foreign key snake_case, pastikan integer
+        if ((key === 'panitia_id' || key === 'hadiah_id') && cleanItem[key] !== null) {
+          cleanItem[key] = parseInt(cleanItem[key]);
+        }
       });
       return cleanItem;
     });
@@ -1899,7 +1911,7 @@ function playNotificationSound() {
 
 function vibrateDevice() {
   if ('vibrate' in navigator) {
-    navigator.vibrate([200, 100, 200]); 
+    navigator.vibrate([200, 100]); 
   }
 }
 
@@ -2626,7 +2638,7 @@ function openLombaModal(id){
         </div>
         <div><label class="label">Nama Lengkap</label><input type="text" id="f_nama" class="input" value="${l?.nama||''}" required></div>
         <div class="grid grid-cols-2 gap-4">
-          <div><label class="label">Jenis Lomba (Ketik Bebas)</label><input type="text" id="f_jenis" class="input" value="${l?.jenis||''}" placeholder="Ketik jenis lomba..." list="jenisLombaList" required><datalist id="jenisLombaList">${datalistOptions}</datalist></div>
+          <div><label class="label">Jenis Lomba</label><input type="text" id="f_jenis" class="input" value="${l?.jenis||''}" placeholder="Ketik jenis lomba..." list="jenisLombaList" required><datalist id="jenisLombaList">${datalistOptions}</datalist></div>
           <div><label class="label">Golongan</label><select id="f_gol" class="input">${Object.entries(GOL_LABEL).map(([k,v])=>`<option value="${k}" ${l?.golongan===k?'selected':''}>${v}</option>`).join("")}</select></div>
         </div>
         <div class="flex items-center justify-end gap-2 pt-4 border-t border-line">
@@ -2677,7 +2689,7 @@ function renderKepanitiaanTable(){
   const q = ($("#kepanitiaanSearch")?.value || "").toLowerCase();
   const fl = $("#kepanitiaanFilterLomba")?.value || "all";
   const fj = $("#kepanitiaanFilterJabatan")?.value || "all";
-  const items = STATE.kepanitiaanLomba.filter(k => { constpanitia = STATE.panitia.find(p=>p.id===k.panitiaId); const panitiaName = panitia ? panitia.nama.toLowerCase() : ""; return (panitiaName.includes(q) || k.lomba.toLowerCase().includes(q) || k.jabatan.toLowerCase().includes(q)) && (fl==="all" || k.lomba===fl) && (fj==="all" || k.jabatan===fj); });
+  const items = STATE.kepanitiaanLomba.filter(k => { const panitia = STATE.panitia.find(p=>p.id===k.panitiaId); const panitiaName = panitia ? panitia.nama.toLowerCase() : ""; return (panitiaName.includes(q) || k.lomba.toLowerCase().includes(q) || k.jabatan.toLowerCase().includes(q)) && (fl==="all" || k.lomba===fl) && (fj==="all" || k.jabatan===fj); });
   const body = $("#kepanitiaanTableBody");
   if(items.length === 0){ body.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-ink-2"><i data-lucide="users-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i><div>Tidak ada penugasan ditemukan</div></td></tr>`; if (window.lucide) lucide.createIcons(); return; }
   body.innerHTML = items.map(k=>{ const p = STATE.panitia.find(x=>x.id===k.panitiaId); const initials = p ? p.nama.split(" ").map(s=>s[0]).slice(0,2).join("") : "?"; const jabatanColor = k.jabatan.includes("Juri") ? "bg-indigo-50 text-indigo-700" : k.jabatan.includes("Penanggung Jawab") ? "bg-merah-soft text-merah" : "bg-amber-50 text-amber-700"; return `<tr class="row-hover transition"><td class="px-4 py-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-merah text-white flex items-center justify-center font-bold text-xs">${initials}</div><div><div class="font-bold text-sm">${p?.nama||"Panitia Dihapus"}</div><div class="text-xs text-ink-2">${p?.divisi||""}</div></div></div></td><td class="px-4 py-3 text-sm font-semibold">${k.lomba}</td><td class="px-4 py-3"><span class="badge ${jabatanColor}">${k.jabatan}</span></td><td class="px-4 py-3 text-sm text-ink-2">${k.tugas}</td><td class="px-4 py-3"><div class="flex items-center justify-end gap-1"><button onclick="openKepanitiaanModal(${k.id})" class="btn btn-primary !py-1.5 !px-3 text-xs"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</button><button onclick="deleteKepanitiaan(${k.id})" class="w-8 h-8 rounded-lg hover:bg-rose-50 text-ink-2 hover:text-rose-600 flex items-center justify-center transition" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`; }).join("");
@@ -2715,28 +2727,93 @@ function buildWheel(svgId = "#raffleWheel") {
     wheel.innerHTML = `<circle cx="100" cy="100" r="98" fill="var(--bg-soft)" stroke="var(--merah)" stroke-width="3"/><circle cx="100" cy="100" r="80" fill="none" stroke="var(--gold)" stroke-width="2" stroke-dasharray="4 4"/><text x="100" y="95" text-anchor="middle" font-family="Anton" font-size="14" fill="var(--merah)">TIDAK ADA</text><text x="100" y="115" text-anchor="middle" font-family="Anton" font-size="14" fill="var(--merah)">PESERTA</text>`;
     return;
   }
-  for(let i = eligible.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [eligible[i], eligible[j]] = [eligible[j], eligible[i]]; }
-  const segments = eligible.slice(0, 12);
+  
+  const segments = eligible;
   const anglePer = 360 / segments.length;
-  let svg = `<circle cx="100" cy="100" r="98" fill="var(--bg-soft)" stroke="var(--merah)" stroke-width="3"/>`;
+  
+  // Background roda
+  let svg = `<circle cx="100" cy="100" r="98" fill="#1A0F0A" stroke="var(--gold)" stroke-width="4"/>`;
+  
+  // Pengaturan ukuran kotak dan font berdasarkan jumlah peserta (Dikecilkan agar muat)
+  let fontSize = 11;
+  let boxRadius = 80; 
+  let boxW = 22, boxH = 10, boxRx = 3;
+  
+  if (segments.length > 15) { fontSize = 10; boxW = 20; boxH = 9; boxRadius = 78; }
+  if (segments.length > 30) { fontSize = 9; boxW = 18; boxH = 8; boxRadius = 76; }
+  if (segments.length > 50) { fontSize = 8; boxW = 16; boxH = 7; boxRadius = 74; }
+  if (segments.length > 80) { fontSize = 7; boxW = 14; boxH = 6; boxRadius = 72; boxRx = 2; }
+  if (segments.length > 120) { fontSize = 6; boxW = 12; boxH = 5; boxRadius = 70; boxRx = 2; }
+  
   segments.forEach((p, i) => {
     const startAngle = i * anglePer - 90, endAngle = (i + 1) * anglePer - 90;
     const startRad = startAngle * Math.PI / 180, endRad = endAngle * Math.PI / 180;
     const x1 = 100 + 95 * Math.cos(startRad), y1 = 100 + 95 * Math.sin(startRad);
     const x2 = 100 + 95 * Math.cos(endRad), y2 = 100 + 95 * Math.sin(endRad);
-    const largeArc = anglePer > 180 ? 1 : 0, color = WHEEL_COLORS[i % WHEEL_COLORS.length];
-    svg += `<path d="M 100 100 L ${x1} ${y1} A 95 95 0 ${largeArc} 1 ${x2} ${y2} Z" fill="${color}" stroke="white" stroke-width="1.5" opacity="0.92"/>`;
-    const midAngle = (startAngle + endAngle) / 2, midRad = midAngle * Math.PI / 180, textRadius = 65;
-    const tx = 100 + textRadius * Math.cos(midRad), ty = 100 + textRadius * Math.sin(midRad), rotation = midAngle + 90;
+    const largeArc = anglePer > 180 ? 1 : 0;
     
-    const numStr = p.nomor ? p.nomor.toString() : "";
-    let fontSize = 11;
-    if (numStr.length > 4) fontSize = 9;
-    if (numStr.length > 6) fontSize = 7;
+    // Warn selang-seling Merah Putih
+    const color = i % 2 === 0 ? "#FF1F3D" : "#FFFFFF"; 
     
-    svg += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" font-size="${fontSize}" font-weight="800" fill="white" transform="rotate(${rotation} ${tx} ${ty})" style="font-family: 'Plus Jakarta Sans', sans-serif;">${numStr}</text>`;
+    // Irisan roda
+    svg += `<path d="M 100 100 L ${x1} ${y1} A 95 95 0 ${largeArc} 1 ${x2} ${y2} Z" fill="${color}" stroke="rgba(0,0,0,0.2)" stroke-width="1" opacity="0.95"/>`;
+    
+    const midAngle = (startAngle + endAngle) / 2, midRad = midAngle * Math.PI / 180;
+    
+    // Ambil angka dari tiket
+    let numStr = p.nomor ? p.nomor.toString() : "";
+    if (!numStr) return;
+    const numMatch = numStr.match(/\d+/); 
+    let displayNum = numMatch ? numMatch[0] : numStr;
+    
+    // Format agar selalu 3 digit (001, 010, 100, dst)
+    if (!isNaN(displayNum) && displayNum !== "") {
+      let num = parseInt(displayNum);
+      displayNum = num.toString().padStart(3, "0");
+    } else if (displayNum.length > 4) {
+      displayNum = displayNum.substring(0, 4);
+    }
+    
+    let tx = 100 + boxRadius * Math.cos(midRad);
+    let ty = 100 + boxRadius * Math.sin(midRad);
+    
+    // LOGIKA LANDSCAPE: Memastikan teks selalu terbaca
+    let rotation = midAngle + 90;
+    if (midAngle > 0 && midAngle < 180) {
+      rotation = midAngle - 90;
+    }
+    
+    // Tentukan warna kotak agar kontras
+    const boxFill = i % 2 === 0 ? "rgba(0, 0, 0, 0.85)" : "rgba(255, 31, 61, 0.15)";
+    const textFill = i % 2 === 0 ? "#FFFFFF" : "#D60028"; 
+    
+    // Gambar Kartu Latar
+    svg += `<rect x="${tx - boxW/2}" y="${ty - boxH/2}" width="${boxW}" height="${boxH}" rx="${boxRx}" fill="${boxFill}" stroke="${i % 2 === 0 ? 'var(--gold)' : 'rgba(0,0,0,0.5)'}" stroke-width="0.8" transform="rotate(${rotation} ${tx} ${ty})"/>`;
+    
+    // Gambar Angka dengan stroke bayangan agar terbaca di latar apapun
+    svg += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="central" font-size="${fontSize}" font-weight="900" fill="${textFill}" transform="rotate(${rotation} ${tx} ${ty})" style="font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: 0px; paint-order: stroke; stroke: rgba(0,0,0,0.6); stroke-width: 0.5px; stroke-linecap: round; stroke-linejoin: round;">${displayNum}</text>`;
   });
-  svg += `<circle cx="100" cy="100" r="22" fill="var(--merah)" stroke="white" stroke-width="3"/><circle cx="100" cy="100" r="22" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="100" cy="100" r="95" fill="none" stroke="var(--gold)" stroke-width="2" stroke-dasharray="6 4"/>`;
+
+  // Garis detik jam di pinggir
+  const tickCount = 60;
+  const outerRadius = 95;
+  const innerRadius = 92; 
+  const innerRadiusMajor = 88; 
+
+  svg += `<g stroke="rgba(255,255,255,0.6)" stroke-width="1">`;
+  for (let i = 0; i < tickCount; i++) {
+    let angle = (i * 360 / tickCount) * Math.PI / 180;
+    let x1 = 100 + outerRadius * Math.cos(angle);
+    let y1 = 100 + outerRadius * Math.sin(angle);
+    let r2 = (i % 5 === 0) ? innerRadiusMajor : innerRadius;
+    let x2 = 100 + r2 * Math.cos(angle);
+    let y2 = 100 + r2 * Math.sin(angle);
+    svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="${i % 5 === 0 ? 1.5 : 0.5}"/>`;
+  }
+  svg += `</g>`;
+  
+  // Tombol tengah
+  svg += `<circle cx="100" cy="100" r="22" fill="var(--merah)" stroke="white" stroke-width="3"/><circle cx="100" cy="100" r="22" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="100" cy="100" r="95" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-dasharray="6 4"/>`;
   wheel.innerHTML = svg;
 }
 
@@ -2982,9 +3059,10 @@ function executeSpin(isScreen, wheelEl, pointerEl, resEl, btnEl, eligible, hadia
   const wheel = $(wheelEl), pointer = $(pointerEl), btn = $(btnEl), res = $(resEl);
   pointer.classList.add("pointer-spinning");
   const winner = eligible[Math.floor(Math.random() * eligible.length)];
-  let segments = [];
-  if(eligible.length <= 12) { segments = eligible; } else { segments.push(winner); const others = eligible.filter(e => e.id !== winner.id); for(let i = others.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [others[i], others[j]] = [others[j], others[i]]; } segments = segments.concat(others.slice(0, 11)); for(let i = segments.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [segments[i], segments[j]] = [segments[j], segments[i]]; } }
+  
+  const segments = eligible; 
   const winnerIndex = segments.findIndex(s => s.id === winner.id), segmentsCount = segments.length, anglePer = 360 / segmentsCount;
+  
   const targetSegmentCenter = winnerIndex * anglePer + anglePer / 2, targetRotation = 360 - targetSegmentCenter, extraRotations = 10 + Math.floor(Math.random() * 5);
   let currentRot = isScreen ? wheelCurrentRotationScreen : wheelCurrentRotationDash, currentMod = currentRot % 360, deltaToTarget = targetRotation - currentMod;
   if (deltaToTarget < 0) deltaToTarget += 360;
@@ -2992,9 +3070,11 @@ function executeSpin(isScreen, wheelEl, pointerEl, resEl, btnEl, eligible, hadia
   if(isScreen) wheelCurrentRotationScreen = finalRotation; else wheelCurrentRotationDash = finalRotation;
   wheel.style.transform = `rotate(${finalRotation}deg)`;
   if(isScreen) { res.style.opacity = "0"; res.innerHTML = ""; } else { res.innerHTML = ""; }
+  
+  // 15 detik putaran
   setTimeout(async () => {
     pointer.classList.remove("pointer-spinning"); $("#countdownContainer").classList.add("hidden-x");
-    winner.status = "menang"; winner.hadiahId = hadiah.id; winner.hadiah_id = hadiah.id; hadiah.terpakai++;
+    winner.status = "menang";  winner.hadiah_id = hadiah.id; hadiah.terpakai++;
     if(isScreen) { 
       res.style.opacity = "0"; 
       setTimeout(() => { 
@@ -3018,7 +3098,7 @@ function executeSpin(isScreen, wheelEl, pointerEl, resEl, btnEl, eligible, hadia
     launchConfetti(isScreen); isSpinning = false; if(btn) { btn.classList.add("hidden-x"); }
     if(!isScreen) initUndianPage(); else { const sel = $("#screenHadiahSelect"); sel.innerHTML = '<option value="" class="text-black">Pilih Hadiah...</option>' + STATE.hadiah.map(h=>`<option value="${h.id}" class="text-black">${h.nama} (${h.nilai}) - Sisa: ${h.jumlah-h.terpakai}</option>`).join(""); }
     if (window.lucide) lucide.createIcons();
-  }, 10200); 
+  }, 15000); 
 }
 
 function hideWinnerResult() {
@@ -3042,7 +3122,7 @@ async function resetUndian(){
 }
 
 async function confirmResetUndian(){
-  STATE.undian.forEach(u=>{ u.status = "eligible"; delete u.hadiahId; delete u.hadiah_id; }); 
+ STATE.undian.forEach(u=>{ u.status = "eligible"; delete u.hadiah_id; delete u.hadiahId; }); 
   STATE.hadiah.forEach(h=> h.terpakai = 0);
   await syncDataToSupabase('undian', STATE.undian); 
   await syncDataToSupabase('hadiah', STATE.hadiah);
@@ -3080,7 +3160,7 @@ function openDaftarLombaModal() {
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div><label class="label">Golongan</label><select id="dl_gol" class="input">${Object.entries(GOL_LABEL).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></div>
-          <div><label class="label">Jenis Lomba (Ketik Bebas)</label><input type="text" id="dl_jenis" class="input" placeholder="Ketik jenis lomba yang diinginkan..." list="daftarJenisList" required><datalist id="daftarJenisList">${datalistOptions}</datalist></div>
+          <div><label class="label">Jenis Lomba</label><input type="text" id="dl_jenis" class="input" placeholder="Ketik jenis lomba yang diinginkan..." list="daftarJenisList" required><datalist id="daftarJenisList">${datalistOptions}</datalist></div>
         </div>
         <div class="flex items-center justify-end gap-2 pt-4 border-t border-line">
           <button type="button" onclick="closeModal()" class="btn btn-light">Batal</button>
@@ -3927,7 +4007,6 @@ async function init() {
     setupSupabaseRealtime();
   }
   
-  // Init SW Setelah Window Load agar tidak block rendering
   if (document.readyState === "complete") {
     registerServiceWorker();
   } else {
